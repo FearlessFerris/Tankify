@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// Main Tankify Application 
 
+
+// Dependencies 
+import React, { useState } from 'react';
+import { Typography } from '@mui/material';
+
+
+// Necessary Files & Components
+import Menu from './Components/Menu';
+import './Static/App.css'
+
+
+// Tankify Application 
 function App() {
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div 
+      className = "application-container" 
+      style = {{ 
+        alignItems: 'center',
+        backgroundColor: '#263238',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column'
+      }}
+    >
+
+
+    <Menu /> 
     </div>
   );
 }
