@@ -13,6 +13,9 @@ import MenuSearch from './MenuSearch';
 
 // Menu Component 
 function Menu() {
+
+    
+
     return (
         <AppBar
             position='fixed'
