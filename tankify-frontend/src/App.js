@@ -3,15 +3,21 @@
 
 // Dependencies 
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
 
-// Necessary Files & Components
-import Menu from './Components/Menu';
+// Components & Necessary Files 
+import CreateUser from './Components/CreateUser';
+import Home from './Components/Home';
+import Navbar from './Components/Navbar';
 import './Static/App.css'
 
+
+// Context Providers 
+import { AlertProvider } from './ContextDirectory/AlertContext';
 
 
 // Custom Theme 
@@ -30,26 +36,19 @@ const theme = createTheme({
 
 // Tankify Application 
 function App() {
-
-
     return (
-        <ThemeProvider
-            theme={theme}
-        >
-            <CssBaseline />
-            <div
-                className="application-container"
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: '#263238',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column'
-                }}
-            >
-              <Menu />
-            </div>
+        <AlertProvider>
+        <ThemeProvider theme={theme}>
+        <CssBaseline />
+          <Router>
+            <Navbar />
+                <Routes>
+                    <Route exact path = '/' element = { <Home /> } />
+                    <Route exact path = '/user/create' element = { <CreateUser /> } />  
+                </Routes>
+          </Router>
         </ThemeProvider>
+        </AlertProvider>
     );
 }
 

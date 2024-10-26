@@ -26,6 +26,7 @@ function MenuSearch() {
         <TextField
           id = 'search'
           label = 'Search'
+          placeholder = 'How can I help you?'
           variant = 'outlined'
           size = 'small'
           sx = {{
@@ -51,7 +52,7 @@ function MenuSearch() {
               color: '#fafafa',
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#004d40',
+              color: '#fafafa',
             },
             width: '100%',
           }}
