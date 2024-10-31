@@ -274,6 +274,8 @@ function Navbar() {
                         }}
                     >
                         <Button
+                            component = { Link }
+                            to = '/user/login'
                             variant="outlined"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('login')}

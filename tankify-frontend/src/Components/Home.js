@@ -25,7 +25,7 @@ function Home(){
         >
 
 
-            <h1> Home Component </h1>
+            {/* <h1> Explore... </h1> */}
         </div>
     )
 }

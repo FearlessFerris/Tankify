@@ -39,13 +39,19 @@ function MenuSearch() {
             },
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: '#004d40',
+                  borderColor: '#004d40',
+                  border: '.2rem solid #004d40',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
-              '&:hover fieldset': {
-                borderColor: '#004d40',
+                '&:hover fieldset': {
+                  borderColor: '#004d40',
+                  border: '.2rem solid #004d40',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
-              '&.Mui-focused fieldset': {
-                borderColor: '#004d40',
+                '&.Mui-focused fieldset': {
+                  borderColor: '#004d40',
+                  border: '.2rem solid #004d40',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
             },
             '& .MuiInputLabel-root': {
