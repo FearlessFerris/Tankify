@@ -39,7 +39,7 @@ class User( Base ):
     reviews = relationship( 'Review', back_populates='user', lazy=True )
     inventory = relationship( 'Inventory', back_populates='user', lazy=True )
 
-    def __init__( self, username, password_hash, email, balance, image = None ):
+    def __init__( self, username, password_hash, email, balance = 1000, image = None ):
         self.username = username 
         self.password_hash = password_hash 
         self.email = email 
@@ -63,9 +63,10 @@ class User( Base ):
         """ Create New User Instance """
 
         hashed_pw = bcrypt.hashpw( password.encode( 'utf-8' ), bcrypt.gensalt( 12 )).decode( 'utf-8' )
-        new_user = cls( username = username, password = hashed_pw, email = email, image = image )
+        new_user = cls( username = username, password_hash = hashed_pw, email = email, image = image )
         db.session.add( new_user )
         db.session.commit()
+        return new_user
 
     
 class Tank( Base ):

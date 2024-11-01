@@ -57,7 +57,13 @@ export const AlertProvider = ({ children }) => {
                 onClose = { closeAlert }
                 severity = { alert.severity }
                 sx = {{
-                    width: '100%'
+                    width: '100%',
+                    fontSize: '1.1rem',
+                    backgroundColor: alert.severity === 'error' ? '#ab003c' : '#004d40',
+                    color: '#fafafa',
+                    border: '.1rem solid #fafafa',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
+                    marginTop: '4rem'
                 }}    
                 > 
                 { alert.message }
