@@ -416,7 +416,7 @@ function CreateUser() {
                                 display: 'flex',
                                 border: '.2rem solid #004d40',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                marginBottom: '1rem', // Add space below the button
+                                marginBottom: '1rem',
                             }}
                         >
                             Image

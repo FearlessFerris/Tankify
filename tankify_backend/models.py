@@ -57,7 +57,7 @@ class User( Base ):
             'image': self.image,
         }
         return user
-
+        
     @classmethod 
     def create_user( cls, username, password, email, image = None ):
         """ Create New User Instance """
@@ -67,6 +67,15 @@ class User( Base ):
         db.session.add( new_user )
         db.session.commit()
         return new_user
+    
+    @classmethod 
+    def login_user( cls, username, password ):
+        """ Login / Authenticate User Instance """
+
+        user = cls.query.filter_by( username = username ).first()
+        if user and bcrypt.checkpw( password.encode( 'utf-8' ), user.password_hash.encode( 'utf8' )):
+            return user 
+        return None
 
     
 class Tank( Base ):

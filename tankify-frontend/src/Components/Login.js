@@ -3,28 +3,50 @@
 
 // Dependencies 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
 import { CheckCircle, Error } from '@mui/icons-material';
 
 
 // Components & Necessary Files 
+import apiClient from '../api/apiClient';
+import { useAlert } from '../ContextDirectory/AlertContext';
 
 
 // Login Component 
 function Login() {
 
+    const navigate = useNavigate();
+    const showAlert = useAlert();
     const [form, setForm] = useState({
         username: '',
         password: '',
     });
 
     const handleChange = (e) => {
+        console.log( e.target.value );
+        const { id, value } = e.target;
         setForm({
             ...form,
-            [e.target.id]: e.target.value
+            [id]: value
         });
     };
+
+    const handleSubmit = async ( e ) => {
+        e.preventDefault();
+        try{
+            const response = await apiClient.post( '/login', form );
+            setForm({
+                username: '',
+                password: ''
+            });
+            showAlert( response.data.message, 'success' );
+            navigate( '/' );
+        }
+        catch{
+            console.error( 'Error processing your request to login!' );
+        }
+    }
 
     const getAdornmentColor = (isValid) => (isValid ? '#004d40' : '#ab003c');
 
@@ -40,6 +62,7 @@ function Login() {
             }}
         >
             <form
+                onSubmit = { handleSubmit }
                 style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -212,6 +235,7 @@ function Login() {
                     >
 
                         <Button
+                            onClick = { handleSubmit }
                             variant='outlined'
                             size='large'
                             sx={{
