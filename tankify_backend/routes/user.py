@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify, session, Blueprint
 
 # Necessary Files 
 from models import db, User 
+from error_handlers import error_handler
 
 
 # Define a blueprint for routes
@@ -23,6 +24,7 @@ def homepage():
 
 
 @user_routes.route( '/api/create', methods = [ 'POST' ] )
+@error_handler( 400, 'Bad Request - Unable to create user do to invalid input' )
 def create_user(): 
     """ Creates User Account Instance """
 
@@ -34,44 +36,43 @@ def create_user():
 
     if not username and password and email:
         return jsonify({ 'message': 'Please complete all required fields!' }), 401
-    try:
-        new_user = User.create_user( username = username, password = password, email = email, image = image )
-        return jsonify({ 
-            'message': f'Congratulations { new_user.username }, your account was successfully created!', 
-            'user': {
-            'id': new_user.id,
-            'username': new_user.username,
-            'email': new_user.email,
-            'image': new_user.image,
-            'created_at': new_user.created_at
-        }}), 201
-    except ValueError as e: 
-       return jsonify({'errors': {'message': str(e)}}), 400
-    except Exception as e:
-        print( f'500: { e }' )
-        return jsonify({'errors': {'message': str(e)}}), 500
+    
+    new_user = User.create_user( username = username, password = password, email = email, image = image )
+    return jsonify({ 
+        'message': f'Congratulations { new_user.username }, your account was successfully created!', 
+        'user': {
+        'id': new_user.id,
+        'username': new_user.username,
+        'email': new_user.email,
+        'image': new_user.image,
+        'created_at': new_user.created_at
+    }}), 201
 
 
 @user_routes.route( '/api/login', methods = [ 'POST' ] )
+@error_handler( 401, 'Unauthorized - Invalid credentials provided' )
 def login_user():
     """ Login / Authenticate User Instance """
 
     data = request.get_json()
+
+    if not data or not data.get( 'username' ) or not data.get( 'password' ):
+        raise ValueError( 'Username and Password are required!' )
+    
     username = data.get( 'username' )
     password = data.get( 'password' )
-    print( username, password )
-
     user = User.login_user( username, password )
-    if user: 
-        return jsonify({
-            'message': f'Welcome back { user.username }, hope you are well today!',
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'image': user.image,
-                'created_at': user.created_at
-            } 
-        }), 200 
-    else:
-        return jsonify({ 'message': 'Invalid Username / Password' }), 401 
+    
+    if not user: 
+        raise ValueError( 'Invalid Username / Password' )
+    
+    return jsonify({
+        'message': f'Welcome back { user.username }, hope you are well today!',
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'image': user.image,
+            'created_at': user.created_at
+        } 
+    }), 200 

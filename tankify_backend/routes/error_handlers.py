@@ -10,29 +10,35 @@ from functools import wraps
 
 
 # Error Handlers 
-# def error_handler( status_code, message ):
-#     """ Error Handler """
+def error_handler( status_code, message ):
+    """ Error Handler """
 
-#     def decorator( func ):
-#         @wraps( func )
+    def decorator( func ):
+        @wraps( func )
 
-#         def wrapper( *args, **kwargs ):
+        def wrapper( *args, **kwargs ):
+            try:
+                return func(*args, **kwargs)
+            except ValueError as ve:
+                response = {
+                    "status": "error",
+                    "message": str(ve)
+                }
+                return jsonify(response), 400
+            except KeyError as ke:
+                response = {
+                    "status": "error",
+                    "message": f"Missing key: {str(ke)}"
+                }
+                return jsonify(response), 400
+            except Exception as e:
+                response = {
+                    "status": "error",
+                    "message": message,
+                    "details": str(e)
+                }
+                return jsonify(response), status_code
+        return wrapper 
+    return decorator
+    
 
-
-
-def log_decorator( func ):
-    @wraps( func )
-    def wrapper( *args, **kwargs ):
-        print( f'Running function: { func.__name__ }' )
-        result = func( *args, **kwargs )
-        print( f'Finished function: { func.__name__ }' )
-        return result 
-    return wrapper 
-
-
-@log_decorator
-def say_hello():
-    print( 'Hello World!!!' )
-
-
-say_hello()

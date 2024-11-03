@@ -3,6 +3,7 @@
 
 // Dependencies 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { CheckCircle, CloudUploadOutlined, DeleteOutline, Error } from '@mui/icons-material';
 
@@ -15,6 +16,7 @@ import { useAlert } from '../ContextDirectory/AlertContext';
 // Create User Component 
 function CreateUser() {
 
+    const navigate = useNavigate();
     const showAlert = useAlert();
     const [fileName, setFileName] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -74,10 +76,9 @@ function CreateUser() {
             showAlert( 'Password field is required!', 'error' );
             return
         }
-        
+
          try {
             const response = await apiClient.post('/create', formData);
-            console.log(response.data.message);
             setForm({
                 username: '',
                 password: '',
@@ -85,7 +86,8 @@ function CreateUser() {
                 email: '',
                 image: null
             });
-            showAlert(`Congratulations ${form.username}, your account was successfully created!`, 'success')
+            showAlert( response.data.message, 'success' );
+            navigate( '/user/login' );
         }
         catch {
             console.error('Error creating a new user!');
