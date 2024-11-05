@@ -10,12 +10,17 @@ import { CheckCircle, Error } from '@mui/icons-material';
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
+
+
+// Context Providers 
 import { useAlert } from '../ContextDirectory/AlertContext';
+import { useUser } from '../ContextDirectory/UserContext';
 
 
 // Login Component 
 function Login() {
 
+    const { login } = useUser();
     const navigate = useNavigate();
     const showAlert = useAlert();
     const [form, setForm] = useState({
@@ -36,6 +41,8 @@ function Login() {
         e.preventDefault();
         try{
             const response = await apiClient.post( '/login', form );
+            const userData = response.data.user;
+            login( userData );
             setForm({
                 username: '',
                 password: ''

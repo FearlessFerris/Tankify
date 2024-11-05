@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify, session, Blueprint
 
 # Necessary Files 
 from models import db, User 
-from error_handlers import error_handler
+from .error_handlers import error_handler
 
 
 # Define a blueprint for routes
@@ -72,7 +72,9 @@ def login_user():
             'id': user.id,
             'username': user.username,
             'email': user.email,
+            'balance': user.balance,
             'image': user.image,
             'created_at': user.created_at
         } 
     }), 200 
+

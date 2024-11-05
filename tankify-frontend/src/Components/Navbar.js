@@ -12,15 +12,21 @@ import tankIcon from '../Static/Tank.png';
 import MenuSearch from './MenuSearch';
 
 
+// Context Providers 
+import { useUser } from '../ContextDirectory/UserContext';
+
+
 // Navbar Component 
 function Navbar() {
 
+    const { user, logout } = useUser();
     const [openTooltip, setOpenTooltip] = useState({
         home: false,
         shop: false,
         deals: false,
         create: false,
         login: false,
+        profile: false,
     });
 
     const timeoutRefs = useRef({
@@ -29,21 +35,22 @@ function Navbar() {
         deals: null,
         create: null,
         login: null,
+        profile: null,
     });
 
-    const handleTooltipOpen = ( key ) => {
+    const handleTooltipOpen = (key) => {
         if (timeoutRefs.current[key]) {
             clearTimeout(timeoutRefs.current[key]);
         }
         timeoutRefs.current[key] = setTimeout(() => {
             setOpenTooltip((prev) => ({ ...prev, [key]: true }));
-        }, 1000 ); 
+        }, 1000);
     };
 
     const handleTooltipClose = (key) => {
         if (timeoutRefs.current[key]) {
             clearTimeout(timeoutRefs.current[key]);
-            timeoutRefs.current[key] = null; 
+            timeoutRefs.current[key] = null;
         }
         setOpenTooltip((prev) => ({ ...prev, [key]: false }));
     };
@@ -105,9 +112,9 @@ function Navbar() {
                     <Tooltip
                         title="Home"
                         arrow
-                        open={openTooltip.home}
-                        onOpen={() => handleTooltipOpen('home')}
-                        onClose={() => handleTooltipClose('home')}
+                        open={Boolean(openTooltip.home)}
+                        onMouseEnter={() => handleTooltipOpen('home')}
+                        onMouseLeave={() => handleTooltipClose('home')}
                         slotProps={{
                             popper: {
                                 modifiers: [
@@ -122,8 +129,8 @@ function Navbar() {
                         }}
                     >
                         <Button
-                            component = { Link }
-                            to = '/'
+                            component={Link}
+                            to="/"
                             variant="outlined"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('home')}
@@ -144,9 +151,9 @@ function Navbar() {
                     <Tooltip
                         title="Shop"
                         arrow
-                        open={openTooltip.shop}
-                        onOpen={() => handleTooltipOpen('shop')}
-                        onClose={() => handleTooltipClose('shop')}
+                        open={Boolean(openTooltip.shop)}
+                        onMouseEnter={() => handleTooltipOpen('shop')}
+                        onMouseLeave={() => handleTooltipClose('shop')}
                         slotProps={{
                             popper: {
                                 modifiers: [
@@ -181,9 +188,9 @@ function Navbar() {
                     <Tooltip
                         title="Deals"
                         arrow
-                        open={openTooltip.deals}
-                        onOpen={() => handleTooltipOpen('deals')}
-                        onClose={() => handleTooltipClose('deals')}
+                        open={Boolean(openTooltip.deals)}
+                        onMouseEnter={() => handleTooltipOpen('deals')}
+                        onMouseLeave={() => handleTooltipClose('deals')}
                         slotProps={{
                             popper: {
                                 modifiers: [
@@ -215,83 +222,143 @@ function Navbar() {
                         </Button>
                     </Tooltip>
 
-                    <Tooltip
-                        title="Create"
-                        arrow
-                        open={openTooltip.create}
-                        onOpen={() => handleTooltipOpen('create')}
-                        onClose={() => handleTooltipClose('create')}
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -14],
-                                        },
+                    {user ? (
+                        <>
+                            <Tooltip
+                                title="Profile"
+                                arrow
+                                open={Boolean(openTooltip.profile)}
+                                onMouseEnter={() => handleTooltipOpen('profile')}
+                                onMouseLeave={() => handleTooltipClose('profile')}
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -14],
+                                                },
+                                            },
+                                        ],
                                     },
-                                ],
-                            },
-                        }}
-                    >
-                        <Button
-                            component = { Link }
-                            to = '/user/create'
-                            variant="outlined"
-                            size="large"
-                            onMouseEnter={() => handleTooltipOpen('create')}
-                            onMouseLeave={() => handleTooltipClose('create')}
-                            sx={{
-                                color: '#eceff1',
-                                border: '.2rem solid #004d40',
-                                fontSize: '1.2rem',
-                                margin: '0 .5rem',
-                                minWidth: '8rem',
-                                padding: '.2rem 1.5rem',
-                            }}
-                        >
-                            Create
-                        </Button>
-                    </Tooltip>
+                                }}
+                            >
+                                <Button
+                                    component={Link}
+                                    to="/user/profile"
+                                    variant="outlined"
+                                    size="large"
+                                    onMouseEnter={() => handleTooltipOpen('profile')}
+                                    onMouseLeave={() => handleTooltipClose('profile')}
+                                    sx={{
+                                        color: '#eceff1',
+                                        border: '.2rem solid #004d40',
+                                        fontSize: '1.2rem',
+                                        margin: '0 .5rem',
+                                        minWidth: '8rem',
+                                        padding: '.2rem 1.5rem',
+                                    }}
+                                >
+                                    Profile
+                                </Button>
+                            </Tooltip>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                onClick={logout}
+                                sx={{
+                                    color: '#eceff1',
+                                    border: '.2rem solid #004d40',
+                                    fontSize: '1.2rem',
+                                    margin: '0 .5rem',
+                                    minWidth: '8rem',
+                                    padding: '.2rem 1.5rem',
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Tooltip
+                                title="Create"
+                                arrow
+                                open={Boolean(openTooltip.create)}
+                                onMouseEnter={() => handleTooltipOpen('create')}
+                                onMouseLeave={() => handleTooltipClose('create')}
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -14],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                }}
+                            >
+                                <Button
+                                    component={Link}
+                                    to="/user/create"
+                                    variant="outlined"
+                                    size="large"
+                                    onMouseEnter={() => handleTooltipOpen('create')}
+                                    onMouseLeave={() => handleTooltipClose('create')}
+                                    sx={{
+                                        color: '#eceff1',
+                                        border: '.2rem solid #004d40',
+                                        fontSize: '1.2rem',
+                                        margin: '0 .5rem',
+                                        minWidth: '8rem',
+                                        padding: '.2rem 1.5rem',
+                                    }}
+                                >
+                                    Create
+                                </Button>
+                            </Tooltip>
 
-                    <Tooltip
-                        title="Login"
-                        arrow
-                        open={openTooltip.login}
-                        onOpen={() => handleTooltipOpen('login')}
-                        onClose={() => handleTooltipClose('login')}
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -14],
-                                        },
+                            <Tooltip
+                                title="Login"
+                                arrow
+                                open={Boolean(openTooltip.login)}
+                                onMouseEnter={() => handleTooltipOpen('login')}
+                                onMouseLeave={() => handleTooltipClose('login')}
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -14],
+                                                },
+                                            },
+                                        ],
                                     },
-                                ],
-                            },
-                        }}
-                    >
-                        <Button
-                            component = { Link }
-                            to = '/user/login'
-                            variant="outlined"
-                            size="large"
-                            onMouseEnter={() => handleTooltipOpen('login')}
-                            onMouseLeave={() => handleTooltipClose('login')}
-                            sx={{
-                                color: '#eceff1',
-                                border: '.2rem solid #004d40',
-                                fontSize: '1.2rem',
-                                margin: '0 .5rem',
-                                minWidth: '8rem',
-                                padding: '.2rem 1.5rem',
-                            }}
-                        >
-                            Login
-                        </Button>
-                    </Tooltip>
+                                }}
+                            >
+                                <Button
+                                    component={Link}
+                                    to="/user/login"
+                                    variant="outlined"
+                                    size="large"
+                                    onMouseEnter={() => handleTooltipOpen('login')}
+                                    onMouseLeave={() => handleTooltipClose('login')}
+                                    sx={{
+                                        color: '#eceff1',
+                                        border: '.2rem solid #004d40',
+                                        fontSize: '1.2rem',
+                                        margin: '0 .5rem',
+                                        minWidth: '8rem',
+                                        padding: '.2rem 1.5rem',
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                            </Tooltip>
+                        </>
+                    )}
                 </Box>
 
                 <MenuSearch />
