@@ -4,7 +4,8 @@
 // Dependencies 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, Box, Typography, TextField } from '@mui/material';
+import { Avatar, Box, Button, Typography, TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 // Components & Necessary Files 
@@ -21,7 +22,7 @@ function Profile() {
 
     const { user } = useUser();
 
-    return(
+    return (
         <div
             className='profile-container'
             style={{
@@ -29,7 +30,7 @@ function Profile() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 marginTop: '10rem',
-                maxWidth: '35rem',
+                maxWidth: '45rem',
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 border: '.2rem solid #004d40',
@@ -37,7 +38,7 @@ function Profile() {
                 padding: '2rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
             }}
-        >
+            >
             <Avatar
                 src={user.image}
                 alt='User profile'
@@ -56,82 +57,122 @@ function Profile() {
             >
                 Welcome, <span style={{ color: '#ab003c' }}>{user.username}</span>
             </Typography>
+
+            {/* Email Field */}
             <Box
                 sx={{
                     display: 'flex',
                     width: '100%',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '0.5rem',
+                    marginBottom: '1rem',
                 }}
             >
                 <Typography
                     variant='h4'
-                    sx={{
-                        color: '#ab003c',
-                    }}
+                    sx={{ color: '#ab003c' }}
                 >
                     Email:
                 </Typography>
-                <Typography
-                    variant='h4'
-                    sx={{
-                        color: '#fafafa',
-                    }}
-                >
-                    {user.email}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                        variant='h4'
+                        sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                    >
+                        {user.email}
+                    </Typography>
+                    <Button
+                        size='small'
+                        sx={{
+                            minWidth: 'auto', // To keep button compact
+                            color: '#fafafa',
+                            border: '.2rem solid #004d40',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            padding: '0.3rem',
+                        }}
+                    >
+                        <EditIcon sx={{ color: '#ab003c' }} />
+                    </Button>
+                </Box>
             </Box>
+
+            {/* Balance Field */}
             <Box
                 sx={{
                     display: 'flex',
                     width: '100%',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '0.5rem',
+                    marginBottom: '1rem',
                 }}
             >
                 <Typography
                     variant='h4'
-                    sx={{
-                        color: '#ab003c',
-                    }}
+                    sx={{ color: '#ab003c' }}
                 >
                     Balance:
                 </Typography>
-                <Typography
-                    variant='h4'
-                    sx={{
-                        color: '#fafafa',
-                    }}
-                >
-                    ${user.balance}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                        variant='h4'
+                        sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                    >
+                        ${user.balance}
+                    </Typography>
+                    <Button
+                        size='small'
+                        sx={{
+                            minWidth: 'auto',
+                            color: '#fafafa',
+                            border: '.2rem solid #004d40',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            padding: '0.3rem',
+                        }}
+                    >
+                        <EditIcon sx={{ color: '#ab003c' }} />
+                    </Button>
+                </Box>
             </Box>
+
+            {/* Account Created Field */}
             <Box
                 sx={{
                     display: 'flex',
                     width: '100%',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
+                    marginBottom: '1rem',
                 }}
             >
                 <Typography
                     variant='h4'
-                    sx={{
-                        color: '#ab003c',
-                    }}
+                    sx={{ color: '#ab003c' }}
                 >
                     Account Created:
                 </Typography>
-                <Typography
-                    variant='h4'
-                    sx={{
-                        color: '#fafafa',
-                    }}
-                >
-                    {new Date(user.created_at).toLocaleDateString()}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                        variant='h4'
+                        sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                    >
+                        {new Date(user.created_at).toLocaleDateString()}
+                    </Typography>
+                    <Button
+                        size='small'
+                        sx={{
+                            minWidth: 'auto',
+                            color: '#fafafa',
+                            border: '.2rem solid #004d40',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            padding: '0.3rem',
+                        }}
+                    >
+                        <EditIcon sx={{ color: '#ab003c' }} />
+                    </Button>
+                </Box>
             </Box>
         </div>
-    )
+    );
 }
 
 export default Profile;
