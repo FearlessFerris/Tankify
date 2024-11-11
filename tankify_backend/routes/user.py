@@ -23,58 +23,90 @@ def homepage():
     return "<h1>Welcome to Tankify!</h1><p>Your one-stop shop for tanks and tank-related products.</p>"
 
 
-@user_routes.route( '/api/create', methods = [ 'POST' ] )
-@error_handler( 400, 'Bad Request - Unable to create user do to invalid input' )
-def create_user(): 
+# Create User Route 
+@user_routes.route('/api/create', methods=['POST'])
+@error_handler(400, 'Bad Request - Unable to create user due to invalid input')
+def create_user():
     """ Creates User Account Instance """
 
-    data = request.get_json()
-    username = data.get( 'username' )
-    password = data.get( 'password' )
-    email = data.get( 'email' )
-    image = data.get( 'image' )
+    data = request.form
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    image = request.files.get('image')
+    link = data.get('link')
 
-    if not username and password and email:
-        return jsonify({ 'message': 'Please complete all required fields!' }), 401
-    
-    new_user = User.create_user( username = username, password = password, email = email, image = image )
-    return jsonify({ 
-        'message': f'Congratulations { new_user.username }, your account was successfully created!', 
-        'user': {
-        'id': new_user.id,
-        'username': new_user.username,
-        'email': new_user.email,
-        'image': new_user.image,
-        'created_at': new_user.created_at
-    }}), 201
+    if not username or not password or not email:
+        return jsonify({'message': 'Please complete all required fields!'}), 400
+
+    try:
+        new_user = User.create_user(username=username, password=password, email=email)
+
+        if image:
+            upload_result = new_user.upload_image(file=image)
+            if not upload_result['success']:
+                return jsonify({'message': upload_result['error']}), 400
+
+        elif link:
+            upload_result = new_user.upload_image(link=link)
+            if not upload_result['success']:
+                return jsonify({'message': upload_result['error']}), 400
+
+        return jsonify({
+            'message': f'Congratulations {new_user.username}, your account was successfully created!',
+            'user': new_user.get_user_profile()
+        }), 201
+
+    except Exception as e:
+        print(f'Error creating new user: {e}')
+        return jsonify({'message': 'Unable to create new user. Please try again!'}), 500
 
 
-@user_routes.route( '/api/login', methods = [ 'POST' ] )
-@error_handler( 401, 'Unauthorized - Invalid credentials provided' )
+# Login User Route
+@user_routes.route('/api/login', methods=['POST'])
+@error_handler(401, 'Unauthorized - Invalid credentials provided')
 def login_user():
     """ Login / Authenticate User Instance """
 
     data = request.get_json()
 
-    if not data or not data.get( 'username' ) or not data.get( 'password' ):
-        raise ValueError( 'Username and Password are required!' )
-    
-    username = data.get( 'username' )
-    password = data.get( 'password' )
-    user = User.login_user( username, password )
-    
-    if not user: 
-        raise ValueError( 'Invalid Username / Password' )
-    
-    return jsonify({
-        'message': f'Welcome back { user.username }, hope you are well today!',
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'balance': user.balance,
-            'image': user.image,
-            'created_at': user.created_at
-        } 
-    }), 200 
+    if not data or not data.get('username') or not data.get('password'):
+        return jsonify({'message': 'Username and Password are required!'}), 400
 
+    username = data.get('username')
+    password = data.get('password')
+    user = User.login_user(username, password)
+
+    if not user:
+        return jsonify({'message': 'Invalid Username / Password'}), 401
+
+    return jsonify({
+        'message': f'Welcome back {user.username}, hope you are well today!',
+        'user': user.get_user_profile()
+    }), 200
+
+
+# Edit User Route
+@user_routes.route('/api/edit_user/<user_id>', methods=['PUT'])
+@error_handler(400, 'Bad Request - Unable to update user profile')
+def edit_user(user_id):
+    """ Edit User Profile """
+
+    data = request.get_json()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    try:
+        # Update the user's profile using the `update_profile` method
+        update_result = user.update_profile(**data)
+
+        if update_result['success']:
+            return jsonify(update_result), 200
+        else:
+            return jsonify(update_result), 500
+
+    except Exception as e:
+        print(f'Error updating user: {e}')
+        return jsonify({'message': 'Unable to update user profile. Please try again!'}), 500

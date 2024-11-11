@@ -4,12 +4,14 @@
 // Dependencies 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, Box, Button, Typography, TextField } from '@mui/material';
+import { Avatar, Backdrop, Box, Button, Typography, TextField } from '@mui/material';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
 
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
+import EditUser from './Edituser';
 
 
 // Context Providers 
@@ -21,6 +23,17 @@ import { formControlClasses } from '@mui/material';
 function Profile() {
 
     const { user } = useUser();
+    const [ hover, setHover ] = useState( false );
+    const [ open, setOpen ] = useState( false );
+
+    const onOpen = () => {
+        setOpen( true );
+    }
+
+    const onClose = () => {
+        setOpen( false );
+    }
+
 
     return (
         <div
@@ -37,17 +50,45 @@ function Profile() {
                 borderRadius: '.3rem',
                 padding: '2rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                overflow: 'hidden'
             }}
-            >
-            <Avatar
-                src={user.image}
-                alt='User profile'
+        >
+            <Box
                 sx={{
-                    width: '7rem',
-                    height: '7rem',
-                    marginBottom: '1rem',
+                    position: 'relative',
+                    width: '12rem',
+                    height: '12rem',
                 }}
-            />
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+            >
+                <img
+                    src={user.image}
+                    alt="User profile"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '.2rem solid #004d40',
+                    }}
+                />
+                {hover && (
+                    <PhotoCamera
+                        sx={{
+                            position: 'absolute',
+                            bottom: '0.5rem',
+                            right: '0.5rem',
+                            color: '#004d40',
+                            fontSize: '2.5rem',
+                            backgroundColor: '#ab003c',
+                            borderRadius: '50%',
+                            padding: '0.3rem',
+                            cursor: 'pointer',
+                        }}
+                    />
+                )}
+            </Box>
             <Typography
                 variant='h2'
                 sx={{
@@ -57,8 +98,6 @@ function Profile() {
             >
                 Welcome, <span style={{ color: '#ab003c' }}>{user.username}</span>
             </Typography>
-
-            {/* Email Field */}
             <Box
                 sx={{
                     display: 'flex',
@@ -81,22 +120,8 @@ function Profile() {
                     >
                         {user.email}
                     </Typography>
-                    <Button
-                        size='small'
-                        sx={{
-                            minWidth: 'auto', // To keep button compact
-                            color: '#fafafa',
-                            border: '.2rem solid #004d40',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                            padding: '0.3rem',
-                        }}
-                    >
-                        <EditIcon sx={{ color: '#ab003c' }} />
-                    </Button>
                 </Box>
             </Box>
-
-            {/* Balance Field */}
             <Box
                 sx={{
                     display: 'flex',
@@ -119,22 +144,8 @@ function Profile() {
                     >
                         ${user.balance}
                     </Typography>
-                    <Button
-                        size='small'
-                        sx={{
-                            minWidth: 'auto',
-                            color: '#fafafa',
-                            border: '.2rem solid #004d40',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                            padding: '0.3rem',
-                        }}
-                    >
-                        <EditIcon sx={{ color: '#ab003c' }} />
-                    </Button>
                 </Box>
             </Box>
-
-            {/* Account Created Field */}
             <Box
                 sx={{
                     display: 'flex',
@@ -157,20 +168,38 @@ function Profile() {
                     >
                         {new Date(user.created_at).toLocaleDateString()}
                     </Typography>
-                    <Button
-                        size='small'
-                        sx={{
-                            minWidth: 'auto',
-                            color: '#fafafa',
-                            border: '.2rem solid #004d40',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                            padding: '0.3rem',
-                        }}
-                    >
-                        <EditIcon sx={{ color: '#ab003c' }} />
-                    </Button>
                 </Box>
             </Box>
+                <Button 
+                    onClick = { onOpen }
+                    size = 'large'
+                    variant = 'outlined'
+                    startIcon = { <EditIcon sx = {{ color: '#ab003c' }} /> }
+                    sx={{
+                        color: '#fafafa',
+                        border: '.2rem solid #004d40',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                    }}
+                >
+                Edit
+                </Button> 
+
+                <Box 
+                    sx = {{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                    }}
+                >
+                    <Backdrop 
+                        open = { open }
+                        onClick = { onClose }
+                    >
+                    { open && (
+                        <EditUser user = { user } onClose = { onClose } /> 
+                    )}
+                    </Backdrop>
+                </Box>
         </div>
     );
 }

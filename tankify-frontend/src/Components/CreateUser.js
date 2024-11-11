@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
-import { CheckCircle, CloudUploadOutlined, DeleteOutline, Error } from '@mui/icons-material';
+import { CheckCircle, CloudUploadOutlined, DeleteOutline, Error, LinkOutlined } from '@mui/icons-material';
 
 
 // Components & Necessary Files 
@@ -18,6 +18,7 @@ function CreateUser() {
 
     const navigate = useNavigate();
     const showAlert = useAlert();
+    const [linkImage, setLinkImage] = useState(false);
     const [fileName, setFileName] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [form, setForm] = useState({
@@ -38,12 +39,19 @@ function CreateUser() {
         if (id === 'password' || id === 'confirmPassword') {
             setPasswordsMatch(value === (id === 'password' ? form.confirmPassword : form.password));
         }
+
+        if (id === 'image') {
+            setForm({ ...form, image: value });
+            setLinkImage(true);
+            setFileName('');
+        }
     };
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setForm({ ...form, image: e.target.files[0] });
             setFileName(e.target.files[0].name)
+            setLinkImage(false);
         }
     };
 
@@ -52,6 +60,12 @@ function CreateUser() {
             ...form,
             image: null
         });
+        setFileName('');
+    }
+
+    const handleLinkImage = () => {
+        setLinkImage(true);
+        setForm({ ...form, image: '' });
         setFileName('');
     }
 
@@ -65,19 +79,25 @@ function CreateUser() {
         formData.append('username', form.username);
         formData.append('password', form.password);
         formData.append('email', form.email);
-        if (form.image) {
+
+        if (form.image && typeof form.image !== 'string') {
             formData.append('image', form.image);
         }
-        if ( form.username === '' ){
-            showAlert( 'Username field is required!', 'error' )
-            return
-        }
-        if( form.password === '' || form.confirmPassword === '' ){
-            showAlert( 'Password field is required!', 'error' );
-            return
+
+        if (form.image && typeof form.image === 'string') {
+            formData.append('link', form.image);
         }
 
-         try {
+        if (form.username === '') {
+            showAlert('Username field is required!', 'error')
+            return
+        }
+        if (form.password === '' || form.confirmPassword === '') {
+            showAlert('Password field is required!', 'error');
+            return
+        }
+        
+        try {
             const response = await apiClient.post('/create', formData);
             setForm({
                 username: '',
@@ -86,12 +106,16 @@ function CreateUser() {
                 email: '',
                 image: null
             });
-            showAlert( response.data.message, 'success' );
-            navigate( '/user/login' );
+            setFileName('');
+            setLinkImage(false);
+            showAlert(response.data.message, 'success');
+            navigate('/user/login');
         }
-        catch {
-            console.error('Error creating a new user!');
+        catch (error) {
+            console.error('Error creating a new user!', error.response ? error.response.data : error.message);
+            showAlert('Unable to create a new user. Please try again.', 'error');
         }
+
     }
 
     const getAdornmentColor = (isValid) => (isValid ? '#004d40' : '#ab003c');
@@ -139,7 +163,6 @@ function CreateUser() {
                         marginBottom: '2rem'
                     }}
                 >
-                    {/* Username Field */}
                     <div
                         style={{
                             display: 'flex',
@@ -402,9 +425,10 @@ function CreateUser() {
                     <div
                         style={{
                             display: 'flex',
-                            flexDirection: 'column',
+                            flexDirection: 'row',
                             alignItems: 'center',
                             marginTop: '1rem',
+                            marginBottom: '1rem',
                         }}
                     >
                         <Button
@@ -418,64 +442,138 @@ function CreateUser() {
                                 display: 'flex',
                                 border: '.2rem solid #004d40',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                marginBottom: '1rem',
                             }}
                         >
-                            Image
+                            Upload Image
                             <input
                                 type='file'
+                                name='image'
                                 hidden
                                 onChange={handleFileChange}
                             />
                         </Button>
-                        {fileName && (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    width: '100%',
-                                    maxWidth: '300px',
-                                    marginBottom: '1rem',
-                                }}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{
-                                        color: '#fafafa',
-                                        textAlign: 'left',
-                                        flexGrow: 1,
-                                    }}
-                                >
-                                    {fileName}
-                                </Typography>
-                                <IconButton
-                                    onClick={handleFileRemove}
-                                    sx={{
-                                        color: '#ab003c',
-                                    }}
-                                >
-                                    <DeleteOutline />
-                                </IconButton>
-                            </div>
-                        )}
-                    </div>
-                    <div>
                         <Button
-                            onClick={handleSubmit}
+                            onClick={() => handleLinkImage()}
+                            component='label'
                             variant='outlined'
                             size='large'
+                            startIcon={<LinkOutlined />}
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
                                 border: '.2rem solid #004d40',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                marginTop: '1rem'
+                                marginLeft: '1rem'
                             }}
                         >
-                            Create
+                            Link Image
                         </Button>
                     </div>
+                    {fileName && (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                maxWidth: '300px',
+                                marginBottom: '1rem',
+                                border: '.2rem solid #004d40',
+                                borderRadius: '.3rem',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            }}
+                        >
+                            <Typography
+                                variant='body2'
+                                sx={{
+                                    color: '#fafafa',
+                                    textAlign: 'center',
+                                    flexGrow: 1,
+                                }}
+                            >
+                                {fileName}
+                            </Typography>
+                            <IconButton
+                                onClick={handleFileRemove}
+                                sx={{
+                                    color: '#ab003c',
+                                }}
+                            >
+                                <DeleteOutline />
+                            </IconButton>
+                        </Box>
+                    )}
+
+                    {linkImage && !fileName && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginTop: '1rem',
+                                marginBottom: '1rem',
+                            }}
+                        >
+
+                            <TextField
+                                id='image'
+                                label='Image URL'
+                                placeholder='Enter the URL for your image'
+                                variant='outlined'
+                                size='small'
+                                value={form.image}
+                                onChange={handleChange}
+                                sx={{
+                                    input: {
+                                        color: '#fafafa',
+                                        width: '18rem'
+                                    },
+                                    label: {
+                                        color: '#fafafa'
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            borderColor: '#004d40',
+                                            border: '.2rem solid #004d40',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#004d40',
+                                            border: '.2rem solid #004d40',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#004d40',
+                                            border: '.2rem solid #004d40',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        },
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                        color: '#fafafa',
+                                    },
+                                    '& .MuiInputLabel-root.Mui-focused': {
+                                        color: '#fafafa',
+                                    },
+                                    width: '100%',
+                                    marginBottom: '1rem'
+                                }}
+                            ></TextField>
+                        </div>
+                    )}
+                    <Button
+                        type='submit'
+                        variant='outlined'
+                        size='large'
+                        sx={{
+                            color: '#fafafa',
+                            display: 'flex',
+                            border: '.2rem solid #004d40',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        Create
+                    </Button>
                 </Box>
             </form>
         </div>

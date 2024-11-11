@@ -13,6 +13,7 @@ import bcrypt
 
 
 # Necessary Files 
+from s3_utils import get_s3_client, BUCKET_NAME 
 
 
 # Other Settings 
@@ -39,9 +40,9 @@ class User( Base ):
     reviews = relationship( 'Review', back_populates='user', lazy=True )
     inventory = relationship( 'Inventory', back_populates='user', lazy=True )
 
-    def __init__( self, username, password_hash, email, balance = 1000, image = None ):
+    def __init__( self, username, password, email, balance = 1000, image = None ):
         self.username = username 
-        self.password_hash = password_hash 
+        self.set_password( password )
         self.email = email 
         self.balance = balance
         self.image = image
@@ -57,13 +58,62 @@ class User( Base ):
             'image': self.image,
         }
         return user
+    
+    def set_password( self, password ):
+        """ Sets a User Instance Password """
+
+        self.password_hash = bcrypt.hashpw( password.encode( 'utf-8' ), bcrypt.gensalt( 12 )).decode( 'utf-8' )
+
+    def verify_password( self, password ):
+        """ Verifies the instance of a User Password """
+
+        return bcrypt.checkpw( password.encode( 'utf-8' ), self.password_hash.encode( 'utf-8' ))
+
+    def upload_image( self, file = None, link = None ):
+        """ Upload Profile Image or Link to Image """
+
+        if file:
+            s3 = get_s3_client()
+            key = f'user_{ self.id }/{ file.filename }'
+            try:
+                s3.upload_fileobj( file, BUCKET_NAME, key )
+                self.image = f'https://{ BUCKET_NAME }.s3.amazonaws.com/{ key }'
+                print( self.image )
+                db.session.commit()
+                return { 'success': True, 'image_url': self.image }
+            except Exception as e: 
+                print( f'Error uploading image file to S3: { e }' )
+                return { 'success': False, 'error': str( e ) }
+        elif link:
+            if link.startswith( 'http://' ) or link.startswith( 'https://' ):
+                self.image = link
+                db.session.commit()
+                return { 'success': True, 'image_url': self.image }
+            else: 
+                return { 'success': False, 'error': 'Invalid URL Format' }
+        return { 'success': False, 'error': 'No File Provided' }
+    
+    def update_profile( self, **kwargs ):
+        """ Updates any / all fields of a User Instance """
+
+        for key, value in kwargs.items():
+            if key == 'password':
+                self.set_password( value )
+            elif hasattr( self, key ):
+                setattr( self, key, value )
         
+        try: 
+            db.session.commit()
+            return { 'success': True, 'message': 'User updated successfully', 'user': self.get_user_profile() }
+        except Exception as e: 
+            db.session.rollback()
+            return { 'success': False, 'error': str( e ) }
+
     @classmethod 
     def create_user( cls, username, password, email, image = None ):
         """ Create New User Instance """
 
-        hashed_pw = bcrypt.hashpw( password.encode( 'utf-8' ), bcrypt.gensalt( 12 )).decode( 'utf-8' )
-        new_user = cls( username = username, password_hash = hashed_pw, email = email, image = image )
+        new_user = cls( username = username, password = password, email = email, image = image )
         db.session.add( new_user )
         db.session.commit()
         return new_user
@@ -73,9 +123,9 @@ class User( Base ):
         """ Login / Authenticate User Instance """
 
         user = cls.query.filter_by( username = username ).first()
-        if user and bcrypt.checkpw( password.encode( 'utf-8' ), user.password_hash.encode( 'utf8' )):
-            return user 
-        return None
+        if user and user.verify_password( password ):
+            return user
+        return None 
 
     
 class Tank( Base ):
