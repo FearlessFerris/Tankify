@@ -2,7 +2,7 @@
 
 
 // Dependencies 
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -39,22 +39,22 @@ const theme = createTheme({
 // Tankify Application 
 function App() {
     return (
-        <UserProvider>
-        <AlertProvider>
-            <ThemeProvider theme={ theme }>
-                <CssBaseline />
-                <Router>
-                    <Navbar />
-                    <Routes>
-                        <Route exact path = '/' element ={ <Home /> } />
-                        <Route exact path = '/user/create' element = { <CreateUser /> } />
-                        <Route exact path = '/user/profile' element = { <Profile /> } /> 
-                        <Route exact path = '/user/login' element = { <Login /> } />
-                    </Routes>
-                </Router>
-            </ThemeProvider>
-        </AlertProvider>
-        </UserProvider>
+        <Router>
+            <UserProvider>
+                <AlertProvider>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Navbar />
+                        <Routes>
+                            <Route exact path='/' element={<Home />} />
+                            <Route exact path='/user/create' element={<CreateUser />} />
+                            <Route exact path='/user/profile' element={<Profile />} />
+                            <Route exact path='/user/login' element={<Login />} />
+                        </Routes>
+                    </ThemeProvider>
+                </AlertProvider>
+            </UserProvider>
+        </Router>
     );
 }
 

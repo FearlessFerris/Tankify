@@ -193,7 +193,7 @@ function Profile() {
                 >
                     <Backdrop 
                         open = { open }
-                        onClick = { onClose }
+                        onClose = { onClose }
                     >
                     { open && (
                         <EditUser user = { user } onClose = { onClose } /> 

@@ -56,6 +56,7 @@ class User( Base ):
             'email': self.email,
             'balance': self.balance,
             'image': self.image,
+            'created_at': self.created_at
         }
         return user
     
@@ -88,26 +89,39 @@ class User( Base ):
             if link.startswith( 'http://' ) or link.startswith( 'https://' ):
                 self.image = link
                 db.session.commit()
-                return { 'success': True, 'image_url': self.image }
+                return { 'success': True, 'image_url': self.image, 'user': self.get_user_profile() }
             else: 
                 return { 'success': False, 'error': 'Invalid URL Format' }
         return { 'success': False, 'error': 'No File Provided' }
     
-    def update_profile( self, **kwargs ):
+    def update_profile(self, **kwargs):
         """ Updates any / all fields of a User Instance """
+    
+        if 'password' in kwargs and 'newPassword' in kwargs and 'confirmNewPassword' in kwargs:
+            current_password = kwargs['password']
+            new_password = kwargs['newPassword']
+            confirm_password = kwargs['confirmNewPassword']
+        
+            if not self.verify_password( current_password ):
+                return {'success': False, 'message': 'Current password is incorrect'}
+
+            if new_password != confirm_password:
+                return {'success': False, 'message': 'New password and confirm password do not match'}
+        
+            if current_password == new_password:
+                return {'success': False, 'message': 'New password must be different from the current password'}
+
+            self.set_password(new_password)
 
         for key, value in kwargs.items():
-            if key == 'password':
-                self.set_password( value )
-            elif hasattr( self, key ):
-                setattr( self, key, value )
-        
-        try: 
+            if key not in ['password', 'newPassword', 'confirmNewPassword'] and hasattr(self, key):
+                setattr(self, key, value)
+        try:
             db.session.commit()
-            return { 'success': True, 'message': 'User updated successfully', 'user': self.get_user_profile() }
-        except Exception as e: 
+            return {'success': True, 'message': f'{ self.username }, your profile was updated successfully', 'user': self.get_user_profile()} 
+        except Exception as e:
             db.session.rollback()
-            return { 'success': False, 'error': str( e ) }
+            return {'success': False, 'error': str(e)}
 
     @classmethod 
     def create_user( cls, username, password, email, image = None ):

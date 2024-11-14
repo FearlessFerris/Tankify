@@ -92,19 +92,33 @@ def login_user():
 def edit_user(user_id):
     """ Edit User Profile """
 
-    data = request.get_json()
+    data = request.form
     user = User.query.get(user_id)
+    image_file = request.files.get('image')
+    image_link = data.get('imageLink')
 
     if not user:
         return jsonify({'message': 'User not found'}), 404
 
     try:
-        # Update the user's profile using the `update_profile` method
-        update_result = user.update_profile(**data)
+        # Handle image file or image link update
+        if image_file:
+            upload_result = user.upload_image(file=image_file)
+            if not upload_result['success']:
+                return jsonify({'message': upload_result['error']}), 400
+        elif image_link:
+            upload_result = user.upload_image(link=image_link)
+            if not upload_result['success']:
+                return jsonify({'message': upload_result['error']}), 400
+
+        # Update other profile information
+        update_data = {key: value for key, value in data.items() if key not in ['image', 'imageLink']}
+        update_result = user.update_profile(**update_data)
 
         if update_result['success']:
             return jsonify(update_result), 200
         else:
+            print('Failed to update profile fields')
             return jsonify(update_result), 500
 
     except Exception as e:

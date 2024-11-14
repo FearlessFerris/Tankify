@@ -265,7 +265,7 @@ function Navbar() {
                             <Button
                                 variant="outlined"
                                 size="large"
-                                onClick={logout}
+                                onClick={ () => logout() }
                                 sx={{
                                     color: '#eceff1',
                                     border: '.2rem solid #004d40',
