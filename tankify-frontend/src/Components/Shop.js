@@ -1,22 +1,21 @@
-// Home Component Implementation 
+// Shop Component Implementation 
 
 
 // Dependencies 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Box, TextField, Typography } from '@mui/material';
 
 
 // Components & Necessary Files 
 
 
-// Home Component 
-function Home(){
+// Shop Component 
+function Shop() {
 
 
-
-    return( 
-        <div
-            className = 'home-component'
+    return(
+        <div    
+            className = 'shop-container'
             style = {{
                 color: '#eceff1',
                 display: 'flex',
@@ -25,11 +24,9 @@ function Home(){
                 marginTop: '10rem'
             }}
         >
-
-
-            <h1> Explore... </h1>
+            <h1> Shop Component </h1>
         </div>
     )
 }
 
-export default Home;
+export default Shop;

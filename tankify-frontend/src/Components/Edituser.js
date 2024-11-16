@@ -79,7 +79,7 @@ function EditUser({ user, onClose }) {
     
     const handleSaveChanges = async () => {
         try {
-            const formData = new FormData();
+            const formData = new FormData()
             if (form.username && form.username !== user.username) {
                 formData.append('username', form.username)
             }
@@ -96,7 +96,6 @@ function EditUser({ user, onClose }) {
             } else if (linkImage) {
                 formData.append('imageLink', form.image);
             }
-            console.log(formData);
             const response = await apiClient.put(`/edit_user/${user.id}`, formData);
             if (response.status === 200) {
                 console.log('success');
@@ -137,7 +136,7 @@ function EditUser({ user, onClose }) {
                         borderRadius: '1rem',
                         border: '.2rem solid #fafafa',
                         display: 'flex',
-                        height: '45rem',
+                        minHeight: 'fit-content',
                         flexDirection: 'column',
                         width: '30rem',
                     }}
@@ -605,8 +604,8 @@ function EditUser({ user, onClose }) {
                         style={{
                             display: 'flex',
                             flexDirection: 'row',
-                            bottom: '24rem',
-                            position: 'absolute'
+                            marginTop: '3rem',
+                            marginBottom: '2rem'
                         }}
                     >
 

@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Box, Container, Button, TextField, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Container, Button, TextField, Tooltip, Typography } from '@mui/material';
 
 
 // Necessary Files & Components 
@@ -21,20 +21,24 @@ function Navbar() {
 
     const { user, logout } = useUser();
     const [openTooltip, setOpenTooltip] = useState({
+        avatar: false,
         home: false,
         shop: false,
         deals: false,
         create: false,
         login: false,
+        logout: false,
         profile: false,
     });
 
     const timeoutRefs = useRef({
+        avatar: null,
         home: null,
         shop: null,
         deals: null,
         create: null,
         login: null,
+        logout: null,
         profile: null,
     });
 
@@ -44,7 +48,7 @@ function Navbar() {
         }
         timeoutRefs.current[key] = setTimeout(() => {
             setOpenTooltip((prev) => ({ ...prev, [key]: true }));
-        }, 1000);
+        }, 500);
     };
 
     const handleTooltipClose = (key) => {
@@ -168,6 +172,8 @@ function Navbar() {
                         }}
                     >
                         <Button
+                            component = { Link }
+                            to = '/shop'
                             variant="outlined"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('shop')}
@@ -262,6 +268,25 @@ function Navbar() {
                                     Profile
                                 </Button>
                             </Tooltip>
+                            <Tooltip
+                                title="Logout"
+                                arrow
+                                open={Boolean(openTooltip.logout)}
+                                onMouseEnter={() => handleTooltipOpen('logout')}
+                                onMouseLeave={() => handleTooltipClose('logout')}
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -14],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                }}
+                            >
                             <Button
                                 variant="outlined"
                                 size="large"
@@ -274,9 +299,10 @@ function Navbar() {
                                     minWidth: '8rem',
                                     padding: '.2rem 1.5rem',
                                 }}
-                            >
+                                >
                                 Logout
                             </Button>
+                        </Tooltip>
                         </>
                     ) : (
                         <>
@@ -361,7 +387,45 @@ function Navbar() {
                     )}
                 </Box>
 
-                <MenuSearch />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    <MenuSearch />
+                    {user && (
+                        <Tooltip 
+                            title="User Profile" 
+                            arrow
+                            open={Boolean(openTooltip.avatar)}
+                            onMouseEnter={() => handleTooltipOpen('avatar')}
+                            onMouseLeave={() => handleTooltipClose('avatar')}
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [0, -14],
+                                            },
+                                        },
+                                    ],
+                                },
+                            }}
+                        >
+                            <Avatar
+                                src={user.image}
+                                alt="User profile"
+                                sx={{
+                                    marginLeft: '1rem',
+                                    width: '3rem',
+                                    height: '3rem',
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                </Box>
             </Box>
         </AppBar>
     );
