@@ -24,7 +24,7 @@ function Shop() {
                 marginTop: '10rem'
             }}
         >
-            <h1> Shop Component </h1>
+            <h1> Shop Component... </h1>
         </div>
     )
 }

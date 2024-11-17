@@ -33,12 +33,12 @@ class User( Base ):
     image = Column( String, nullable = True )
     balance = Column( Integer, default = 1000 )
     created_at = Column( DateTime, server_default = func.now() )
-    updated_at = Column( DateTime, server_default = func.now() )
+    updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
 
     # Relationships with back_populates and overlaps
-    transactions = relationship( 'Transaction', back_populates='user', lazy=True )
-    reviews = relationship( 'Review', back_populates='user', lazy=True )
-    inventory = relationship( 'Inventory', back_populates='user', lazy=True )
+    transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
+    reviews = relationship( 'Review', back_populates='user', lazy= 'select' )
+    inventory = relationship( 'Inventory', back_populates='user', lazy= 'select' )
 
     def __init__( self, username, password, email, balance = 1000, image = None ):
         self.username = username 
@@ -159,6 +159,35 @@ class Tank( Base ):
     inventory = relationship( 'Inventory', back_populates='tank', lazy=True )
 
 
+    def __init__( self, name, description, price, image_url, rating ):
+        self.name = name 
+        self.description = description 
+        self.price = price 
+        self.image_url = image_url 
+        self.rating = rating 
+    
+    def show_profile( self ):
+        """ Retrieve Tank Profile """
+
+        tank = {
+            'id': str( self.id ),
+            'name': self.name,
+            'description': self.description,
+            'price': self.price,
+            'image_url': self.image_url,
+            'rating': self.rating
+        }
+        return tank
+    
+    @classmethod 
+    def get__all( cls ):
+        """ Retrieve all Tank Class Instances """
+
+        tanks = cls.query.all()
+        tank_list = [ tank.show_profile() for tank in tanks ]
+        return tank_list
+
+
 class Transaction( Base ):
     """ Transaction Model """
 
@@ -177,7 +206,7 @@ class Transaction( Base ):
 class Review( Base ):
     """ Review Model """
 
-    __tablename__ = 'reviews'
+    __tablename__ = 'reviews', 
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
     tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )

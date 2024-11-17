@@ -2,17 +2,18 @@
 
 
 // Dependencies 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 
 // Components & Necessary Files 
+import Carousel from './Carousel';
 
 
 // Home Component 
 function Home(){
 
-
+    
 
     return( 
         <div
@@ -27,7 +28,8 @@ function Home(){
         >
 
 
-            <h1> Explore... </h1>
+            {/* <h1> Explore... </h1> */}
+            <Carousel /> 
         </div>
     )
 }

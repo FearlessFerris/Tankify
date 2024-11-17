@@ -34,7 +34,6 @@ function Profile() {
         setOpen( false );
     }
 
-
     return (
         <div
             className='profile-container'

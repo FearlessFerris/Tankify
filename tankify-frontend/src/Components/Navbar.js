@@ -24,7 +24,6 @@ function Navbar() {
         avatar: false,
         home: false,
         shop: false,
-        deals: false,
         create: false,
         login: false,
         logout: false,
@@ -35,7 +34,6 @@ function Navbar() {
         avatar: null,
         home: null,
         shop: null,
-        deals: null,
         create: null,
         login: null,
         logout: null,
@@ -190,44 +188,6 @@ function Navbar() {
                             Shop
                         </Button>
                     </Tooltip>
-
-                    <Tooltip
-                        title="Deals"
-                        arrow
-                        open={Boolean(openTooltip.deals)}
-                        onMouseEnter={() => handleTooltipOpen('deals')}
-                        onMouseLeave={() => handleTooltipClose('deals')}
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -14],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}
-                    >
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            onMouseEnter={() => handleTooltipOpen('deals')}
-                            onMouseLeave={() => handleTooltipClose('deals')}
-                            sx={{
-                                color: '#eceff1',
-                                border: '.2rem solid #004d40',
-                                fontSize: '1.2rem',
-                                margin: '0 .5rem',
-                                minWidth: '8rem',
-                                padding: '.2rem 1.5rem',
-                            }}
-                        >
-                            Deals
-                        </Button>
-                    </Tooltip>
-
                     {user ? (
                         <>
                             <Tooltip
