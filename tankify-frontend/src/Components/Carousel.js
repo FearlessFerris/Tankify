@@ -14,14 +14,18 @@ import apiClient from '../api/apiClient';
 function Carousel() {
 
     const [ tanks, setTanks ] = useState([]);
+    console.log( tanks );
 
     useEffect(() => {
        const fetchTanks = async () => {
         try{
             const response = await apiClient.get( '/tanks/all' );
             console.log( response );
-            console.log( response.data.tanks );
-            setTanks( response.data.tanks );
+            const apiTanks = Object.values( response.data.data || {} );
+            const localTanks = response.data.tanks || [];
+            const combinedTanks = [ ...apiTanks, localTanks ];
+            setTanks( combinedTanks ); 
+            console.log( combinedTanks );
         }
         catch{
             console.error( 'Error retrieving tanks!' );
@@ -42,8 +46,58 @@ function Carousel() {
             <h1
 
             > Tank Inventory </h1>
-
-            <Box > 
+<Box>
+    {tanks && tanks.length > 0 ? (
+        tanks.map((tank ) => (
+            <Card
+                key={ tank.tank_id  }
+                sx={{
+                    alignItems: 'center',
+                    border: '.2rem solid #ab003c',
+                    borderRadius: '1rem',
+                    display: 'flex', 
+                    margin: '2rem',
+                    maxWidth: '55rem',
+                }}
+            >
+                <CardMedia
+                    component='img'
+                    image={ tank.images?.big_icon } 
+                    alt={ tank.name } 
+                    sx={{
+                        flexShrink: 0,
+                        marginRight: '0.5rem',
+                        objectFit: 'cover',
+                        maxWidth: '10rem',
+                    }}
+                />
+                <CardContent>
+                    <Typography
+                        variant='h4'
+                        sx={{
+                            fontWeight: 'bold',
+                            color: '#ab003c',
+                        }}
+                    >
+                        {tank.name} 
+                    </Typography>
+                    <Typography
+                        variant='h4'
+                        sx={{
+                            fontWeight: 'bold',
+                            color: '#ab003c',
+                        }}
+                    >
+                    { tank.rating  }
+                    </Typography>
+                </CardContent>
+            </Card>
+        ))
+    ) : (
+        <Typography variant='h4'>No Tanks Available</Typography>
+    )}
+</Box>
+            {/* <Box > 
                 { tanks && tanks.length > 0 ? (
                     tanks.map(( tank ) => ( 
                         <Card
@@ -116,7 +170,7 @@ function Carousel() {
                     No Tanks Available 
                     </Typography>
                 )}
-            </Box>
+            </Box> */}
         </div>
     )
 }

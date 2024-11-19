@@ -180,7 +180,7 @@ class Tank( Base ):
         return tank
     
     @classmethod 
-    def get__all( cls ):
+    def get_all( cls ):
         """ Retrieve all Tank Class Instances """
 
         tanks = cls.query.all()
