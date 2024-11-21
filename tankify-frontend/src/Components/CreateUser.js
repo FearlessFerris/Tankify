@@ -118,7 +118,7 @@ function CreateUser() {
         
     }
     
-    const getAdornmentColor = (isValid) => (isValid ? '#004d40' : '#ab003c');
+    const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#ab003c');
     
     return (
         <div
@@ -137,7 +137,7 @@ function CreateUser() {
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    border: '.2rem solid #004d40',
+                    border: '.2rem solid #fafafa',
                     borderRadius: '.3rem',
                     padding: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
@@ -200,18 +200,18 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                 },
@@ -265,18 +265,18 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -330,18 +330,18 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
                                         borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
                                         borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -395,18 +395,18 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #004d40',
+                                        borderColor: '#fafafa',
+                                        border: '.2rem solid #fafafa',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -440,7 +440,7 @@ function CreateUser() {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #004d40',
+                                border: '.2rem solid #fafafa',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
                         >
@@ -461,7 +461,7 @@ function CreateUser() {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #004d40',
+                                border: '.2rem solid #fafafa',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 marginLeft: '1rem'
                             }}
@@ -478,7 +478,7 @@ function CreateUser() {
                                 width: '100%',
                                 maxWidth: '300px',
                                 marginBottom: '1rem',
-                                border: '.2rem solid #004d40',
+                                border: '.2rem solid #fafafa',
                                 borderRadius: '.3rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
@@ -533,18 +533,18 @@ function CreateUser() {
                                     },
                                     '& .MuiOutlinedInput-root': {
                                         '& fieldset': {
-                                            borderColor: '#004d40',
-                                            border: '.2rem solid #004d40',
+                                            borderColor: '#fafafa',
+                                            border: '.2rem solid #fafafa',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                         '&:hover fieldset': {
-                                            borderColor: '#004d40',
-                                            border: '.2rem solid #004d40',
+                                            borderColor: '#fafafa',
+                                            border: '.2rem solid #fafafa',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                         '&.Mui-focused fieldset': {
-                                            borderColor: '#004d40',
-                                            border: '.2rem solid #004d40',
+                                            borderColor: '#fafafa',
+                                            border: '.2rem solid #fafafa',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                     },
@@ -567,7 +567,7 @@ function CreateUser() {
                         sx={{
                             color: '#fafafa',
                             display: 'flex',
-                            border: '.2rem solid #004d40',
+                            border: '.2rem solid #fafafa',
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             marginTop: '1rem'
                         }}

@@ -115,7 +115,7 @@ function EditUser({ user, onClose }) {
         }
     }
     
-    const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#004d40');
+    const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#ab003c');
 
     return (
         <div
@@ -132,7 +132,7 @@ function EditUser({ user, onClose }) {
                 <Box
                     sx={{
                         alignItems: 'center',
-                        backgroundColor: '#ab003c',
+                        backgroundColor: '#263238',
                         borderRadius: '1rem',
                         border: '.2rem solid #fafafa',
                         display: 'flex',
@@ -148,7 +148,7 @@ function EditUser({ user, onClose }) {
                             marginTop: '1rem'
                         }}
                     >
-                        <span style={{ color: '#004d40' }}> {user.username}'s </span> Profile
+                        <span style={{ color: '#ab003c' }}> {user.username}'s </span> Profile
                     </Typography>
 
                     <div
@@ -610,30 +610,24 @@ function EditUser({ user, onClose }) {
                     >
 
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             onClick={handleSaveChanges}
                             sx={{
-                                backgroundColor: '#004d40',
+                                backgroundColor: '#263238',
                                 border: '.2rem solid #fafafa',
                                 color: '#fafafa',
-                                '&:hover': {
-                                    backgroundColor: '#00332f'
-                                }
                             }}
                         >
                             Save Changes
                         </Button>
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             onClick={onClose}
                             sx={{
-                                backgroundColor: '#004d40',
+                                backgroundColor: '#263238',
                                 border: '.2rem solid #fafafa',
                                 color: '#fafafa',
                                 marginLeft: '1rem',
-                                '&:hover': {
-                                    backgroundColor: '#00332f'
-                                }
                             }}
                         >
                             Cancel

@@ -3,176 +3,102 @@
 
 // Dependencies 
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardMedia, CardContent, TextField, Typography } from '@mui/material'; 
+import { Box, Card, CardMedia, CardContent, TextField, Typography } from '@mui/material';
 
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
 
 
-// Carousel Component 
+// // Carousel Component 
 function Carousel() {
-
-    const [ tanks, setTanks ] = useState([]);
-    console.log( tanks );
+    const [tanks, setTanks] = useState([]);
 
     useEffect(() => {
-       const fetchTanks = async () => {
-        try{
-            const response = await apiClient.get( '/tanks/all' );
-            console.log( response );
-            const apiTanks = Object.values( response.data.data || {} );
-            const localTanks = response.data.tanks || [];
-            const combinedTanks = [ ...apiTanks, localTanks ];
-            setTanks( combinedTanks ); 
-            console.log( combinedTanks );
-        }
-        catch{
-            console.error( 'Error retrieving tanks!' );
-        }
-       };
-       fetchTanks();
+        const fetchTanks = async () => {
+            try {
+                const response = await apiClient.get('/tanks/all');
+                const apiTanks = Object.values(response.data.data || {});
+                setTanks(apiTanks);
+                console.log(tanks);
+            } catch {
+                console.error('Error retrieving tanks!');
+            }
+        };
+        fetchTanks();
     }, []);
 
-    return(
+    return (
         <div
-            className = 'carousel-container'
-            style = {{
+            className='carousel-container'
+            style={{
                 alignItems: 'center',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
             }}
-        >
-            <h1
+        >   
 
-            > Tank Inventory </h1>
-<Box>
-    {tanks && tanks.length > 0 ? (
-        tanks.map((tank ) => (
-            <Card
-                key={ tank.tank_id  }
+            <Typography
+                variant='h3'
                 sx={{
-                    alignItems: 'center',
-                    border: '.2rem solid #ab003c',
-                    borderRadius: '1rem',
-                    display: 'flex', 
-                    margin: '2rem',
-                    maxWidth: '55rem',
+                    marginBottom: '4rem',
                 }}
             >
-                <CardMedia
-                    component='img'
-                    image={ tank.images?.big_icon } 
-                    alt={ tank.name } 
-                    sx={{
-                        flexShrink: 0,
-                        marginRight: '0.5rem',
-                        objectFit: 'cover',
-                        maxWidth: '10rem',
-                    }}
-                />
-                <CardContent>
-                    <Typography
-                        variant='h4'
-                        sx={{
-                            fontWeight: 'bold',
-                            color: '#ab003c',
-                        }}
-                    >
-                        {tank.name} 
-                    </Typography>
-                    <Typography
-                        variant='h4'
-                        sx={{
-                            fontWeight: 'bold',
-                            color: '#ab003c',
-                        }}
-                    >
-                    { tank.rating  }
-                    </Typography>
-                </CardContent>
-            </Card>
-        ))
-    ) : (
-        <Typography variant='h4'>No Tanks Available</Typography>
-    )}
-</Box>
-            {/* <Box > 
-                { tanks && tanks.length > 0 ? (
-                    tanks.map(( tank ) => ( 
+                Tank Inventory
+            </Typography>
+            <Box>
+                {tanks && tanks.length > 0 ? (
+                    tanks.map((tank, index) => (
                         <Card
-                            key = { tank.id }
-                            sx = {{ 
+                            key={index}
+                            sx={{
                                 alignItems: 'center',
-                                border: '.2rem solid #ab003c',
+                                backgroundColor: '#263238',
+                                border: '.2rem solid #fafafa',
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
-                                maxWidth: '55rem'
+                                maxWidth: '30rem',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                overflow: 'visible',
+                                position: 'relative',
+                                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                                '&:hover': {
+                                    transform: 'scale(1.08)',
+                                    boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.4)',
+                                },
                             }}
                         >
-                            <CardMedia 
-                                component = 'img'
-                                image = { tank.image_url }
-                                alt = { tank.name }
-                                sx = {{
+                            <CardMedia
+                                component='img'
+                                image={tank.images?.big_icon}
+                                alt={tank.name}
+                                sx={{
                                     flexShrink: 0,
                                     marginRight: '0.5rem',
                                     objectFit: 'cover',
-                                    width: '18rem',
+                                    maxWidth: '10rem',
                                 }}
                             />
                             <CardContent>
-
-                            <Typography 
-                                variant = 'h5'
-                                sx = {{
-                                    fontWeight: 'bold',
-                                    color: '#004d40'
-                                }}    
-                            >
-                            <span style = {{ fontWeight: 'bold', color: '#ab003c' }}> Tank Name: </span> { tank.name }
-                            </Typography>
-                            <Typography 
-                                variant = 'h6'
-                                sx = {{
-                                    fontWeight: 'bold',
-                                    color: '#004d40'
-                                }}
-                            >
-                            <span style = {{ fontWeight: 'bold', color: '#ab003c' }}> Description: </span> { tank.description }
-                            </Typography>
-                            <Typography 
-                                variant = 'h6'
-                                sx = {{
-                                    fontWeight: 'bold',
-                                    color: '#004d40'
-                                }}
-                            >
-                            <span style = {{ fontWeight: 'bold', color: '#ab003c' }}> Price: </span> { tank.price }
-                            </Typography>
-                            <Typography 
-                                variant = 'h6'
-                                sx = {{
-                                    fontWeight: 'bold',
-                                    color: '#004d40'
-                                }}
-                            >
-                            Rating: { tank.rating }
-                            </Typography>
+                                <Typography
+                                    variant='h4'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        color: '#ab003c',
+                                    }}
+                                >
+                                    {tank.name}
+                                </Typography>   
                             </CardContent>
                         </Card>
                     ))
-                ):(
-                    <Typography 
-                        variant = 'h4'
-                    >
-                    No Tanks Available 
-                    </Typography>
+                ) : (
+                    <Typography variant='h4'>No Tanks Available</Typography>
                 )}
-            </Box> */}
+            </Box>
         </div>
-    )
+    );
 }
 
 export default Carousel;

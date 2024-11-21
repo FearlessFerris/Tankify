@@ -16,9 +16,8 @@ import MenuSearch from './MenuSearch';
 import { useUser } from '../ContextDirectory/UserContext';
 
 
-// Navbar Component 
+// // Navbar Component 
 function Navbar() {
-
     const { user, logout } = useUser();
     const [openTooltip, setOpenTooltip] = useState({
         avatar: false,
@@ -63,24 +62,22 @@ function Navbar() {
             sx={{
                 backgroundColor: '#263238',
                 overflow: 'hidden',
+                padding: '0 2rem',
             }}
         >
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
                     alignItems: 'center',
+                    justifyContent: 'space-between',
                     width: '100%',
-                    padding: '0 1rem',
-                    boxSizing: 'border-box',
-                    flexWrap: 'wrap',
                 }}
             >
+                {/* Left Section: Logo */}
                 <Box
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'flex-start',
                     }}
                 >
                     <img
@@ -106,9 +103,11 @@ function Navbar() {
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-start', 
+                        alignItems: 'center',
                         flexGrow: 1,
-                        maxWidth: '50%',
+                        ml: '30%', 
+                        gap: '1rem',
                     }}
                 >
                     <Tooltip
@@ -117,18 +116,6 @@ function Navbar() {
                         open={Boolean(openTooltip.home)}
                         onMouseEnter={() => handleTooltipOpen('home')}
                         onMouseLeave={() => handleTooltipClose('home')}
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -14],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}
                     >
                         <Button
                             component={Link}
@@ -139,9 +126,8 @@ function Navbar() {
                             onMouseLeave={() => handleTooltipClose('home')}
                             sx={{
                                 color: '#eceff1',
-                                border: '.2rem solid #004d40',
+                                border: '.2rem solid #fafafa',
                                 fontSize: '1.2rem',
-                                margin: '0 .5rem',
                                 minWidth: '8rem',
                                 padding: '.2rem 1.5rem',
                             }}
@@ -156,31 +142,18 @@ function Navbar() {
                         open={Boolean(openTooltip.shop)}
                         onMouseEnter={() => handleTooltipOpen('shop')}
                         onMouseLeave={() => handleTooltipClose('shop')}
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -14],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}
                     >
                         <Button
-                            component = { Link }
-                            to = '/shop'
+                            component={Link}
+                            to="/shop"
                             variant="outlined"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('shop')}
                             onMouseLeave={() => handleTooltipClose('shop')}
                             sx={{
                                 color: '#eceff1',
-                                border: '.2rem solid #004d40',
+                                border: '.2rem solid #fafafa',
                                 fontSize: '1.2rem',
-                                margin: '0 .5rem',
                                 minWidth: '8rem',
                                 padding: '.2rem 1.5rem',
                             }}
@@ -188,6 +161,7 @@ function Navbar() {
                             Shop
                         </Button>
                     </Tooltip>
+
                     {user ? (
                         <>
                             <Tooltip
@@ -196,18 +170,6 @@ function Navbar() {
                                 open={Boolean(openTooltip.profile)}
                                 onMouseEnter={() => handleTooltipOpen('profile')}
                                 onMouseLeave={() => handleTooltipClose('profile')}
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [0, -14],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
                             >
                                 <Button
                                     component={Link}
@@ -218,9 +180,8 @@ function Navbar() {
                                     onMouseLeave={() => handleTooltipClose('profile')}
                                     sx={{
                                         color: '#eceff1',
-                                        border: '.2rem solid #004d40',
+                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
-                                        margin: '0 .5rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
                                     }}
@@ -234,35 +195,22 @@ function Navbar() {
                                 open={Boolean(openTooltip.logout)}
                                 onMouseEnter={() => handleTooltipOpen('logout')}
                                 onMouseLeave={() => handleTooltipClose('logout')}
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [0, -14],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
                             >
-                            <Button
-                                variant="outlined"
-                                size="large"
-                                onClick={ () => logout() }
-                                sx={{
-                                    color: '#eceff1',
-                                    border: '.2rem solid #004d40',
-                                    fontSize: '1.2rem',
-                                    margin: '0 .5rem',
-                                    minWidth: '8rem',
-                                    padding: '.2rem 1.5rem',
-                                }}
+                                <Button
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => logout()}
+                                    sx={{
+                                        color: '#eceff1',
+                                        border: '.2rem solid #fafafa',
+                                        fontSize: '1.2rem',
+                                        minWidth: '8rem',
+                                        padding: '.2rem 1.5rem',
+                                    }}
                                 >
-                                Logout
-                            </Button>
-                        </Tooltip>
+                                    Logout
+                                </Button>
+                            </Tooltip>
                         </>
                     ) : (
                         <>
@@ -272,18 +220,6 @@ function Navbar() {
                                 open={Boolean(openTooltip.create)}
                                 onMouseEnter={() => handleTooltipOpen('create')}
                                 onMouseLeave={() => handleTooltipClose('create')}
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [0, -14],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
                             >
                                 <Button
                                     component={Link}
@@ -294,9 +230,8 @@ function Navbar() {
                                     onMouseLeave={() => handleTooltipClose('create')}
                                     sx={{
                                         color: '#eceff1',
-                                        border: '.2rem solid #004d40',
+                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
-                                        margin: '0 .5rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
                                     }}
@@ -311,18 +246,6 @@ function Navbar() {
                                 open={Boolean(openTooltip.login)}
                                 onMouseEnter={() => handleTooltipOpen('login')}
                                 onMouseLeave={() => handleTooltipClose('login')}
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [0, -14],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
                             >
                                 <Button
                                     component={Link}
@@ -333,9 +256,8 @@ function Navbar() {
                                     onMouseLeave={() => handleTooltipClose('login')}
                                     sx={{
                                         color: '#eceff1',
-                                        border: '.2rem solid #004d40',
+                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
-                                        margin: '0 .5rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
                                     }}
@@ -347,6 +269,7 @@ function Navbar() {
                     )}
                 </Box>
 
+                {/* Right Section: Search Bar and Avatar */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -355,24 +278,12 @@ function Navbar() {
                 >
                     <MenuSearch />
                     {user && (
-                        <Tooltip 
-                            title="User Profile" 
+                        <Tooltip
+                            title="User Profile"
                             arrow
                             open={Boolean(openTooltip.avatar)}
                             onMouseEnter={() => handleTooltipOpen('avatar')}
                             onMouseLeave={() => handleTooltipClose('avatar')}
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [0, -14],
-                                            },
-                                        },
-                                    ],
-                                },
-                            }}
                         >
                             <Avatar
                                 src={user.image}

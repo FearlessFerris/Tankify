@@ -39,14 +39,13 @@ def all_tanks():
     params = {
         'application_id': api_key,
         'page_no': 1,
-        'limit': 5,
     }
 
     tanks = Tank.get_all()
     response = requests.get( url, params = params )
     if response.status_code == 200:
         data = response.json()
-        return jsonify({ 'message': 'Successfully retrieved tanks', 'data': data['data'], 'tanks': tanks })
+        return jsonify({ 'message': 'Successfully retrieved tanks', 'data': data['data']} )
     else: 
         return jsonify({ 'error': 'Failed to fetch data' }), response.status_code
 

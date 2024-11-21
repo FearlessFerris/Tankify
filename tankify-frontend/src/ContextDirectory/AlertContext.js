@@ -59,7 +59,7 @@ export const AlertProvider = ({ children }) => {
                 sx = {{
                     width: '100%',
                     fontSize: '1.1rem',
-                    backgroundColor: alert.severity === 'error' ? '#ab003c' : '#004d40',
+                    backgroundColor: alert.severity === 'error' ? '#ab003c' : '#263238',
                     color: '#fafafa',
                     border: '.1rem solid #fafafa',
                     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',

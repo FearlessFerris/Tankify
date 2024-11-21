@@ -45,7 +45,7 @@ function Profile() {
                 maxWidth: '45rem',
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                border: '.2rem solid #004d40',
+                border: '.2rem solid #fafafa',
                 borderRadius: '.3rem',
                 padding: '2rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -69,7 +69,7 @@ function Profile() {
                         height: '100%',
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        border: '.2rem solid #004d40',
+                        border: '.2rem solid #fafafa',
                     }}
                 />
                 {hover && (
@@ -80,7 +80,7 @@ function Profile() {
                             right: '0.5rem',
                             color: '#004d40',
                             fontSize: '2.5rem',
-                            backgroundColor: '#ab003c',
+                            backgroundColor: '#fafafa',
                             borderRadius: '50%',
                             padding: '0.3rem',
                             cursor: 'pointer',
@@ -176,7 +176,7 @@ function Profile() {
                     startIcon = { <EditIcon sx = {{ color: '#ab003c' }} /> }
                     sx={{
                         color: '#fafafa',
-                        border: '.2rem solid #004d40',
+                        border: '.2rem solid #fafafa',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     }}
                 >
@@ -193,6 +193,9 @@ function Profile() {
                     <Backdrop 
                         open = { open }
                         onClose = { onClose }
+                        sx = {{
+                            backgroundColor: 'rgba(0, 0, 0, 0.85)'
+                        }}
                     >
                     { open && (
                         <EditUser user = { user } onClose = { onClose } /> 
