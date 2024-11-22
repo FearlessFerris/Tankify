@@ -17,12 +17,11 @@ import apiClient from '../api/apiClient';
 function Carousel() {
 
     const [tanks, setTanks] = useState([]);
-    console.log( tanks );
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    const types = ['heavyTank', 'Medium Tank', 'Light Tank', 'Tank Destroyer', 'SPG'];
+    const types = ['heavyTank', 'mediumTank', 'lightTank', 'AT-SPG', 'SPG'];
     const nations = ['ussr', 'germany', 'usa', 'china', 'france', 'uk', 'japan', 'czech', 'sweden', 'poland', 'italy'];
 
     useEffect(() => {
@@ -61,7 +60,7 @@ function Carousel() {
 
     const filteredTanks = tanks.filter((tank) => {
         const matchesSearch = tank.name.toLowerCase().includes(search.toLowerCase());
-        const matchesType = !filters.type || tank.type === filters.type.toLowerCase().replace(' ', '');
+        const matchesType = !filters.type || tank.type.toLowerCase() === filters.type.toLowerCase().replace(' ', '');
         const matchesTier = !filters.tier || tank.tier === tiers.indexOf(filters.tier) + 1;
         const matchesNation = !filters.nation || tank.nation === filters.nation;
         return matchesSearch && matchesType && matchesTier && matchesNation;
@@ -164,7 +163,7 @@ function Carousel() {
                                     boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.5)',
                                 },
                                 borderRadius: '0.5rem',
-                                color: filters.class ? '#ab003c' : '#fafafa',
+                                color: filters.type ? '#ab003c' : '#fafafa',
                             }}
                         >
                             <ClassIcon sx={{ fontSize: '2.5rem' }} />
