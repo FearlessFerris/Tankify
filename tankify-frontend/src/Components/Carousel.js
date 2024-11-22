@@ -1,3 +1,6 @@
+// Carousel Component Implementation 
+
+
 // Dependencies
 import React, { useState, useEffect } from 'react';
 import { Box, Card, CardMedia, CardContent, IconButton, Menu, MenuItem, Tooltip, Typography, TextField } from '@mui/material';
@@ -5,18 +8,21 @@ import ClassIcon from '@mui/icons-material/Class';
 import FlagIcon from '@mui/icons-material/Flag';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 
+
 // Components & Necessary Files
 import apiClient from '../api/apiClient';
 
+
 // Carousel Component
 function Carousel() {
-    const [tanks, setTanks] = useState([]);
-    const [search, setSearch] = useState('');
-    const [filters, setFilters] = useState({ class: '', tier: '', nation: '' });
-    const [anchorEl, setAnchorEl] = useState({ tier: null, class: null, nation: null });
 
-    const tiers = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
-    const classes = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'Tank Destroyer', 'SPG'];
+    const [tanks, setTanks] = useState([]);
+    console.log( tanks );
+    const [search, setSearch] = useState('');
+    const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
+    const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
+    const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const types = ['heavyTank', 'Medium Tank', 'Light Tank', 'Tank Destroyer', 'SPG'];
     const nations = ['ussr', 'germany', 'usa', 'china', 'france', 'uk', 'japan', 'czech', 'sweden', 'poland', 'italy'];
 
     useEffect(() => {
@@ -25,6 +31,7 @@ function Carousel() {
                 const response = await apiClient.get('/tanks/all');
                 const apiTanks = Object.values(response.data.data || {});
                 setTanks(apiTanks);
+                console.log( tanks );
             } catch {
                 console.error('Error retrieving tanks!');
             }
@@ -32,38 +39,32 @@ function Carousel() {
         fetchTanks();
     }, []);
 
-    // Handle real-time search
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
     };
 
-    // Handle opening the filter menu
     const handleMenuOpen = (event, type) => {
         setAnchorEl((prev) => ({ ...prev, [type]: event.currentTarget }));
     };
 
-    // Handle closing the filter menu
     const handleMenuClose = (type) => {
         setAnchorEl((prev) => ({ ...prev, [type]: null }));
     };
 
-    // Handle filter selection from menu
     const handleFilterChange = (filterType, value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
-            [filterType]: prevFilters[filterType] === value ? '' : value, // Toggle filter value on click (deselect if already selected)
+            [filterType]: prevFilters[filterType] === value ? '' : value, 
         }));
         handleMenuClose(filterType);
     };
 
-    // Filter tanks based on search term and selected filters
     const filteredTanks = tanks.filter((tank) => {
         const matchesSearch = tank.name.toLowerCase().includes(search.toLowerCase());
-        const matchesClass = !filters.class || tank.type === filters.class.toLowerCase().replace(' ', '');
+        const matchesType = !filters.type || tank.type === filters.type.toLowerCase().replace(' ', '');
         const matchesTier = !filters.tier || tank.tier === tiers.indexOf(filters.tier) + 1;
         const matchesNation = !filters.nation || tank.nation === filters.nation;
-
-        return matchesSearch && matchesClass && matchesTier && matchesNation;
+        return matchesSearch && matchesType && matchesTier && matchesNation;
     });
 
     return (
@@ -83,8 +84,6 @@ function Carousel() {
             >
                 Tank Inventory
             </Typography>
-
-            {/* Unified Search and Filter Component */}
             <Box
                 sx={{
                     display: 'flex',
@@ -98,7 +97,6 @@ function Carousel() {
                     backgroundColor: '#2b2a2e',
                 }}
             >
-                {/* Search Bar (Left) */}
                 <TextField
                     variant='outlined'
                     placeholder='Search Tank by Name'
@@ -117,8 +115,6 @@ function Carousel() {
                         flexGrow: 1,
                     }}
                 />
-
-                {/* Filter Icons (Right) */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -128,7 +124,6 @@ function Carousel() {
                         marginLeft: '1rem',
                     }}
                 >
-                    {/* Tier Filter Icon */}
                     <Tooltip title='Tier Filter'>
                         <IconButton
                             onClick={(e) => handleMenuOpen(e, 'tier')}
@@ -159,11 +154,9 @@ function Carousel() {
                             </MenuItem>
                         ))}
                     </Menu>
-
-                    {/* Class Filter Icon */}
-                    <Tooltip title='Class Filter'>
+                    <Tooltip title='Type Filter'>
                         <IconButton
-                            onClick={(e) => handleMenuOpen(e, 'class')}
+                            onClick={(e) => handleMenuOpen(e, 'type')}
                             sx={{
                                 boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
                                 transition: 'box-shadow 0.3s ease',
@@ -178,21 +171,19 @@ function Carousel() {
                         </IconButton>
                     </Tooltip>
                     <Menu
-                        anchorEl={anchorEl.class}
-                        open={Boolean(anchorEl.class)}
-                        onClose={() => handleMenuClose('class')}
+                        anchorEl={anchorEl.type}
+                        open={Boolean(anchorEl.type)}
+                        onClose={() => handleMenuClose('type')}
                     >
-                        {classes.map((cls) => (
+                        {types.map(( type ) => (
                             <MenuItem
-                                key={cls}
-                                onClick={() => handleFilterChange('class', cls)}
+                                key={ type }
+                                onClick={() => handleFilterChange('type', type)}
                             >
-                                {cls}
+                                { type }
                             </MenuItem>
                         ))}
                     </Menu>
-
-                    {/* Nation Filter Icon */}
                     <Tooltip title='Nation Filter'>
                         <IconButton
                             onClick={(e) => handleMenuOpen(e, 'nation')}
@@ -225,8 +216,6 @@ function Carousel() {
                     </Menu>
                 </Box>
             </Box>
-
-            {/* Tank Cards */}
             <Box>
                 {filteredTanks && filteredTanks.length > 0 ? (
                     filteredTanks.map((tank, index) => (
@@ -239,7 +228,7 @@ function Carousel() {
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
-                                maxWidth: '30rem',
+                                width: '30rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 overflow: 'visible',
                                 position: 'relative',
