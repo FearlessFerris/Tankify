@@ -132,7 +132,7 @@ function EditUser({ user, onClose }) {
                 <Box
                     sx={{
                         alignItems: 'center',
-                        backgroundColor: '#263238',
+                        backgroundColor: '#2b2a2e',
                         borderRadius: '1rem',
                         border: '.2rem solid #fafafa',
                         display: 'flex',

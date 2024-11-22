@@ -73,7 +73,6 @@ function Navbar() {
                     width: '100%',
                 }}
             >
-                {/* Left Section: Logo */}
                 <Box
                     sx={{
                         display: 'flex',

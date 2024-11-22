@@ -41,7 +41,6 @@ def all_tanks():
         'page_no': 1,
     }
 
-    tanks = Tank.get_all()
     response = requests.get( url, params = params )
     if response.status_code == 200:
         data = response.json()

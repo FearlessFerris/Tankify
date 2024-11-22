@@ -38,6 +38,7 @@ function Profile() {
         <div
             className='profile-container'
             style={{
+                backgroundColor: '#2b2a2e',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',

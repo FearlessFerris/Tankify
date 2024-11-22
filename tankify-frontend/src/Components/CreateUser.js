@@ -134,6 +134,7 @@ function CreateUser() {
             <form
                 onSubmit={handleSubmit}
                 style={{
+                    backgroundColor: '#2b2a2e',
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
