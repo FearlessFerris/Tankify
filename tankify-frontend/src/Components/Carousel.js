@@ -256,8 +256,8 @@ function Carousel() {
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
-                                width: '40rem',
-                                height: '10rem',
+                                width: '20rem',
+                                height: '20rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 overflow: 'visible',
                                 position: 'relative',
@@ -269,19 +269,19 @@ function Carousel() {
                                 },
                             }}
                         >
-                            <CardMedia
-                                component='img'
-                                image={tank.image}
-                                alt={tank.name}
-                                sx={{
-                                    flexShrink: 0,
-                                    marginRight: '2rem',
-                                    marginLeft: '1rem',
-                                    objectFit: 'cover',
-                                    maxWidth: '10rem'
-                                }}
-                            />
-                            <CardMedia
+                        <CardMedia
+                            component = 'img'
+                            image = { tank.image }
+                            alt = { tank.name }
+                            sx = {{
+                                flexShrink: 0,
+                                objectFit: 'contain',
+                                width: '12rem'
+                            }}
+                        >
+
+                        </CardMedia>
+                            {/* <CardMedia
                                 component='img'
                                 image={tank.nation_flag}
                                 alt={`${tank.nation} flag`}
@@ -291,17 +291,18 @@ function Carousel() {
                                     objectFit: 'cover',
                                     maxWidth: '8rem',
                                 }}
-                            />
+                            /> */}
                             <CardContent
                                 sx={{
-                                    marginRight: '1.5rem'
+                                    marginLeft: '0'
                                 }}
                             >
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'space-between'
+                                        justifyContent: 'space-between',
+                                        marginLeft: '-1rem'
                                     }}
                                 >
                                     <Typography
@@ -335,50 +336,12 @@ function Carousel() {
                                         {tank.name}
                                     </Typography>
                                 </Box>
-
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between'
-                                    }}
-                                >
-                                    <Typography
-                                        variant='h5'
-                                        sx={{
-                                            color: '#fafafa',
-                                            textAlign: 'right',
-                                            minWidth: '5rem',
-                                            marginRight: '.5rem',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
-                                        }}
-                                    >
-                                        Tier:
-                                    </Typography>
-                                    <Typography
-                                        variant='h5'
-                                        sx={{
-                                            color: '#ab003c',
-                                            fontWeight: 'bold',
-                                            textAlign: 'left',
-                                            flexGrow: 1,
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            maxWidth: '12rem'
-                                        }}
-                                    >
-                                        {tank.tier}
-                                    </Typography>
-                                </Box>
-
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
+                                        marginLeft: '-1rem'
                                     }}
                                 >
                                     <Typography
@@ -409,6 +372,44 @@ function Carousel() {
                                         }}
                                     >
                                         {fixCurrency(tank.price)}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        marginLeft: '-1rem'
+                                    }}
+                                >
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#fafafa',
+                                            textAlign: 'right',
+                                            minWidth: '5rem',
+                                            marginRight: '.5rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        Tier:
+                                    </Typography>
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#ab003c',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            flexGrow: 1,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '12rem'
+                                        }}
+                                    >
+                                        {tank.tier}
                                     </Typography>
                                 </Box>
                             </CardContent>
