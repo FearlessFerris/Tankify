@@ -1,10 +1,23 @@
-# Dependencies
-from datetime import datetime, timezone
-import uuid
+# Seed File Implementation 
 
-# Necessary Files
+
+# Dependencies
+import requests
+from datetime import datetime, timezone
+from dotenv import load_dotenv
+import os 
+
+
+# Necessary Files 
 from app import app, db
-from models import User, Tank, Transaction, Inventory, Review
+from models import User, Tank, Transaction
+
+
+# Load Environmental Variables 
+load_dotenv()
+WG_API_KEY = os.getenv( 'WG_API_KEY' )
+
+
 
 # Define the clear_database function
 def clear_database():
@@ -16,96 +29,108 @@ def clear_database():
         db.create_all()
     print('Database clearing has completed!')
 
-# Define the seed_database function
-def seed_database():
-    """ Seeds Database with mock initial data """
 
+# Seed Users
+def seed_users():
+    """Seeds the Users table with initial mock data."""
+    users = [
+        User(username='Jack Sparrow', password='IamAsuperSecretPassword', email='jacksparrow@thesevenseas.org', image='https://lumiere-a.akamaihd.net/v1/images/bluesteel_d0f846ee.jpeg'),
+        User(username='Lara Croft', password='AnotherSecretPassword', email='lara.croft@tombraider.com', image='https://example.com/lara_croft_image.png')
+    ]
+    db.session.add_all(users)
+    db.session.commit()
+    return users
+
+
+# Seed Tanks
+def seed_tanks():
+    """Seeds the Tanks table with data from World of Tanks API."""
+    print('Fetching tank data from World of Tanks API...')
+    try:
+        response = requests.get('https://api.worldoftanks.com/wot/encyclopedia/vehicles/', params={'application_id': WG_API_KEY })
+        response.raise_for_status()
+        tank_data = response.json()
+
+        # Logging the response for debugging purposes
+        print(f'API Response: {tank_data}')
+
+        flag_base_url = "https://tankify-images.s3.amazonaws.com/flags/"
+        nation_flag_urls = {
+            'ussr': f"{flag_base_url}ussr_flag.png",
+            'germany': f"{flag_base_url}germany_flag.png",
+            'usa': f"{flag_base_url}usa_flag.png",
+            'china': f"{flag_base_url}china_flag.png",
+            'france': f"{flag_base_url}france_flag.png",
+            'uk': f"{flag_base_url}uk_flag.png",
+            'japan': f"{flag_base_url}japan_flag.png",
+            'czech': f"{flag_base_url}czech_flag.png",
+            'sweden': f"{flag_base_url}sweden_flag.png",
+            'poland': f"{flag_base_url}poland_flag.png",
+            'italy': f"{flag_base_url}italy_flag.png",
+        }
+
+        tanks = []
+        if 'data' in tank_data and isinstance(tank_data['data'], dict):
+            for tank_id, tank_info in tank_data['data'].items():
+                if 'name' in tank_info and 'price_credit' in tank_info:
+                    nation = tank_info.get('nation', '').lower()
+                    tanks.append(
+                        Tank(
+                            name=tank_info.get('name', 'Unknown Tank'),
+                            description=tank_info.get('description', 'No description available.'),
+                            price=tank_info.get('price_credit', 1000) if tank_info.get('price_credit') is not None else 1000, 
+                            type=tank_info.get('type', 'Unknown Type'),
+                            nation=nation,
+                            nation_flag=nation_flag_urls.get(nation, ''),
+                            tier=tank_info.get('tier', 'Unknown Tier'),
+                            image=tank_info.get('images', {}).get('big_icon', '')
+                        )
+                    )
+                else:
+                    print(f'Skipping tank with ID {tank_id} due to missing name or price_credit.')
+
+            if tanks:
+                db.session.add_all(tanks)
+                db.session.commit()
+                print(f'{len(tanks)} tanks successfully added to the database.')
+            else:
+                print('No valid tank data found to add to the database.')
+        else:
+            print('No tank data found in the API response or unexpected response format.')
+    except requests.RequestException as e:
+        print(f'Error occurred while fetching tank data: {e}')
+
+
+# Seed Transactions
+def seed_transactions(users, tanks):
+    """Seeds the Transactions table."""
+    if not users or not tanks:
+        print('Skipping transaction seeding due to missing users or tanks.')
+        return
+
+    transactions = [
+        Transaction(user_id=users[0].id, tank_id=tanks[0].id, amount=tanks[0].price, timestamp=datetime.now(tz=timezone.utc)),
+        Transaction(user_id=users[1].id, tank_id=tanks[1].id, amount=tanks[1].price, timestamp=datetime.now(tz=timezone.utc))
+    ]
+    db.session.add_all(transactions)
+    db.session.commit()
+
+
+# Seed Database Function
+def seed_database():
+    """Calls all individual seeding functions."""
     print('Seeding database with initial data...')
     with app.app_context():
         try:
-            # Seed Users
-            user1 = User( 
-                username='Jack Sparrow',
-                password='IamAsuperSecretPassword',
-                email='jacksparrow@thesevenseas.org',
-                image='https://lumiere-a.akamaihd.net/v1/images/bluesteel_d0f846ee.jpeg'
-            )
-            user2 = User(
-                username='Lara Croft',
-                password='AnotherSecretPassword',
-                email='lara.croft@tombraider.com',
-                image='https://example.com/lara_croft_image.jpg'
-            )
-            db.session.add_all([user1, user2])
-            db.session.commit()
-
-            # Seed Tanks
-            tanks = [
-                Tank(name='Tiger I', description='A fearsome German heavy tank with formidable firepower.', price=5000, image_url='https://na-wotp.wgcdn.co/dcont/tankopedia_images/g04_pzvi_tiger_i/g04_pzvi_tiger_i_image_resized.png', rating=4),
-                Tank(name='M4 Sherman', description='A reliable American medium tank, known for its versatility.', price=3000, image_url='https://na-wotp.wgcdn.co/dcont/tankopedia_images/a05_m4_sherman/a05_m4_sherman_image_resized.png', rating=3),
-                Tank(name='T-34', description='A legendary Soviet medium tank, well-known for its ruggedness and efficiency.', price=4000, image_url='https://wxpcdn-cbprodretail.gcdn.co/dcont/tankopedia/ussr/R07_T-34-85_preview.png', rating=5),
-                Tank(name='Panzer IV', description='A German medium tank, widely used during WWII.', price=3500, image_url='https://na-wotp.wgcdn.co/dcont/tankopedia_images/g81_pz_iv_ausfh/g81_pz_iv_ausfh_image_resized.png', rating=4),
-                Tank(name='Churchill Mk IV', description='A British heavy infantry tank with thick armor.', price=4500, image_url='https://upload.wikimedia.org/wikipedia/commons/0/0b/Churchill_Mk_IV.jpg', rating=4),
-                Tank(name='Centurion', description='A post-WWII British main battle tank, known for its reliability.', price=6000, image_url='https://sg-wotp.wgcdn.co/dcont/tankopedia_images/gb24_centurion_mk3/gb24_centurion_mk3_image_resized.png', rating=5),
-                Tank(name='KV-1', description='A Soviet heavy tank, famous for its strong armor during early WWII.', price=4800, image_url='https://na-wotp.wgcdn.co/dcont/tankopedia_images/r80_kv1/r80_kv1_image_resized.png', rating=4),
-                Tank(name='M26 Pershing', description='An American heavy tank, introduced late in WWII.', price=5200, image_url='https://wxpcdn-cbprodretail.gcdn.co/dcont/tankopedia/usa/A35_Pershing_preview.png', rating=4),
-                Tank(name='Leopard 1', description='A German main battle tank, known for its speed and firepower.', price=7000, image_url='https://na-wotp.wgcdn.co/dcont/tankopedia_images/g89_leopard1/g89_leopard1_image_resized.png', rating=5),
-                Tank(name='Cromwell', description='A British cruiser tank, known for its speed and agility during WWII.', price=3200, image_url='https://eu-wotp.wgcdn.co/dcont/fb/image/cromwell_png.png', rating=3)
-            ]
-            db.session.add_all(tanks)
-            db.session.commit()
-
-            # Seed Transactions
-            transaction1 = Transaction(
-                user_id=user1.id,
-                tank_id=tanks[0].id,  # Using the first tank in the list
-                amount=tanks[0].price,
-                timestamp=datetime.now(tz=timezone.utc)
-            )
-            transaction2 = Transaction(
-                user_id=user2.id,
-                tank_id=tanks[1].id,  # Using the second tank in the list
-                amount=tanks[1].price,
-                timestamp=datetime.now(tz=timezone.utc)
-            )
-            db.session.add_all([transaction1, transaction2])
-
-            # Seed Reviews
-            review1 = Review(
-                user_id=user1.id,
-                tank_id=tanks[0].id,
-                comment='Incredible power and durability!',
-                rating=5,
-                created_at=datetime.now(tz=timezone.utc)
-            )
-            review2 = Review(
-                user_id=user2.id,
-                tank_id=tanks[1].id,
-                comment='Reliable but could use more armor.',
-                rating=4,
-                created_at=datetime.now(tz=timezone.utc)
-            )
-            db.session.add_all([review1, review2])
-
-            # Seed Inventory (Garage)
-            inventory1 = Inventory(
-                user_id=user1.id,
-                tank_id=tanks[0].id,
-                acquired_at=datetime.now(tz=timezone.utc)
-            )
-            inventory2 = Inventory(
-                user_id=user2.id,
-                tank_id=tanks[1].id,
-                acquired_at=datetime.now(tz=timezone.utc)
-            )
-            db.session.add_all([inventory1, inventory2])
-
-            # Commit all changes
-            db.session.commit()
+            users = seed_users()
+            seed_tanks()
+            tanks = Tank.query.all()  # Fetch tanks after seeding them
+            seed_transactions(users, tanks)
+            print('Seed data successfully added!')
         except Exception as e:
             print(f"Error occurred while seeding data: {e}")
             db.session.rollback()
-    print('Seed data successfully added!')
+
 
 # Run the script if executed directly
 if __name__ == "__main__":

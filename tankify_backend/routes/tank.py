@@ -7,6 +7,7 @@ import requests
 import os 
 from dotenv import load_dotenv
 
+
 # Necessary Files 
 from models import db, Tank 
 
@@ -20,33 +21,31 @@ load_dotenv()
 WG_API_KEY = os.getenv( 'WG_API_KEY' )
 
 
-
 # Tank Routes 
-# @tank_routes.route( '/api/tanks/all', methods = [ 'GET' ] )
-# def all_tanks(): 
-#     """ Retrieve All Available Tanks """
-
-#     tanks = Tank.get__all()
-#     return jsonify({ 'message': 'Successfully retrieved all tanks', 'tanks': tanks }), 200 
-
-
 @tank_routes.route( '/api/tanks/all', methods = [ 'GET' ] )
 def all_tanks(): 
     """ Retrieve all Tanks from WOT Developer API """
 
-    api_key = WG_API_KEY
-    url = 'https://api.worldoftanks.eu/wot/encyclopedia/vehicles/'
-    params = {
-        'application_id': api_key,
-        'page_no': 1,
-    }
-
-    response = requests.get( url, params = params )
-    if response.status_code == 200:
-        data = response.json()
-        return jsonify({ 'message': 'Successfully retrieved tanks', 'data': data['data']} )
-    else: 
-        return jsonify({ 'error': 'Failed to fetch data' }), response.status_code
+    try:
+        tanks = Tank.get_all_tanks()
+        return jsonify({ 'message': 'Successfully retrieved tanks!', 'data': tanks })
+    except Exception as e: 
+        print( f'Error occurred while fetching tanks: { e }' )
+        return jsonify({ 'error': 'Failed to fetch data' }), 500 
 
 
+@tank_routes.route( '/api/tanks/<tank_id>', methods = [ 'GET' ] )
+def get_tank( tank_id ): 
+    """ Retrieve Tank by ID """
+
+    try:
+        tank = Tank.query.get( tank_id )
+        if tank: 
+            return jsonify({ 'message': 'Successfully retrieved tank!', 'data': tank.show_info() })
+        else:
+            return jsonify({ 'message': 'Error, tank not found' }), 404 
+    except Exception as e: 
+        print( f'Error occurred while fetching tank by ID: { e }' )
+        return jsonify({ 'message': 'Failed to fetch data' }), 500 
+    
 

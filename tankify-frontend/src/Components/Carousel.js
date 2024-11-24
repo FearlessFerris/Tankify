@@ -3,7 +3,9 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardMedia, CardContent, IconButton, Menu, MenuItem, Tooltip, Typography, TextField } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import ClassIcon from '@mui/icons-material/Class';
 import FlagIcon from '@mui/icons-material/Flag';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
@@ -16,21 +18,21 @@ import apiClient from '../api/apiClient';
 // Carousel Component
 function Carousel() {
 
+    const navigate = useNavigate();
     const [tanks, setTanks] = useState([]);
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    const types = ['heavyTank', 'mediumTank', 'lightTank', 'AT-SPG', 'SPG'];
-    const nations = ['ussr', 'germany', 'usa', 'china', 'france', 'uk', 'japan', 'czech', 'sweden', 'poland', 'italy'];
+    const types = [ 'Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG' ];
+    const nations = [ 'USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy' ];
 
     useEffect(() => {
         const fetchTanks = async () => {
             try {
                 const response = await apiClient.get('/tanks/all');
-                const apiTanks = Object.values(response.data.data || {});
-                setTanks(apiTanks);
-                console.log( tanks );
+                const apiTanks = response.data.data;
+                setTanks( apiTanks );
             } catch {
                 console.error('Error retrieving tanks!');
             }
@@ -58,11 +60,15 @@ function Carousel() {
         handleMenuClose(filterType);
     };
 
+    const fixCurrency = ( price ) => {
+        return Number( price ).toLocaleString();
+    }
+
     const filteredTanks = tanks.filter((tank) => {
         const matchesSearch = tank.name.toLowerCase().includes(search.toLowerCase());
         const matchesType = !filters.type || tank.type.toLowerCase() === filters.type.toLowerCase().replace(' ', '');
-        const matchesTier = !filters.tier || tank.tier === tiers.indexOf(filters.tier) + 1;
-        const matchesNation = !filters.nation || tank.nation === filters.nation;
+        const matchesTier = !filters.tier || tank.tier === filters.tier;
+        const matchesNation = !filters.nation || tank.nation === filters.nation.toLowerCase();
         return matchesSearch && matchesType && matchesTier && matchesNation;
     });
 
@@ -85,15 +91,15 @@ function Carousel() {
             </Typography>
             <Box
                 sx={{
+                    backgroundColor: '#2b2a2e',
                     display: 'flex',
                     alignItems: 'center',
                     borderRadius: '1rem',
                     border: '.2rem solid #fafafa',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
                     marginBottom: '4rem',
-                    width: '30rem',
-                    padding: '0.5rem',
-                    backgroundColor: '#2b2a2e',
+                    width: '40rem',
+                    padding: '0.5rem'
                 }}
             >
                 <TextField
@@ -110,6 +116,7 @@ function Carousel() {
                         },
                         '& .MuiInputBase-input': {
                             color: '#fafafa',
+                            fontSize: '1.3rem'
                         },
                         flexGrow: 1,
                     }}
@@ -148,6 +155,13 @@ function Carousel() {
                             <MenuItem
                                 key={tier}
                                 onClick={() => handleFilterChange('tier', tier)}
+                                sx = {{
+                                    backgroundColor: filters.tier === tier ? '#ab003c' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa'
+                                    }
+                                }}
                             >
                                 {tier}
                             </MenuItem>
@@ -178,6 +192,13 @@ function Carousel() {
                             <MenuItem
                                 key={ type }
                                 onClick={() => handleFilterChange('type', type)}
+                                sx = {{
+                                    backgroundColor: filters.type === type ? '#ab003c' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa'
+                                    }
+                                }}
                             >
                                 { type }
                             </MenuItem>
@@ -208,6 +229,13 @@ function Carousel() {
                             <MenuItem
                                 key={nation}
                                 onClick={() => handleFilterChange('nation', nation)}
+                                sx = {{
+                                    backgroundColor: filters.nation === nation ? '#ab003c' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa'
+                                    }
+                                }}
                             >
                                 {nation.charAt(0).toUpperCase() + nation.slice(1)}
                             </MenuItem>
@@ -220,6 +248,7 @@ function Carousel() {
                     filteredTanks.map((tank, index) => (
                         <Card
                             key={index}
+                            onClick = { () => navigate( `/tank/${ tank.id }`)}
                             sx={{
                                 alignItems: 'center',
                                 backgroundColor: '#2b2a2e',
@@ -227,11 +256,13 @@ function Carousel() {
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
-                                width: '30rem',
+                                width: '40rem',
+                                height: '10rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 overflow: 'visible',
                                 position: 'relative',
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                                cursor: 'pointer',
                                 '&:hover': {
                                     transform: 'scale(1.08)',
                                     boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.4)',
@@ -240,30 +271,84 @@ function Carousel() {
                         >
                             <CardMedia
                                 component='img'
-                                image={tank.images?.big_icon}
-                                alt={tank.name}
+                                image={ tank.image }
+                                alt={ tank.name }
                                 sx={{
                                     flexShrink: 0,
                                     marginRight: '0.5rem',
+                                    marginLeft: '0.5rem',
                                     objectFit: 'cover',
-                                    maxWidth: '10rem',
+                                    maxWidth: '10rem'
                                 }}
                             />
+                                <CardMedia
+                                    component = 'img'
+                                    image={tank.nation_flag}
+                                    alt={`${tank.nation} flag`}
+                                    sx={{
+                                        flexShrink: 0,
+                                        marginRight: '0.5rem',
+                                        objectFit: 'cover',
+                                        maxWidth: '8rem',
+                                    }}
+                                />
                             <CardContent>
                                 <Typography
-                                    variant='h4'
+                                    variant='h5'
+                                    noWrap
                                     sx={{
-                                        fontWeight: 'bold',
-                                        color: '#ab003c',
+                                        color: '#fafafa',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        maxWidth: '18rem'
                                     }}
                                 >
-                                    {tank.name}
+                                Name:  <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { tank.name } </span>
+                                </Typography>
+                                <Typography
+                                    variant = 'h5'
+                                    sx = {{
+                                        color: '#fafafa'
+                                    }}
+                                >
+                                Tier: <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { tank.tier } </span> 
+                                </Typography>
+                                <Typography
+                                    variant = 'h5'
+                                    sx = {{
+                                        color: '#fafafa'
+                                    }}
+                                >
+                                Price: <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { fixCurrency( tank.price ) } </span> 
                                 </Typography>
                             </CardContent>
                         </Card>
                     ))
                 ) : (
-                    <Typography variant='h4'> No Tanks Available </Typography>
+                    <>
+                    <Box 
+                        sx = {{
+                            alignItems: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                        }}
+                    >
+                    <Typography 
+                        variant='h4'
+                        sx = {{
+                            marginBottom: '3rem'
+                        }}
+                    > 
+                    Loading 874 Vehicles...
+                    </Typography>
+                    <CircularProgress 
+                        color = '#fafafa'
+                        size = '5rem'
+                    />  
+                    </Box>
+                    </>
                 )}
             </Box>
         </div>

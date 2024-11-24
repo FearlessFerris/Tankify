@@ -613,7 +613,7 @@ function EditUser({ user, onClose }) {
                             variant="outlined"
                             onClick={handleSaveChanges}
                             sx={{
-                                backgroundColor: '#263238',
+                                backgroundColor: '#2b2a2e',
                                 border: '.2rem solid #fafafa',
                                 color: '#fafafa',
                             }}
@@ -624,7 +624,7 @@ function EditUser({ user, onClose }) {
                             variant="outlined"
                             onClick={onClose}
                             sx={{
-                                backgroundColor: '#263238',
+                                backgroundColor: '#2b2a2e',
                                 border: '.2rem solid #fafafa',
                                 color: '#fafafa',
                                 marginLeft: '1rem',

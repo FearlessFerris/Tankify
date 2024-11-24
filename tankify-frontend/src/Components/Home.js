@@ -26,9 +26,6 @@ function Home(){
                 marginTop: '10rem'
             }}
         >
-
-
-            {/* <h1> Explore... </h1> */}
             <Carousel /> 
         </div>
     )

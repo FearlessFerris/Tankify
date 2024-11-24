@@ -37,8 +37,6 @@ class User( Base ):
 
     # Relationships with back_populates and overlaps
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
-    reviews = relationship( 'Review', back_populates='user', lazy= 'select' )
-    inventory = relationship( 'Inventory', back_populates='user', lazy= 'select' )
 
     def __init__( self, username, password, email, balance = 1000, image = None ):
         self.username = username 
@@ -141,50 +139,60 @@ class User( Base ):
             return user
         return None 
 
-    
-class Tank( Base ):
+
+class Tank( Base ): 
     """ Tank Model """
 
     __tablename__ = 'tanks'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
     name = Column( String, nullable = False )
-    description = Column( Text, nullable = False )
-    price = Column( Integer, nullable = False )
-    image_url = Column( String, nullable = True ) 
-    rating = Column( Integer, nullable = True, default = 0 )
+    description = Column( String, nullable = False )
+    price = Column( String, nullable = False )
+    type = Column( String, nullable = False )
+    nation = Column( String, nullable = False )
+    nation_flag = Column( String, nullable = False )
+    tier = Column( String, nullable = False )
+    image = Column( String, nullable = False )
     created_at = Column( DateTime, server_default = func.now() )
 
-    # Relationships with back_populates and overlaps
-    reviews = relationship( 'Review', back_populates='tank', lazy=True )
-    inventory = relationship( 'Inventory', back_populates='tank', lazy=True )
+    # Relationships 
 
 
-    def __init__( self, name, description, price, image_url, rating ):
+    # Instance Methods 
+    def __init__( self, name, description, price, type, nation, nation_flag, tier, image ): 
         self.name = name 
-        self.description = description 
+        self.description = description
         self.price = price 
-        self.image_url = image_url 
-        self.rating = rating 
-    
-    def show_profile( self ):
-        """ Retrieve Tank Profile """
+        self.type = type
+        self.nation = nation
+        self.nation_flag = nation_flag
+        self.tier = tier
+        self.image = image 
+
+    def show_info( self ): 
+        """ Retrieves Tank Information """
 
         tank = {
             'id': str( self.id ),
             'name': self.name,
             'description': self.description,
             'price': self.price,
-            'image_url': self.image_url,
-            'rating': self.rating
+            'type': self.type, 
+            'nation': self.nation, 
+            'nation_flag': self.nation_flag, 
+            'tier': self.tier,
+            'image': self.image,
+
         }
-        return tank
+        return tank 
     
-    @classmethod 
-    def get_all( cls ):
-        """ Retrieve all Tank Class Instances """
+    # Class Methods 
+    @classmethod
+    def get_all_tanks( cls ): 
+        """ Retrieves all Tanks from Database """
 
         tanks = cls.query.all()
-        tank_list = [ tank.show_profile() for tank in tanks ]
+        tank_list = [ tank.show_info() for tank in tanks ]
         return tank_list
 
 
@@ -203,31 +211,31 @@ class Transaction( Base ):
     tank = relationship( 'Tank', backref='transactions' )
 
 
-class Review( Base ):
-    """ Review Model """
+# class Review( Base ):
+#     """ Review Model """
 
-    __tablename__ = 'reviews', 
-    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
-    comment = Column( Text, nullable = True )
-    rating = Column( Integer, nullable = False ) 
-    created_at = Column( DateTime, server_default = func.now() )
+#     __tablename__ = 'reviews', 
+#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+#     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+#     tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
+#     comment = Column( Text, nullable = True )
+#     rating = Column( Integer, nullable = False ) 
+#     created_at = Column( DateTime, server_default = func.now() )
 
-    # Relationships with back_populates
-    user = relationship( 'User', back_populates='reviews' )
-    tank = relationship( 'Tank', back_populates='reviews' )
+#     # Relationships with back_populates
+#     user = relationship( 'User', back_populates='reviews' )
+#     tank = relationship( 'Tank', back_populates='reviews' )
 
 
-class Inventory( Base ):
-    """ Inventory Model """
+# class Inventory( Base ):
+#     """ Inventory Model """
 
-    __tablename__ = 'inventory'
-    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
-    acquired_at = Column( DateTime, server_default = func.now() )
+#     __tablename__ = 'inventory'
+#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+#     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+#     tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
+#     acquired_at = Column( DateTime, server_default = func.now() )
 
-    # Relationships with back_populates
-    user = relationship( 'User', back_populates='inventory' )
-    tank = relationship( 'Tank', back_populates='inventory' )
+#     # Relationships with back_populates
+#     user = relationship( 'User', back_populates='inventory' )
+#     tank = relationship( 'Tank', back_populates='inventory' )
