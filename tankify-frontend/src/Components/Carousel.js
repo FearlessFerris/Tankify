@@ -24,15 +24,15 @@ function Carousel() {
     const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    const types = [ 'Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG' ];
-    const nations = [ 'USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy' ];
+    const types = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG'];
+    const nations = ['USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy'];
 
     useEffect(() => {
         const fetchTanks = async () => {
             try {
                 const response = await apiClient.get('/tanks/all');
                 const apiTanks = response.data.data;
-                setTanks( apiTanks );
+                setTanks(apiTanks);
             } catch {
                 console.error('Error retrieving tanks!');
             }
@@ -55,13 +55,13 @@ function Carousel() {
     const handleFilterChange = (filterType, value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
-            [filterType]: prevFilters[filterType] === value ? '' : value, 
+            [filterType]: prevFilters[filterType] === value ? '' : value,
         }));
         handleMenuClose(filterType);
     };
 
-    const fixCurrency = ( price ) => {
-        return Number( price ).toLocaleString();
+    const fixCurrency = (price) => {
+        return Number(price).toLocaleString();
     }
 
     const filteredTanks = tanks.filter((tank) => {
@@ -155,7 +155,7 @@ function Carousel() {
                             <MenuItem
                                 key={tier}
                                 onClick={() => handleFilterChange('tier', tier)}
-                                sx = {{
+                                sx={{
                                     backgroundColor: filters.tier === tier ? '#ab003c' : 'inherit',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
@@ -188,11 +188,11 @@ function Carousel() {
                         open={Boolean(anchorEl.type)}
                         onClose={() => handleMenuClose('type')}
                     >
-                        {types.map(( type ) => (
+                        {types.map((type) => (
                             <MenuItem
-                                key={ type }
+                                key={type}
                                 onClick={() => handleFilterChange('type', type)}
-                                sx = {{
+                                sx={{
                                     backgroundColor: filters.type === type ? '#ab003c' : 'inherit',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
@@ -200,7 +200,7 @@ function Carousel() {
                                     }
                                 }}
                             >
-                                { type }
+                                {type}
                             </MenuItem>
                         ))}
                     </Menu>
@@ -229,7 +229,7 @@ function Carousel() {
                             <MenuItem
                                 key={nation}
                                 onClick={() => handleFilterChange('nation', nation)}
-                                sx = {{
+                                sx={{
                                     backgroundColor: filters.nation === nation ? '#ab003c' : 'inherit',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
@@ -248,7 +248,7 @@ function Carousel() {
                     filteredTanks.map((tank, index) => (
                         <Card
                             key={index}
-                            onClick = { () => navigate( `/tank/${ tank.id }`)}
+                            onClick={() => navigate(`/tank/${tank.id}`)}
                             sx={{
                                 alignItems: 'center',
                                 backgroundColor: '#2b2a2e',
@@ -271,83 +271,172 @@ function Carousel() {
                         >
                             <CardMedia
                                 component='img'
-                                image={ tank.image }
-                                alt={ tank.name }
+                                image={tank.image}
+                                alt={tank.name}
                                 sx={{
                                     flexShrink: 0,
-                                    marginRight: '0.5rem',
-                                    marginLeft: '0.5rem',
+                                    marginRight: '2rem',
+                                    marginLeft: '1rem',
                                     objectFit: 'cover',
                                     maxWidth: '10rem'
                                 }}
                             />
-                                <CardMedia
-                                    component = 'img'
-                                    image={tank.nation_flag}
-                                    alt={`${tank.nation} flag`}
+                            <CardMedia
+                                component='img'
+                                image={tank.nation_flag}
+                                alt={`${tank.nation} flag`}
+                                sx={{
+                                    flexShrink: 0,
+                                    marginLeft: '.5rem',
+                                    objectFit: 'cover',
+                                    maxWidth: '8rem',
+                                }}
+                            />
+                            <CardContent
+                                sx={{
+                                    marginRight: '1.5rem'
+                                }}
+                            >
+                                <Box
                                     sx={{
-                                        flexShrink: 0,
-                                        marginRight: '0.5rem',
-                                        objectFit: 'cover',
-                                        maxWidth: '8rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
                                     }}
-                                />
-                            <CardContent>
-                                <Typography
-                                    variant='h5'
-                                    noWrap
+                                >
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#fafafa',
+                                            textAlign: 'right',
+                                            minWidth: '5rem',
+                                            marginRight: '.5rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        Name:
+                                    </Typography>
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#ab003c',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            flexGrow: 1,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '11rem',
+                                            marginRight: '1rem'
+                                        }}
+                                    >
+                                        {tank.name}
+                                    </Typography>
+                                </Box>
+
+                                <Box
                                     sx={{
-                                        color: '#fafafa',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        maxWidth: '18rem'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
                                     }}
                                 >
-                                Name:  <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { tank.name } </span>
-                                </Typography>
-                                <Typography
-                                    variant = 'h5'
-                                    sx = {{
-                                        color: '#fafafa'
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#fafafa',
+                                            textAlign: 'right',
+                                            minWidth: '5rem',
+                                            marginRight: '.5rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        Tier:
+                                    </Typography>
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#ab003c',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            flexGrow: 1,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '12rem'
+                                        }}
+                                    >
+                                        {tank.tier}
+                                    </Typography>
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
                                     }}
                                 >
-                                Tier: <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { tank.tier } </span> 
-                                </Typography>
-                                <Typography
-                                    variant = 'h5'
-                                    sx = {{
-                                        color: '#fafafa'
-                                    }}
-                                >
-                                Price: <span style = {{ color: '#ab003c', fontWeight: 'bold' }}> { fixCurrency( tank.price ) } </span> 
-                                </Typography>
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#fafafa',
+                                            textAlign: 'right',
+                                            minWidth: '5rem',
+                                            marginRight: '.5rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        Price:
+                                    </Typography>
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: '#ab003c',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            flexGrow: 1,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '12rem'
+                                        }}
+                                    >
+                                        {fixCurrency(tank.price)}
+                                    </Typography>
+                                </Box>
                             </CardContent>
                         </Card>
                     ))
                 ) : (
                     <>
-                    <Box 
-                        sx = {{
-                            alignItems: 'center',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
-                        }}
-                    >
-                    <Typography 
-                        variant='h4'
-                        sx = {{
-                            marginBottom: '3rem'
-                        }}
-                    > 
-                    Loading 874 Vehicles...
-                    </Typography>
-                    <CircularProgress 
-                        color = '#fafafa'
-                        size = '5rem'
-                    />  
-                    </Box>
+                        <Box
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Typography
+                                variant='h4'
+                                sx={{
+                                    marginBottom: '3rem'
+                                }}
+                            >
+                                Loading 874 Vehicles...
+                            </Typography>
+                            <CircularProgress
+                                color='#fafafa'
+                                size='5rem'
+                            />
+                        </Box>
                     </>
                 )}
             </Box>
