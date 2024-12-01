@@ -95,11 +95,10 @@ function Carousel() {
                     display: 'flex',
                     alignItems: 'center',
                     borderRadius: '1rem',
-                    border: '.2rem solid #fafafa',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
                     marginBottom: '4rem',
-                    width: '40rem',
-                    padding: '0.5rem'
+                    width: '35rem',
+                    padding: '0.2rem'
                 }}
             >
                 <TextField
@@ -116,7 +115,7 @@ function Carousel() {
                         },
                         '& .MuiInputBase-input': {
                             color: '#fafafa',
-                            fontSize: '1.3rem'
+                            fontSize: '1.1rem'
                         },
                         flexGrow: 1,
                     }}
@@ -252,12 +251,11 @@ function Carousel() {
                             sx={{
                                 alignItems: 'center',
                                 backgroundColor: '#2b2a2e',
-                                border: '.2rem solid #fafafa',
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
-                                width: '20rem',
-                                height: '20rem',
+                                width: '38rem',
+                                height: '8rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 overflow: 'visible',
                                 position: 'relative',
@@ -275,52 +273,49 @@ function Carousel() {
                             alt = { tank.name }
                             sx = {{
                                 flexShrink: 0,
+                                marginLeft: '2rem',
                                 objectFit: 'contain',
-                                width: '12rem'
+                                width: '10rem'
                             }}
-                        >
-
-                        </CardMedia>
-                            {/* <CardMedia
+                        />
+                        <CardMedia
                                 component='img'
                                 image={tank.nation_flag}
                                 alt={`${tank.nation} flag`}
                                 sx={{
                                     flexShrink: 0,
-                                    marginLeft: '.5rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '1rem',
                                     objectFit: 'cover',
                                     maxWidth: '8rem',
                                 }}
-                            /> */}
-                            <CardContent
-                                sx={{
-                                    marginLeft: '0'
-                                }}
-                            >
+                            /> 
+                            <CardContent>
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        marginLeft: '-1rem'
+                                        marginLeft: '-1rem',
+                                        marginBottom: '-0.5rem'
                                     }}
                                 >
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#fafafa',
-                                            textAlign: 'right',
                                             minWidth: '5rem',
                                             marginRight: '.5rem',
-                                            whiteSpace: 'nowrap',
                                             overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            textAlign: 'right',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
                                         }}
                                     >
                                         Name:
                                     </Typography>
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#ab003c',
                                             fontWeight: 'bold',
@@ -329,7 +324,7 @@ function Carousel() {
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
-                                            maxWidth: '11rem',
+                                            maxWidth: '9rem',
                                             marginRight: '1rem'
                                         }}
                                     >
@@ -341,13 +336,15 @@ function Carousel() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        marginLeft: '-1rem'
+                                        marginLeft: '-1rem',
+                                        marginBottom: '-0.5rem'
                                     }}
                                 >
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#fafafa',
+                                            lineHeight: .8,
                                             textAlign: 'right',
                                             minWidth: '5rem',
                                             marginRight: '.5rem',
@@ -359,7 +356,7 @@ function Carousel() {
                                         Price:
                                     </Typography>
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#ab003c',
                                             fontWeight: 'bold',
@@ -379,11 +376,12 @@ function Carousel() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        marginLeft: '-1rem'
+                                        marginLeft: '-1rem',
+                                        marginBottom: '-0.5rem'
                                     }}
                                 >
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#fafafa',
                                             textAlign: 'right',
@@ -397,7 +395,7 @@ function Carousel() {
                                         Tier:
                                     </Typography>
                                     <Typography
-                                        variant='h5'
+                                        variant='h6'
                                         sx={{
                                             color: '#ab003c',
                                             fontWeight: 'bold',
@@ -410,6 +408,47 @@ function Carousel() {
                                         }}
                                     >
                                         {tank.tier}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        marginLeft: '-1rem'
+                                    }}
+                                >
+                                    <Typography
+                                        variant='h6'
+                                        sx={{
+                                            color: '#fafafa',
+                                            textAlign: 'right',
+                                            minWidth: '5rem',
+                                            marginRight: '.5rem',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        Nation:
+                                    </Typography>
+                                    <Typography
+                                        variant='h6'
+                                        sx={{
+                                            color: '#ab003c',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            flexGrow: 1,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '12rem'
+                                        }}
+                                    >
+                                    {tank.nation.length === 3 || tank.nation.length === 4 
+                                        ? tank.nation.toUpperCase() 
+                                        : tank.nation.charAt(0).toUpperCase() + tank.nation.slice(1)
+                                    }
                                     </Typography>
                                 </Box>
                             </CardContent>
