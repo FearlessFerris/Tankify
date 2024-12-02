@@ -31,6 +31,7 @@ function MenuSearch() {
           size = 'small'
           sx = {{
             input: {
+              backgroundColor: '#2b2a2e',
               color: '#fafafa', 
               width: '20rem'
             },
@@ -39,18 +40,15 @@ function MenuSearch() {
             },
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                  borderColor: '#fafafa',
-                  border: '.2rem solid #fafafa',
+                  borderColor: '#0f0e0e',
                   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
                 '&:hover fieldset': {
-                  borderColor: '#fafafa',
-                  border: '.2rem solid #fafafa',
+                  borderColor: '#0f0e0e',
                   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#fafafa',
-                  border: '.2rem solid #fafafa',
+                  borderColor: '#0f0e0e',
                   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
               },
             },

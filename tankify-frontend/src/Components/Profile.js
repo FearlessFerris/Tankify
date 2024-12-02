@@ -46,7 +46,7 @@ function Profile() {
                 maxWidth: '45rem',
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                border: '.2rem solid #fafafa',
+                border: '.1rem solid #0f0e0e',
                 borderRadius: '.3rem',
                 padding: '2rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -70,7 +70,7 @@ function Profile() {
                         height: '100%',
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        border: '.2rem solid #fafafa',
+                        border: '.2rem solid #ab003c',
                     }}
                 />
                 {hover && (
@@ -177,7 +177,7 @@ function Profile() {
                     startIcon = { <EditIcon sx = {{ color: '#ab003c' }} /> }
                     sx={{
                         color: '#fafafa',
-                        border: '.2rem solid #fafafa',
+                        border: '.2rem solid #ab003c',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     }}
                 >

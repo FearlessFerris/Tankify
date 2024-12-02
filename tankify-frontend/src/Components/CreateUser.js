@@ -138,7 +138,7 @@ function CreateUser() {
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    border: '.2rem solid #fafafa',
+                    border: '.1rem solid #0f0e0e',
                     borderRadius: '.3rem',
                     padding: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
@@ -201,18 +201,15 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                 },
@@ -266,19 +263,16 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                 },
                                 '& .MuiInputLabel-root': {
@@ -331,19 +325,16 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#004d40',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                 },
                                 '& .MuiInputLabel-root': {
@@ -396,19 +387,16 @@ function CreateUser() {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
                                 },
                                 '& .MuiInputLabel-root': {
@@ -441,7 +429,7 @@ function CreateUser() {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
                         >
@@ -462,7 +450,7 @@ function CreateUser() {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 marginLeft: '1rem'
                             }}
@@ -479,7 +467,7 @@ function CreateUser() {
                                 width: '100%',
                                 maxWidth: '300px',
                                 marginBottom: '1rem',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 borderRadius: '.3rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
@@ -533,29 +521,26 @@ function CreateUser() {
                                         color: '#fafafa'
                                     },
                                     '& .MuiOutlinedInput-root': {
-                                        '& fieldset': {
-                                            borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
-                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
-                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
-                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                        },
+                                    '& fieldset': {
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
-                                    '& .MuiInputLabel-root': {
-                                        color: '#fafafa',
+                                    '&:hover fieldset': {
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
-                                    '& .MuiInputLabel-root.Mui-focused': {
-                                        color: '#fafafa',
+                                    '&.Mui-focused fieldset': {
+                                        border: '.2rem solid #ab003c',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                     },
-                                    width: '100%',
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: '#fafafa',
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                    color: '#fafafa',
+                                },
+                                width: '100%',
                                     marginBottom: '1rem'
                                 }}
                             ></TextField>
@@ -568,7 +553,7 @@ function CreateUser() {
                         sx={{
                             color: '#fafafa',
                             display: 'flex',
-                            border: '.2rem solid #fafafa',
+                            border: '.2rem solid #ab003c',
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             marginTop: '1rem'
                         }}

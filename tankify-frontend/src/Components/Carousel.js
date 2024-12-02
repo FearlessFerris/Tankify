@@ -19,6 +19,9 @@ import apiClient from '../api/apiClient';
 function Carousel() {
 
     const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [moreTanks, setMoreTanks] = useState(true);
     const [tanks, setTanks] = useState([]);
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
@@ -27,18 +30,66 @@ function Carousel() {
     const types = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG'];
     const nations = ['USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy'];
 
-    useEffect(() => {
-        const fetchTanks = async () => {
-            try {
-                const response = await apiClient.get('/tanks/all');
-                const apiTanks = response.data.data;
+    const fetchTanks = async (currentPage = 1, currentFilters = filters) => {
+        setIsLoading(true);
+        try {
+            const { type, tier, nation } = currentFilters;
+            const response = await apiClient.get(
+                `/tanks/all?page=${currentPage}&per_page=20&type=${type || ''}&tier=${tier || ''}&nation=${nation || ''}`
+            );
+            console.log("API Response:", response.data);
+            const apiTanks = response.data.data;
+            if (currentPage === 1) {
                 setTanks(apiTanks);
-            } catch {
-                console.error('Error retrieving tanks!');
+            } else {
+                setTanks((previous) => [...previous, ...apiTanks]);
+            }
+
+            if (response.data.data.length === 0 || response.data.total_pages <= currentPage) {
+                setMoreTanks(false);
+            } else {
+                setPage(currentPage + 1);
+            }
+        } catch (error) {
+            console.error('Error retrieving tanks:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTanks(1, filters);
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + document.documentElement.scrollTop + 1 >=
+                document.documentElement.scrollHeight
+            ) {
+                if (moreTanks && !isLoading) {
+                    fetchTanks(page, filters);
+                }
             }
         };
-        fetchTanks();
-    }, []);
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [page, isLoading, moreTanks, filters]);
+
+    const handleFilterChange = (filterType, value) => {
+        const updatedFilters = {
+            ...filters,
+            [filterType]: filters[filterType] === value ? '' : value,
+        };
+
+        setFilters(updatedFilters);
+        setPage(1); 
+        setMoreTanks(true); 
+        fetchTanks(1, updatedFilters); 
+    };
 
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
@@ -52,24 +103,13 @@ function Carousel() {
         setAnchorEl((prev) => ({ ...prev, [type]: null }));
     };
 
-    const handleFilterChange = (filterType, value) => {
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [filterType]: prevFilters[filterType] === value ? '' : value,
-        }));
-        handleMenuClose(filterType);
-    };
-
     const fixCurrency = (price) => {
         return Number(price).toLocaleString();
-    }
+    };
 
     const filteredTanks = tanks.filter((tank) => {
         const matchesSearch = tank.name.toLowerCase().includes(search.toLowerCase());
-        const matchesType = !filters.type || tank.type.toLowerCase() === filters.type.toLowerCase().replace(' ', '');
-        const matchesTier = !filters.tier || tank.tier === filters.tier;
-        const matchesNation = !filters.nation || tank.nation === filters.nation.toLowerCase();
-        return matchesSearch && matchesType && matchesTier && matchesNation;
+        return matchesSearch;
     });
 
     return (
@@ -251,6 +291,7 @@ function Carousel() {
                             sx={{
                                 alignItems: 'center',
                                 backgroundColor: '#2b2a2e',
+                                border: '.1rem solid #0f0e0e',
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
@@ -267,18 +308,18 @@ function Carousel() {
                                 },
                             }}
                         >
-                        <CardMedia
-                            component = 'img'
-                            image = { tank.image }
-                            alt = { tank.name }
-                            sx = {{
-                                flexShrink: 0,
-                                marginLeft: '2rem',
-                                objectFit: 'contain',
-                                width: '10rem'
-                            }}
-                        />
-                        <CardMedia
+                            <CardMedia
+                                component='img'
+                                image={tank.image}
+                                alt={tank.name}
+                                sx={{
+                                    flexShrink: 0,
+                                    marginLeft: '2rem',
+                                    objectFit: 'contain',
+                                    width: '10rem',
+                                }}
+                            />
+                            <CardMedia
                                 component='img'
                                 image={tank.nation_flag}
                                 alt={`${tank.nation} flag`}
@@ -289,7 +330,7 @@ function Carousel() {
                                     objectFit: 'cover',
                                     maxWidth: '8rem',
                                 }}
-                            /> 
+                            />
                             <CardContent>
                                 <Box
                                     sx={{
@@ -297,7 +338,7 @@ function Carousel() {
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         marginLeft: '-1rem',
-                                        marginBottom: '-0.5rem'
+                                        marginBottom: '-0.5rem',
                                     }}
                                 >
                                     <Typography
@@ -325,7 +366,7 @@ function Carousel() {
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
                                             maxWidth: '9rem',
-                                            marginRight: '1rem'
+                                            marginRight: '1rem',
                                         }}
                                     >
                                         {tank.name}
@@ -337,20 +378,20 @@ function Carousel() {
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         marginLeft: '-1rem',
-                                        marginBottom: '-0.5rem'
+                                        marginBottom: '-0.5rem',
                                     }}
                                 >
                                     <Typography
                                         variant='h6'
                                         sx={{
                                             color: '#fafafa',
-                                            lineHeight: .8,
+                                            lineHeight: 0.8,
                                             textAlign: 'right',
                                             minWidth: '5rem',
                                             marginRight: '.5rem',
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            textOverflow: 'ellipsis',
                                         }}
                                     >
                                         Price:
@@ -365,7 +406,7 @@ function Carousel() {
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
-                                            maxWidth: '12rem'
+                                            maxWidth: '12rem',
                                         }}
                                     >
                                         {fixCurrency(tank.price)}
@@ -377,7 +418,7 @@ function Carousel() {
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         marginLeft: '-1rem',
-                                        marginBottom: '-0.5rem'
+                                        marginBottom: '-0.5rem',
                                     }}
                                 >
                                     <Typography
@@ -389,7 +430,7 @@ function Carousel() {
                                             marginRight: '.5rem',
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            textOverflow: 'ellipsis',
                                         }}
                                     >
                                         Tier:
@@ -404,7 +445,7 @@ function Carousel() {
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
-                                            maxWidth: '12rem'
+                                            maxWidth: '12rem',
                                         }}
                                     >
                                         {tank.tier}
@@ -415,7 +456,7 @@ function Carousel() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        marginLeft: '-1rem'
+                                        marginLeft: '-1rem',
                                     }}
                                 >
                                     <Typography
@@ -427,7 +468,7 @@ function Carousel() {
                                             marginRight: '.5rem',
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            textOverflow: 'ellipsis',
                                         }}
                                     >
                                         Nation:
@@ -442,13 +483,12 @@ function Carousel() {
                                             whiteSpace: 'nowrap',
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
-                                            maxWidth: '12rem'
+                                            maxWidth: '12rem',
                                         }}
                                     >
-                                    {tank.nation.length === 3 || tank.nation.length === 4 
-                                        ? tank.nation.toUpperCase() 
-                                        : tank.nation.charAt(0).toUpperCase() + tank.nation.slice(1)
-                                    }
+                                        {tank.nation.length === 3 || tank.nation.length === 4
+                                            ? tank.nation.toUpperCase()
+                                            : tank.nation.charAt(0).toUpperCase() + tank.nation.slice(1)}
                                     </Typography>
                                 </Box>
                             </CardContent>
@@ -461,21 +501,18 @@ function Carousel() {
                                 alignItems: 'center',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                             }}
                         >
                             <Typography
                                 variant='h4'
                                 sx={{
-                                    marginBottom: '3rem'
+                                    marginBottom: '3rem',
                                 }}
                             >
-                                Loading 874 Vehicles...
+                                Loading Vehicles...
                             </Typography>
-                            <CircularProgress
-                                color='#fafafa'
-                                size='5rem'
-                            />
+                            <CircularProgress color='#fafafa' size='5rem' />
                         </Box>
                     </>
                 )}

@@ -5,6 +5,7 @@
 from flask import Flask, request, jsonify, session, Blueprint 
 import requests 
 import os 
+from sqlalchemy import func
 from dotenv import load_dotenv
 
 
@@ -22,24 +23,53 @@ WG_API_KEY = os.getenv( 'WG_API_KEY' )
 
 
 # Tank Routes 
-@tank_routes.route( '/api/tanks/all', methods = [ 'GET' ] )
-def all_tanks(): 
-    """ Retrieve all Tanks from WOT Developer API """
+
+
+# Retrieve all / filtered Tanks Route 
+@tank_routes.route('/api/tanks/all', methods=['GET'])
+def all_tanks():
+    """ Retrieve filtered Tanks from the database """
 
     try:
-        tanks = Tank.get_all_tanks()
-        return jsonify({ 'message': 'Successfully retrieved tanks!', 'data': tanks })
-    except Exception as e: 
-        print( f'Error occurred while fetching tanks: { e }' )
-        return jsonify({ 'error': 'Failed to fetch data' }), 500 
+        page = request.args.get('page', default=1, type=int)
+        per_page = request.args.get('per_page', default=20, type=int)
+        nation = request.args.get('nation', default=None, type=str)
+        tank_type = request.args.get('type', default=None, type=str)
+        tier = request.args.get('tier', default=None, type=str)
+
+        query = Tank.query
+
+        if nation:
+            print( nation )
+            query = query.filter(Tank.nation.ilike(f'%{nation}%'))
+        if tank_type:
+            formatted_type = tank_type.replace(" ", "").lower()
+            query = query.filter(func.lower(Tank.type) == formatted_type)
+        if tier:
+            query = query.filter(Tank.tier == tier)
+
+        tanks = query.paginate(page=page, per_page=per_page, error_out=False)
+        tank_list = [tank.show_info() for tank in tanks.items]
+
+        return jsonify({
+            'message': 'Successfully retrieved tanks!',
+            'data': tank_list,
+            'total_pages': tanks.pages,
+            'current_page': page
+        })
+    except Exception as e:
+        print(f'Error occurred while fetching tanks: {e}')
+        return jsonify({'message': 'Failed to fetch data'}), 500
 
 
+# Retrieve specific Tank Instance Route 
 @tank_routes.route( '/api/tanks/<tank_id>', methods = [ 'GET' ] )
 def get_tank( tank_id ): 
     """ Retrieve Tank by ID """
 
     try:
         tank = Tank.query.get( tank_id )
+        print( tank )
         if tank: 
             return jsonify({ 'message': 'Successfully retrieved tank!', 'data': tank.show_info() })
         else:

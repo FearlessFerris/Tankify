@@ -90,7 +90,7 @@ function Navbar() {
                     />
                     <Typography
                         variant="h3"
-                        color="#eceff1"
+                        color="#fafafa"
                         sx={{
                             marginRight: '1rem',
                         }}
@@ -124,8 +124,9 @@ function Navbar() {
                             onMouseEnter={() => handleTooltipOpen('home')}
                             onMouseLeave={() => handleTooltipClose('home')}
                             sx={{
+                                backgroundColor: '#2b2a2e',
+                                border: '.1rem solid #0f0e0e',
                                 color: '#eceff1',
-                                border: '.2rem solid #fafafa',
                                 fontSize: '1.2rem',
                                 minWidth: '8rem',
                                 padding: '.2rem 1.5rem',
@@ -150,8 +151,9 @@ function Navbar() {
                             onMouseEnter={() => handleTooltipOpen('shop')}
                             onMouseLeave={() => handleTooltipClose('shop')}
                             sx={{
+                                backgroundColor: '#2b2a2e',
+                                border: '.1rem solid #0f0e0e',
                                 color: '#eceff1',
-                                border: '.2rem solid #fafafa',
                                 fontSize: '1.2rem',
                                 minWidth: '8rem',
                                 padding: '.2rem 1.5rem',
@@ -178,8 +180,9 @@ function Navbar() {
                                     onMouseEnter={() => handleTooltipOpen('profile')}
                                     onMouseLeave={() => handleTooltipClose('profile')}
                                     sx={{
-                                        color: '#eceff1',
-                                        border: '.2rem solid #fafafa',
+                                        backgroundColor: '#2b2a2e',
+                                        border: '.1rem solid #0f0e0e',
+                                        color: '#fafafa',
                                         fontSize: '1.2rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
@@ -200,8 +203,9 @@ function Navbar() {
                                     size="large"
                                     onClick={() => logout()}
                                     sx={{
+                                        backgroundColor: '#2b2a2e',
+                                        border: '.1rem solid #0f0e0e',
                                         color: '#eceff1',
-                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
@@ -228,8 +232,9 @@ function Navbar() {
                                     onMouseEnter={() => handleTooltipOpen('create')}
                                     onMouseLeave={() => handleTooltipClose('create')}
                                     sx={{
+                                        backgroundColor: '#2b2a2e',
+                                        border: '.1rem solid #0f0e0e',
                                         color: '#eceff1',
-                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
@@ -254,8 +259,9 @@ function Navbar() {
                                     onMouseEnter={() => handleTooltipOpen('login')}
                                     onMouseLeave={() => handleTooltipClose('login')}
                                     sx={{
+                                        backgroundColor: '#2b2a2e',
+                                        border: '.1rem solid #0f0e0e',
                                         color: '#eceff1',
-                                        border: '.2rem solid #fafafa',
                                         fontSize: '1.2rem',
                                         minWidth: '8rem',
                                         padding: '.2rem 1.5rem',
@@ -267,8 +273,6 @@ function Navbar() {
                         </>
                     )}
                 </Box>
-
-                {/* Right Section: Search Bar and Avatar */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -288,6 +292,7 @@ function Navbar() {
                                 src={user.image}
                                 alt="User profile"
                                 sx={{
+                                    border: '.1rem solid #ab003c',
                                     marginLeft: '1rem',
                                     width: '3rem',
                                     height: '3rem',

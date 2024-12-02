@@ -101,7 +101,6 @@ def edit_user(user_id):
         return jsonify({'message': 'User not found'}), 404
 
     try:
-        # Handle image file or image link update
         if image_file:
             upload_result = user.upload_image(file=image_file)
             if not upload_result['success']:
@@ -111,7 +110,6 @@ def edit_user(user_id):
             if not upload_result['success']:
                 return jsonify({'message': upload_result['error']}), 400
 
-        # Update other profile information
         update_data = {key: value for key, value in data.items() if key not in ['image', 'imageLink']}
         update_result = user.update_profile(**update_data)
 

@@ -30,29 +30,29 @@ function EditUser({ user, onClose }) {
         email: '',
         image: null,
     });
-    
+
     const handleChange = (e) => {
         const { id, value } = e.target;
         setForm({
             ...form,
             [id]: value
         });
-        
+
         if (id === 'password') {
             setShowNewPasswordFields(value.length > 0);
         }
-        
+
         if (id === 'newPassword' || id === 'confirmNewPassword') {
             setPasswordsMatch(value === (id === 'newPassword' ? form.confirmNewPassword : form.newPassword));
         }
-        
+
         if (id === 'image') {
             setForm({ ...form, image: value });
             setLinkImage(true);
             setFileName('');
         }
     }
-    
+
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setForm({ ...form, image: e.target.files[0] });
@@ -60,7 +60,7 @@ function EditUser({ user, onClose }) {
             setLinkImage(false);
         }
     }
-    
+
     const handleFileRemove = () => {
         setForm({
             ...form,
@@ -68,7 +68,7 @@ function EditUser({ user, onClose }) {
         });
         setFileName('');
     }
-    
+
     const handleLinkImage = () => {
         setLinkImage(true);
         setForm({
@@ -76,20 +76,20 @@ function EditUser({ user, onClose }) {
             image: ''
         });
     }
-    
+
     const handleSaveChanges = async () => {
         try {
             const formData = new FormData()
             if (form.username && form.username !== user.username) {
                 formData.append('username', form.username)
             }
-            if ( form.password && form.password !== '' && passwordsMatch ){
-                formData.append( 'password', form.password );
-                formData.append( 'newPassword', form.newPassword );
-                formData.append( 'confirmNewPassword', form.confirmNewPassword );
+            if (form.password && form.password !== '' && passwordsMatch) {
+                formData.append('password', form.password);
+                formData.append('newPassword', form.newPassword);
+                formData.append('confirmNewPassword', form.confirmNewPassword);
             }
-            if ( form.email && form.email !== user.email ){
-                formData.append( 'email', form.email );
+            if (form.email && form.email !== user.email) {
+                formData.append('email', form.email);
             }
             if (form.image && !linkImage) {
                 formData.append('image', form.image);
@@ -99,27 +99,27 @@ function EditUser({ user, onClose }) {
             const response = await apiClient.put(`/edit_user/${user.id}`, formData);
             if (response.status === 200) {
                 console.log('success');
-                login( response.data.user );
-                setForm({ 
+                login(response.data.user);
+                setForm({
                     username: '',
                     password: '',
                     newPassword: '',
                     confirmNewPassword: '',
                     email: ''
                 });
-                showAlert( response.data.message, 'success' );
+                showAlert(response.data.message, 'success');
                 onClose();
             }
         } catch (error) {
             console.error('Error updating profile:', error);
         }
     }
-    
+
     const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#ab003c');
 
     return (
         <div
-        className='edit-user-component'
+            className='edit-user-component'
         >
             <form
                 style={{
@@ -134,7 +134,7 @@ function EditUser({ user, onClose }) {
                         alignItems: 'center',
                         backgroundColor: '#2b2a2e',
                         borderRadius: '1rem',
-                        border: '.2rem solid #fafafa',
+                        border: '.1rem solid ##0f0e0e',
                         display: 'flex',
                         minHeight: 'fit-content',
                         flexDirection: 'column',
@@ -176,18 +176,17 @@ function EditUser({ user, onClose }) {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -238,18 +237,17 @@ function EditUser({ user, onClose }) {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -304,18 +302,17 @@ function EditUser({ user, onClose }) {
                                         },
                                         '& .MuiOutlinedInput-root': {
                                             '& fieldset': {
-                                                borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                             '&:hover fieldset': {
                                                 borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                             '&.Mui-focused fieldset': {
                                                 borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                         },
@@ -367,18 +364,17 @@ function EditUser({ user, onClose }) {
                                         },
                                         '& .MuiOutlinedInput-root': {
                                             '& fieldset': {
-                                                borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                             '&:hover fieldset': {
                                                 borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                             '&.Mui-focused fieldset': {
                                                 borderColor: '#fafafa',
-                                                border: '.2rem solid #fafafa',
+                                                border: '.2rem solid #ab003c',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             },
                                         },
@@ -432,18 +428,17 @@ function EditUser({ user, onClose }) {
                                 },
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
-                                        borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&:hover fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     '&.Mui-focused fieldset': {
                                         borderColor: '#fafafa',
-                                        border: '.2rem solid #fafafa',
+                                        border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                 },
@@ -476,7 +471,7 @@ function EditUser({ user, onClose }) {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
                         >
@@ -497,7 +492,7 @@ function EditUser({ user, onClose }) {
                             sx={{
                                 color: '#fafafa',
                                 display: 'flex',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 marginLeft: '1rem'
                             }}
@@ -514,7 +509,7 @@ function EditUser({ user, onClose }) {
                                 width: '100%',
                                 maxWidth: '300px',
                                 marginBottom: '1rem',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 borderRadius: '.3rem',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                             }}
@@ -537,7 +532,7 @@ function EditUser({ user, onClose }) {
                             >
                                 <DeleteOutline
                                     sx={{
-                                        color: '#004d40'
+                                        color: '#ab003c'
                                     }}
                                 />
                             </IconButton>
@@ -572,18 +567,17 @@ function EditUser({ user, onClose }) {
                                     },
                                     '& .MuiOutlinedInput-root': {
                                         '& fieldset': {
-                                            borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
+                                            border: '.2rem solid #ab003c',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                         '&:hover fieldset': {
                                             borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
+                                            border: '.2rem solid #ab003c',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                         '&.Mui-focused fieldset': {
                                             borderColor: '#fafafa',
-                                            border: '.2rem solid #fafafa',
+                                            border: '.2rem solid #ab003c',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         },
                                     },
@@ -614,7 +608,7 @@ function EditUser({ user, onClose }) {
                             onClick={handleSaveChanges}
                             sx={{
                                 backgroundColor: '#2b2a2e',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 color: '#fafafa',
                             }}
                         >
@@ -625,7 +619,7 @@ function EditUser({ user, onClose }) {
                             onClick={onClose}
                             sx={{
                                 backgroundColor: '#2b2a2e',
-                                border: '.2rem solid #fafafa',
+                                border: '.2rem solid #ab003c',
                                 color: '#fafafa',
                                 marginLeft: '1rem',
                             }}
