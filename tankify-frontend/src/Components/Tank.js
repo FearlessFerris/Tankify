@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Card, CardContent, CardMedia, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Paper, Typography } from '@mui/material';
 
 
 // Components & Necessary Files 
@@ -32,6 +32,19 @@ function Tank() {
         fetchTankData();
     }, [tank_id]);
 
+    const capitalizeFirst = ( word ) => {
+        return word.split( ' ' ).map( word => word.charAt( 0 ).toUpperCase() + word.slice( 1 ) )
+    }
+
+    const capitalizeNation = ( word ) => {
+        if( word.length === 2 || word.length === 3 || word.length === 4 ){
+            return word.toUpperCase()
+        }
+        else {
+            return capitalizeFirst( word )
+        }
+    }
+
     return (
         <div
             className='tank-container'
@@ -58,7 +71,7 @@ function Tank() {
                         border: '.1rem solid #0f0e0e',
                         color: '#fafafa',
                         textAlign: 'center',
-                        width: '80rem'
+                        width: '70rem'
                     }}
                 >
                     {tank && (
@@ -67,7 +80,7 @@ function Tank() {
                                 sx = {{
                                     backgroundColor: '#2b2a2e',
                                     color: '#fafafa',
-                                    height: '100rem',
+                                    height: '150rem',
                                     textAlign: 'center'
                                 }}
                             >
@@ -86,38 +99,113 @@ function Tank() {
                                     sx={{
                                         flexShrink: 0,
                                         height: '30rem',
-                                        marginLeft: '10rem',
+                                        marginLeft: '5rem',
                                         width: '80rem',
                                     }}
                                 />
                                 <Box
                                     sx = {{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        marginLeft: '2rem',
                                         textAlign: 'start'
                                     }}
                                 >   
-                                <Typography 
-                                    variant = 'h3'
+                                    <Typography 
+                                        variant = 'h4'
+                                    >
+                                    Tier:&nbsp; 
+                                    </Typography>
+                                    <Typography
+                                        variant='h4'
+                                        sx = {{
+                                            color: '#ab003c'
+                                        }}
+                                    >
+                                    { tank.tier}
+                                    </Typography>
+                                </Box>
+                                <Box 
                                     sx = {{
-                                        
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        marginLeft: '2rem',
+                                        textAlign: 'start'
                                     }}
                                 >
-                                Tier: 
-                                </Typography>
                                     <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.tier}
+                                        variant = 'h4'
+                                    >
+                                    Nation:&nbsp; 
                                     </Typography>
                                     <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.nation}
+                                        variant='h4'
+                                        sx = {{
+                                            color: '#ab003c'
+                                        }}
+                                    >
+                                    { capitalizeNation( tank.nation ) }
+                                    </Typography>
+                                </Box>
+                                <Box 
+                                    sx = {{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        marginLeft: '2rem',
+                                        textAlign: 'start'
+                                    }}
+                                >
+                                    <Typography 
+                                        variant = 'h4'
+                                    >
+                                    Price:&nbsp; 
                                     </Typography>
                                     <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.price}
+                                        variant='h4'
+                                        sx = {{
+                                            color: '#ab003c'
+                                        }}
+                                    >
+                                    {tank.price}
                                     </Typography>
+                                </Box>
+                                <Box 
+                                    sx = {{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        marginLeft: '2rem',
+                                        marginRight: '2rem',
+                                        textAlign: 'start'
+                                    }}
+                                >
+                                    <Typography
+                                        variant = 'h4'
+                                    >
+                                    Description:&nbsp; 
+                                    </Typography>
+                                    <Typography
+                                        variant = 'h4'
+                                        sx = {{
+                                            color: '#ab003c',
+                                            whiteSpace: 'nowrap',
+                                            maxWidth: '45rem',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                    { tank.description } 
+                                    </Typography>
+                                    <Button
+                                        variant = 'outlined'
+                                        size = 'large'
+                                        sx = {{
+                                            color: '#fafafa',
+                                            border: '.2rem solid #ab003c',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
+                                        }}
+                                    > 
+                                    Show More 
+                                    </Button>
                                 </Box>
                             </Card>
                         </>
