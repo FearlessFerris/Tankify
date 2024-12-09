@@ -10,6 +10,7 @@ from sqlalchemy import func
 from datetime import datetime, timedelta
 import uuid
 import bcrypt
+import requests 
 
 
 # Necessary Files 
@@ -20,6 +21,9 @@ from s3_utils import get_s3_client, BUCKET_NAME
 db = SQLAlchemy()
 Base = db.Model
 
+
+# Base URL's 
+WOT_CDN_BASE = 'https://na-wotp.wgcdn.co/dcont/tankopedia_images/'
 
 
 class User( Base ):
@@ -146,28 +150,32 @@ class Tank( Base ):
     __tablename__ = 'tanks'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
     name = Column( String, nullable = False )
+    tag = Column( String, nullable = False )
     description = Column( String, nullable = False )
     price = Column( String, nullable = False )
     type = Column( String, nullable = False )
     nation = Column( String, nullable = False )
     nation_flag = Column( String, nullable = False )
     tier = Column( String, nullable = False )
-    image = Column( String, nullable = False )
+    carousel_image = Column( String, nullable = False )
+    hd_image = Column( String, nullable = False )
     created_at = Column( DateTime, server_default = func.now() )
 
     # Relationships 
 
 
     # Instance Methods 
-    def __init__( self, name, description, price, type, nation, nation_flag, tier, image ): 
+    def __init__( self, name, tag, description, price, type, nation, nation_flag, tier, hd_image, carousel_image ): 
         self.name = name 
+        self.tag = tag 
         self.description = description
         self.price = price 
         self.type = type
         self.nation = nation
         self.nation_flag = nation_flag
         self.tier = tier
-        self.image = image 
+        self.hd_image = hd_image 
+        self.carousel_image = carousel_image
 
     def show_info( self ): 
         """ Retrieves Tank Information """
@@ -175,13 +183,15 @@ class Tank( Base ):
         tank = {
             'id': str( self.id ),
             'name': self.name,
+            'tag': self.tag,
             'description': self.description,
             'price': self.price,
             'type': self.type, 
             'nation': self.nation, 
             'nation_flag': self.nation_flag, 
             'tier': self.tier,
-            'image': self.image,
+            'hd_image': f'{ WOT_CDN_BASE }{ self.tag.lower() }/{ self.tag.lower() }_image.png',
+            'carousel_image': self.carousel_image,
 
         }
         return tank 

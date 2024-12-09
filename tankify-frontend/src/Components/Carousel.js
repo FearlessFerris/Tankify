@@ -23,8 +23,8 @@ function Carousel() {
     const [isLoading, setIsLoading] = useState(false);
     const [moreTanks, setMoreTanks] = useState(true);
     const [tanks, setTanks] = useState([]);
-    const [search, setSearch] = useState('');
-    const [filters, setFilters] = useState({ type: '', tier: '', nation: '' });
+    // const [search, setSearch] = useState('');
+    const [filters, setFilters] = useState({ search: '', type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const types = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG'];
@@ -33,9 +33,9 @@ function Carousel() {
     const fetchTanks = async (currentPage = 1, currentFilters = filters) => {
         setIsLoading(true);
         try {
-            const { type, tier, nation } = currentFilters;
+            const { search, type, tier, nation } = currentFilters;
             const response = await apiClient.get(
-                `/tanks/all?page=${currentPage}&per_page=20&type=${type || ''}&tier=${tier || ''}&nation=${nation || ''}`
+                `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=20&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
             );
             console.log("API Response:", response.data);
             const apiTanks = response.data.data;
@@ -44,7 +44,6 @@ function Carousel() {
             } else {
                 setTanks((previous) => [...previous, ...apiTanks]);
             }
-
             if (response.data.data.length === 0 || response.data.total_pages <= currentPage) {
                 setMoreTanks(false);
             } else {
@@ -59,7 +58,7 @@ function Carousel() {
 
     useEffect(() => {
         fetchTanks(1, filters);
-    }, []);
+    }, [ filters ]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -88,11 +87,9 @@ function Carousel() {
         setFilters(updatedFilters);
         setPage(1); 
         setMoreTanks(true); 
-        fetchTanks(1, updatedFilters); 
-    };
-
-    const handleSearchChange = (e) => {
-        setSearch(e.target.value);
+        if ( filterType === 'search' ){
+            fetchTanks( 1, updatedFilters )
+        }
     };
 
     const handleMenuOpen = (event, type) => {
@@ -108,7 +105,7 @@ function Carousel() {
     };
 
     const filteredTanks = tanks.filter((tank) => {
-        const matchesSearch = tank.name.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = tank.name.toLowerCase().includes(filters.search.toLowerCase());
         return matchesSearch;
     });
 
@@ -144,8 +141,8 @@ function Carousel() {
                 <TextField
                     variant='outlined'
                     placeholder='Search Tank by Name'
-                    value={search}
-                    onChange={handleSearchChange}
+                    value={ filters.search }
+                    onChange={ ( e ) => handleFilterChange( 'search', e.target.value ) }
                     sx={{
                         input: { color: '#fafafa' },
                         '& .MuiOutlinedInput-root': {
@@ -310,7 +307,7 @@ function Carousel() {
                         >
                             <CardMedia
                                 component='img'
-                                image={tank.image}
+                                image={tank.carousel_image}
                                 alt={tank.name}
                                 sx={{
                                     flexShrink: 0,

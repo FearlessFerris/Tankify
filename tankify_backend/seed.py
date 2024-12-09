@@ -77,13 +77,15 @@ def seed_tanks():
                     tanks.append(
                         Tank(
                             name=tank_info.get('name', 'Unknown Tank'),
+                            tag = tank_info.get( 'tag', 'No Tag Available' ),
                             description=tank_info.get('description', 'No description available.'),
                             price=tank_info.get('price_credit', 1000) if tank_info.get('price_credit') is not None else 1000, 
                             type=tank_info.get('type', 'Unknown Type'),
                             nation=nation,
                             nation_flag=nation_flag_urls.get(nation, ''),
                             tier=tank_info.get('tier', 'Unknown Tier'),
-                            image=tank_info.get('images', {}).get('big_icon', '')
+                            hd_image = tank_info.get( 'hd_image', 'No Image Available' ),
+                            carousel_image=tank_info.get('images', {}).get('big_icon', '')
                         )
                     )
                 else:
