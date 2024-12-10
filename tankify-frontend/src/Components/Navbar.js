@@ -105,7 +105,7 @@ function Navbar() {
                         justifyContent: 'flex-start', 
                         alignItems: 'center',
                         flexGrow: 1,
-                        ml: '30%', 
+                        marginLeft: '19rem',
                         gap: '1rem',
                     }}
                 >

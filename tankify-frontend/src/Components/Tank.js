@@ -15,8 +15,8 @@ import apiClient from '../api/apiClient';
 function Tank() {
 
     const { tank_id } = useParams();
-    console.log(`Tank ID: ${tank_id}`)
-    const [tank, setTank] = useState(null);
+    const [ showDescription, setShowDescription ] = useState( false ) 
+    const [ tank, setTank ] = useState(null);
 
     useEffect(() => {
         const fetchTankData = async () => {
@@ -34,6 +34,12 @@ function Tank() {
 
     const capitalizeFirst = ( word ) => {
         return word.split( ' ' ).map( word => word.charAt( 0 ).toUpperCase() + word.slice( 1 ) )
+    }
+
+    const handleDescription = () => {
+        setShowDescription(( previous ) => (
+            !previous
+        ));
     }
 
     const capitalizeNation = ( word ) => {
@@ -187,15 +193,17 @@ function Tank() {
                                         variant = 'h4'
                                         sx = {{
                                             color: '#ab003c',
-                                            whiteSpace: 'nowrap',
+                                            whiteSpace: showDescription ? '' : 'nowrap',
                                             maxWidth: '45rem',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            overflow: showDescription ? '' : 'hidden',
+                                            textOverflow: showDescription ? '' : 'ellipsis'
                                         }}
                                     >
                                     { tank.description } 
                                     </Typography>
+                                    <Box>
                                     <Button
+                                        onClick = { () => handleDescription() }
                                         variant = 'outlined'
                                         size = 'large'
                                         sx = {{
@@ -204,8 +212,9 @@ function Tank() {
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
                                         }}
                                     > 
-                                    Show More 
+                                    { showDescription ? 'Show Less' : 'Show More' }
                                     </Button>
+                                    </Box>
                                 </Box>
                             </Card>
                         </>

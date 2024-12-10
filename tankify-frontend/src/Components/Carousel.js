@@ -23,7 +23,6 @@ function Carousel() {
     const [isLoading, setIsLoading] = useState(false);
     const [moreTanks, setMoreTanks] = useState(true);
     const [tanks, setTanks] = useState([]);
-    // const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({ search: '', type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];

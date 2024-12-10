@@ -79,7 +79,7 @@ function Profile() {
                             position: 'absolute',
                             bottom: '0.5rem',
                             right: '0.5rem',
-                            color: '#004d40',
+                            color: '#ab003c',
                             fontSize: '2.5rem',
                             backgroundColor: '#fafafa',
                             borderRadius: '50%',
