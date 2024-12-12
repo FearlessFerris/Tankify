@@ -153,25 +153,27 @@ class Tank( Base ):
     tag = Column( String, nullable = False )
     description = Column( String, nullable = False )
     price = Column( String, nullable = False )
+    vehicle_type = Column( String, nullable = False )
     nation = Column( String, nullable = False )
     nation_flag = Column( String, nullable = False )
     image = Column( String, nullable = False )
-    crew = Column( object, nullable = False )
-    default_profile = Column( object, nullable = False )
-    guns = Column( object, nullable = False )
-    modules_tree = Column( object, nullable = False )
-    next_tanks = Column( object, nullable = False )
-    radios = Column( object, nullable = False )
-    suspensions = Column( object, nullable = False )
-    turrets = Column( object, nullable = False )
+    crew = Column( JSONB, nullable = False )
+    default_profile = Column( JSONB, nullable = False )
+    guns = Column( JSONB, nullable = False )
+    modules_tree = Column( JSONB, nullable = False )
+    next_tanks = Column( JSONB, nullable = False )
+    radios = Column( JSONB, nullable = False )
+    suspensions = Column( JSONB, nullable = False )
+    turrets = Column( JSONB, nullable = False )
 
-    def __init__( self, name, tag, description, price, nation, nation_flag, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
+    def __init__( self, name, tag, description, price, vehicle_type, nation, nation_flag, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
         """ Initialize Tank Class """
 
         self.name = name 
         self.tag = tag 
         self.description = description
         self.price = price
+        self.vehicle_type = vehicle_type
         self.nation = nation 
         self.nation_flag = nation_flag 
         self.image = image 
@@ -279,19 +281,19 @@ class Tank( Base ):
 #         return tank_list
 
 
-# class Transaction( Base ):
-#     """ Transaction Model """
+class Transaction( Base ):
+    """ Transaction Model """
 
-#     __tablename__ = 'transactions'
-#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-#     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-#     tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
-#     amount = Column( Integer, nullable = False )  
-#     timestamp = Column( DateTime, server_default = func.now() )
+    __tablename__ = 'transactions'
+    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
+    amount = Column( Integer, nullable = False )  
+    timestamp = Column( DateTime, server_default = func.now() )
 
-#     # Relationships with back_populates
-#     user = relationship( 'User', back_populates='transactions' )
-#     tank = relationship( 'Tank', backref='transactions' )
+    # Relationships with back_populates
+    user = relationship( 'User', back_populates='transactions' )
+    tank = relationship( 'Tank', backref='transactions' )
 
 
 # class Review( Base ):

@@ -17,7 +17,8 @@ from models import User, Tank, Transaction
 load_dotenv()
 WG_API_KEY = os.getenv( 'WG_API_KEY' )
 
-
+# Base URL's 
+WOT_CDN_BASE = 'https://na-wotp.wgcdn.co/dcont/tankopedia_images/'
 
 # Define the clear_database function
 def clear_database():
@@ -70,35 +71,65 @@ def seed_tanks():
         }
 
         tanks = []
-        if 'data' in tank_data and isinstance(tank_data['data'], dict):
-            for tank_id, tank_info in tank_data['data'].items():
-                if 'name' in tank_info and 'price_credit' in tank_info:
-                    nation = tank_info.get('nation', '').lower()
+        if 'data' in tank_data:
+            for tank_id, tank in tank_data['data'].items():
+                if all(key in tank for key in ['name', 'default_profile', 'guns', 'modules_tree', 'next_tanks', 'radios']):
                     tanks.append(
-                        Tank(
-                            name=tank_info.get('name', 'Unknown Tank'),
-                            tag = tank_info.get( 'tag', 'No Tag Available' ),
-                            description=tank_info.get('description', 'No description available.'),
-                            price=tank_info.get('price_credit', 1000) if tank_info.get('price_credit') is not None else 1000, 
-                            type=tank_info.get('type', 'Unknown Type'),
-                            nation=nation,
-                            nation_flag=nation_flag_urls.get(nation, ''),
-                            tier=tank_info.get('tier', 'Unknown Tier'),
-                            hd_image = tank_info.get( 'hd_image', 'No Image Available' ),
-                            carousel_image=tank_info.get('images', {}).get('big_icon', '')
+                        Tank( 
+                            name=tank.get('name', 'Unknown Tank'),
+                            tag=tank.get('tag', 'Unknown'),
+                            description=tank.get('description', 'No description available'),
+                            price=str(tank.get('price_credit', 0)),
+                            vehicle_type=tank.get('type', 'Unknown'),
+                            nation=tank.get('nation', 'Unknown'),
+                            nation_flag=nation_flag_urls.get(tank.get('nation', 'unknown'), ''),
+                            image=f"{WOT_CDN_BASE}{tank.get('tag', 'unknown').lower()}/{tank.get('tag', 'unknown').lower()}_image.png",
+                            crew=tank.get('crew', {}),
+                            default_profile=tank.get('default_profile', {}),
+                            guns=tank.get('guns', {}),
+                            modules_tree=tank.get('modules_tree', {}),
+                            next_tanks=tank.get('next_tanks', {}),
+                            radios=tank.get('radios', {}),
+                            suspensions=tank.get('suspensions', {}),
+                            turrets=tank.get('turrets', {})
                         )
                     )
-                else:
-                    print(f'Skipping tank with ID {tank_id} due to missing name or price_credit.')
-
-            if tanks:
-                db.session.add_all(tanks)
-                db.session.commit()
-                print(f'{len(tanks)} tanks successfully added to the database.')
-            else:
-                print('No valid tank data found to add to the database.')
+                if tanks:
+                    db.session.add_all( tanks )
+                    db.session.commit()
+                    print( f'{ len( tanks )} tanks successfully added to the database' )
+        
         else:
-            print('No tank data found in the API response or unexpected response format.')
+            print( 'No tank data found' )
+        # if 'data' in tank_data and isinstance(tank_data['data'], dict):
+        #     for tank_id, tank_info in tank_data['data'].items():
+        #         if 'name' in tank_info and 'price_credit' in tank_info:
+        #             nation = tank_info.get('nation', '').lower()
+        #             tanks.append(
+        #                 Tank(
+        #                     name=tank_info.get('name', 'Unknown Tank'),
+        #                     tag = tank_info.get( 'tag', 'No Tag Available' ),
+        #                     description=tank_info.get('description', 'No description available.'),
+        #                     price=tank_info.get('price_credit', 1000) if tank_info.get('price_credit') is not None else 1000, 
+        #                     type=tank_info.get('type', 'Unknown Type'),
+        #                     nation=nation,
+        #                     nation_flag=nation_flag_urls.get(nation, ''),
+        #                     tier=tank_info.get('tier', 'Unknown Tier'),
+        #                     hd_image = tank_info.get( 'hd_image', 'No Image Available' ),
+        #                     carousel_image=tank_info.get('images', {}).get('big_icon', '')
+        #                 )
+        #             )
+        #         else:
+        #             print(f'Skipping tank with ID {tank_id} due to missing name or price_credit.')
+
+        #     if tanks:
+        #         db.session.add_all(tanks)
+        #         db.session.commit()
+        #         print(f'{len(tanks)} tanks successfully added to the database.')
+        #     else:
+        #         print('No valid tank data found to add to the database.')
+        # else:
+        #     print('No tank data found in the API response or unexpected response format.')
     except requests.RequestException as e:
         print(f'Error occurred while fetching tank data: {e}')
 
