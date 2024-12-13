@@ -32,12 +32,12 @@ def all_tanks():
     """ Retrieve filtered Tanks from the database """
 
     try:
-        page = request.args.get('page', default=1, type=int)
-        per_page = request.args.get('per_page', default=20, type=int)
+        page = request.args.get( 'page', default=1, type=int )
+        per_page = request.args.get('per_page', default=1, type=int )
         search = request.args.get( 'search', default = None, type = str )
-        nation = request.args.get('nation', default=None, type=str)
-        tank_type = request.args.get('type', default=None, type=str)
-        tier = request.args.get('tier', default=None, type=str)
+        nation = request.args.get( 'nation', default=None, type=str )
+        tank_type = request.args.get( 'type', default=None, type=str )
+        tier = request.args.get( 'tier', default=None, type=str )
 
         query = Tank.query
 
@@ -54,7 +54,7 @@ def all_tanks():
             query = query.filter(Tank.tier == tier)
 
         tanks = query.paginate( page=page, per_page=per_page, error_out=False )
-        tank_list = [tank.show_info() for tank in tanks.items]
+        tank_list = [tank.all_tanks() for tank in tanks.items]
 
         return jsonify({
             'message': 'Successfully retrieved tanks!',

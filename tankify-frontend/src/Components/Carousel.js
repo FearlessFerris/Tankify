@@ -23,7 +23,6 @@ function Carousel() {
     const [isLoading, setIsLoading] = useState(false);
     const [moreTanks, setMoreTanks] = useState(true);
     const [tanks, setTanks] = useState([]);
-    // const [search, setSearch] = useState('');
     const [filters, setFilters] = useState({ search: '', type: '', tier: '', nation: '' });
     const [anchorEl, setAnchorEl] = useState({ tier: null, type: null, nation: null });
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
@@ -35,10 +34,10 @@ function Carousel() {
         try {
             const { search, type, tier, nation } = currentFilters;
             const response = await apiClient.get(
-                `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=20&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
+                `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=1&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
             );
             console.log("API Response:", response.data);
-            const apiTanks = response.data.data;
+            const apiTanks = response.data.data.flat();
             if (currentPage === 1) {
                 setTanks(apiTanks);
             } else {
@@ -307,13 +306,14 @@ function Carousel() {
                         >
                             <CardMedia
                                 component='img'
-                                image={tank.carousel_image}
+                                image={tank.image}
                                 alt={tank.name}
                                 sx={{
                                     flexShrink: 0,
-                                    marginLeft: '2rem',
-                                    objectFit: 'contain',
-                                    width: '10rem',
+                                    marginLeft: '-6rem',
+                                    objectFit: 'cover',
+                                    height: '8rem',
+                                    width: '26rem'
                                 }}
                             />
                             <CardMedia
