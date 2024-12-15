@@ -34,7 +34,7 @@ function Carousel() {
         try {
             const { search, type, tier, nation } = currentFilters;
             const response = await apiClient.get(
-                `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=1&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
+                `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=20&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
             );
             console.log("API Response:", response.data);
             const apiTanks = response.data.data.flat();
@@ -310,10 +310,11 @@ function Carousel() {
                                 alt={tank.name}
                                 sx={{
                                     flexShrink: 0,
-                                    marginLeft: '-6rem',
+                                    marginLeft: '2rem',
+                                    marginTop: '1rem',
                                     objectFit: 'cover',
                                     height: '8rem',
-                                    width: '26rem'
+                                    width: '9rem'
                                 }}
                             />
                             <CardMedia

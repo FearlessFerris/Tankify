@@ -6,6 +6,8 @@ import requests
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os 
+from io import BytesIO
+from PIL import Image, ImageOps 
 
 
 # Necessary Files 
@@ -17,8 +19,17 @@ from models import User, Tank, Transaction
 load_dotenv()
 WG_API_KEY = os.getenv( 'WG_API_KEY' )
 
+# s3 Bucket Information 
+from s3_utils import BUCKET_NAME, get_s3_client
+
+
 # Base URL's 
 WOT_CDN_BASE = 'https://na-wotp.wgcdn.co/dcont/tankopedia_images/'
+
+
+# Image Processing 
+ENABLE_IMAGE_PROCESSING = False 
+
 
 # Define the clear_database function
 def clear_database():
@@ -29,7 +40,6 @@ def clear_database():
         db.drop_all()
         db.create_all()
     print('Database clearing has completed!')
-
 
 # Seed Users
 def seed_users():
@@ -44,16 +54,70 @@ def seed_users():
 
 
 # Seed Tanks
+def crop_image_auto(image_url, upload_path):
+    """Fetches an image from a URL, crops whitespace, resizes canvas, and uploads to S3."""
+    try:
+        # Fetch the image
+        response = requests.get(image_url, allow_redirects=True)
+        response.raise_for_status()
+
+        # Open the image
+        image = Image.open(BytesIO(response.content))
+
+        # Convert to RGBA to handle transparency or non-white backgrounds
+        if image.mode != "RGBA":
+            image = image.convert("RGBA")
+
+        # Find the bounding box of non-transparent or non-white pixels
+        bbox = image.getbbox()
+        if bbox:
+            cropped_image = image.crop(bbox)  # Crop to bounding box
+        else:
+            print(f"Image at {image_url} appears to be completely white or transparent. Skipping...")
+            return None
+
+        # Save the cropped image to an in-memory buffer
+        buffer = BytesIO()
+        cropped_image.save(buffer, format="PNG")  # Save as PNG to preserve transparency
+        buffer.seek(0)
+
+        # Upload to S3
+        s3 = get_s3_client()
+        s3_key = f"{upload_path}/{os.path.basename(image_url)}"
+        s3.upload_fileobj(buffer, BUCKET_NAME, s3_key, ExtraArgs={"ContentType": "image/png"})
+
+        # Log successful upload
+        s3_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
+        print(f"Successfully uploaded cropped and resized image for {os.path.basename(image_url)} to {s3_url}")
+
+        # Return the S3 URL
+        return s3_url
+
+    except Exception as e:
+        print(f"Error processing image from {image_url}: {e}")
+        return None  # Return None for failed processing
+
+
+# Capitalize Nations 
+def capitalize_nation( nation ):
+    """ Capitalizes Nation if Acronym """
+
+    if len( nation ) in ( 2, 3, 4 ):
+        return nation.upper() 
+
+    return nation.capitalize()
+
+
 def seed_tanks():
-    """Seeds the Tanks table with data from World of Tanks API."""
+    """Seeds the Tanks table with data from World of Tanks API and optionally uploads cropped images."""
     print('Fetching tank data from World of Tanks API...')
     try:
-        response = requests.get('https://api.worldoftanks.com/wot/encyclopedia/vehicles/', params={'application_id': WG_API_KEY })
+        response = requests.get(
+            'https://api.worldoftanks.com/wot/encyclopedia/vehicles/',
+            params={'application_id': os.getenv("WG_API_KEY")}
+        )
         response.raise_for_status()
         tank_data = response.json()
-
-        # Logging the response for debugging purposes
-        print(f'API Response: {tank_data}')
 
         flag_base_url = "https://tankify-images.s3.amazonaws.com/flags/"
         nation_flag_urls = {
@@ -71,67 +135,60 @@ def seed_tanks():
         }
 
         tanks = []
+        upload_path = "tank_images"  # Folder in your S3 bucket
+
         if 'data' in tank_data:
             for tank_id, tank in tank_data['data'].items():
-                if all(key in tank for key in ['name', 'default_profile', 'guns', 'modules_tree', 'next_tanks', 'radios']):
-                    tanks.append(
-                        Tank( 
-                            name=tank.get('name', 'Unknown Tank'),
-                            tag=tank.get('tag', 'Unknown'),
-                            description=tank.get('description', 'No description available'),
-                            price=str(tank.get('price_credit', 0)),
-                            vehicle_type=tank.get('type', 'Unknown'),
-                            nation=tank.get('nation', 'Unknown'),
-                            nation_flag=nation_flag_urls.get(tank.get('nation', 'unknown'), ''),
-                            image=f"{WOT_CDN_BASE}{tank.get('tag', 'unknown').lower()}/{tank.get('tag', 'unknown').lower()}_image.png",
-                            crew=tank.get('crew', {}),
-                            default_profile=tank.get('default_profile', {}),
-                            guns=tank.get('guns', {}),
-                            modules_tree=tank.get('modules_tree', {}),
-                            next_tanks=tank.get('next_tanks', {}),
-                            radios=tank.get('radios', {}),
-                            suspensions=tank.get('suspensions', {}),
-                            turrets=tank.get('turrets', {})
-                        )
-                    )
-                if tanks:
-                    db.session.add_all( tanks )
-                    db.session.commit()
-                    print( f'{ len( tanks )} tanks successfully added to the database' )
-        
-        else:
-            print( 'No tank data found' )
-        # if 'data' in tank_data and isinstance(tank_data['data'], dict):
-        #     for tank_id, tank_info in tank_data['data'].items():
-        #         if 'name' in tank_info and 'price_credit' in tank_info:
-        #             nation = tank_info.get('nation', '').lower()
-        #             tanks.append(
-        #                 Tank(
-        #                     name=tank_info.get('name', 'Unknown Tank'),
-        #                     tag = tank_info.get( 'tag', 'No Tag Available' ),
-        #                     description=tank_info.get('description', 'No description available.'),
-        #                     price=tank_info.get('price_credit', 1000) if tank_info.get('price_credit') is not None else 1000, 
-        #                     type=tank_info.get('type', 'Unknown Type'),
-        #                     nation=nation,
-        #                     nation_flag=nation_flag_urls.get(nation, ''),
-        #                     tier=tank_info.get('tier', 'Unknown Tier'),
-        #                     hd_image = tank_info.get( 'hd_image', 'No Image Available' ),
-        #                     carousel_image=tank_info.get('images', {}).get('big_icon', '')
-        #                 )
-        #             )
-        #         else:
-        #             print(f'Skipping tank with ID {tank_id} due to missing name or price_credit.')
+                if 'tag' in tank and 'name' in tank:
+                    # Construct the original image URL
+                    image_url = f"https://na-wotp.wgcdn.co/dcont/tankopedia_images/{tank['tag'].lower()}/{tank['tag'].lower()}_image.png"
+                    
+                    # Check if image processing is enabled
+                    if ENABLE_IMAGE_PROCESSING:
+                        cropped_image_url = crop_image_auto(image_url, upload_path)
+                    else:
+                        # Use the pre-existing URL from S3
+                        cropped_image_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{upload_path}/{os.path.basename(image_url)}"
+                        print(f"Using existing image URL for {tank['name']}: {cropped_image_url}")
+                    
+                    # Fallback price handling
+                    price = tank.get('price_credit', 0) if tank.get('price_credit') is not None else 0
 
-        #     if tanks:
-        #         db.session.add_all(tanks)
-        #         db.session.commit()
-        #         print(f'{len(tanks)} tanks successfully added to the database.')
-        #     else:
-        #         print('No valid tank data found to add to the database.')
-        # else:
-        #     print('No tank data found in the API response or unexpected response format.')
+                    if cropped_image_url:
+                        # Create tank instance
+                        tanks.append(
+                            Tank(
+                                name=tank['name'],
+                                tag=tank['tag'],
+                                description=tank.get('description', 'No description available'),
+                                price=price,
+                                vehicle_type=tank.get('type', 'Unknown'),
+                                tier = tank.get( 'tier', 'Unknown' ),
+                                type = tank.get( 'type', 'Unknown' ),
+                                nation= capitalize_nation(tank.get('nation', 'Unknown')),
+                                nation_flag= nation_flag_urls.get( tank.get( 'nation', 'unknown' )),
+                                image=cropped_image_url,
+                                crew=tank.get('crew', {}),
+                                default_profile=tank.get('default_profile', {}),
+                                guns=tank.get('guns', {}),
+                                modules_tree=tank.get('modules_tree', {}),
+                                next_tanks=tank.get('next_tanks', {}),
+                                radios=tank.get('radios', {}),
+                                suspensions=tank.get('suspensions', {}),
+                                turrets=tank.get('turrets', {})
+                            )
+                        )
+                    else:
+                        print(f"Skipping tank {tank['name']} due to image processing failure.")
+
+            # Commit tanks to database
+            if tanks:
+                db.session.add_all(tanks)
+                db.session.commit()
+                print(f'{len(tanks)} tanks successfully added to the database.')
+
     except requests.RequestException as e:
-        print(f'Error occurred while fetching tank data: {e}')
+        print(f"Error fetching tank data: {e}")
 
 
 # Seed Transactions

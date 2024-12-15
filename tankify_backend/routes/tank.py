@@ -33,7 +33,7 @@ def all_tanks():
 
     try:
         page = request.args.get( 'page', default=1, type=int )
-        per_page = request.args.get('per_page', default=1, type=int )
+        per_page = request.args.get('per_page', default=20, type=int )
         search = request.args.get( 'search', default = None, type = str )
         nation = request.args.get( 'nation', default=None, type=str )
         tank_type = request.args.get( 'type', default=None, type=str )
@@ -53,13 +53,14 @@ def all_tanks():
         if tier:
             query = query.filter(Tank.tier == tier)
 
-        tanks = query.paginate( page=page, per_page=per_page, error_out=False )
-        tank_list = [tank.all_tanks() for tank in tanks.items]
+        paginated_result = query.paginate(page=page, per_page=per_page, error_out=False)
+        tanks = paginated_result.items
+        tank_list = [tank.__repr__() for tank in tanks]
 
         return jsonify({
             'message': 'Successfully retrieved tanks!',
             'data': tank_list,
-            'total_pages': tanks.pages,
+            'total_pages': paginated_result.pages,
             'current_page': page
         })
     except Exception as e:
@@ -75,11 +76,10 @@ def get_tank( tank_id ):
     try:
         
         tank = Tank.query.get( tank_id )
-        print( tank )
         if tank: 
             return jsonify({ 
                 'message': 'Successfully retrieved tank!', 
-                'data': tank.show_info() 
+                'data': tank.__repr__() 
             })
         else:
             return jsonify({ 'message': 'Error, tank not found' }), 404 

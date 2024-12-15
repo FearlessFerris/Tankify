@@ -4,7 +4,10 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Card, CardContent, CardMedia, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Paper, Typography } from '@mui/material';
+import { GiBattleTank, GiChemicalTank, GiGreatWarTank } from "react-icons/gi";
+import { MdOutlineExpandCircleDown, MdRemoveRedEye } from "react-icons/md";
+import { SlPeople } from "react-icons/sl";
 
 
 // Components & Necessary Files 
@@ -15,8 +18,18 @@ import apiClient from '../api/apiClient';
 function Tank() {
 
     const { tank_id } = useParams();
-    console.log(`Tank ID: ${tank_id}`)
     const [tank, setTank] = useState(null);
+    const [showAllInfo, setShowAllInfo] = useState(false);
+    const [expand, setExpand] = useState({
+        crew: false,
+        information: true,
+        description: false,
+        firepower: false,
+        mobility: false,
+        spotting: false,
+        survivability: false,
+        vehicle: false
+    })
 
     useEffect(() => {
         const fetchTankData = async () => {
@@ -31,6 +44,40 @@ function Tank() {
         }
         fetchTankData();
     }, [tank_id]);
+
+    const handleShow = (key) => {
+        setExpand((previous) => ({
+            ...previous,
+            [key]: !previous[key]
+        }));
+    }
+
+    const toggleShowAll = () => {
+        if (showAllInfo) {
+            setExpand({
+                crew: false,
+                information: false,
+                description: false,
+                firepower: false,
+                mobility: false,
+                spotting: false,
+                survivability: false,
+                vehicle: false,
+            });
+        } else {
+            setExpand({
+                crew: true,
+                information: true,
+                description: true,
+                firepower: true,
+                mobility: true,
+                spotting: true,
+                survivability: true,
+                vehicle: true,
+            });
+        }
+        setShowAllInfo((prev) => !prev);
+    };
 
     return (
         <div
@@ -58,67 +105,775 @@ function Tank() {
                         border: '.1rem solid #0f0e0e',
                         color: '#fafafa',
                         textAlign: 'center',
-                        width: '80rem'
+                        width: '70rem'
                     }}
                 >
                     {tank && (
                         <>
                             <Card
-                                sx = {{
+                                sx={{
                                     backgroundColor: '#2b2a2e',
                                     color: '#fafafa',
-                                    height: '100rem',
-                                    textAlign: 'center'
+                                    minHeight: expand.description ? '60rem' : '40rem',
+                                    textAlign: 'center',
+                                    transition: 'height 0.3s ease-in-out',
                                 }}
                             >
                                 <Typography
                                     variant='h1'
-                                    sx = {{
+                                    sx={{
                                         color: '#ab003c'
                                     }}
                                 >
                                     {tank.name}
                                 </Typography>
-                                <CardMedia
-                                    component='img'
-                                    image={tank.hd_image}
-                                    alt={`${tank.name}`}
-                                    sx={{
-                                        flexShrink: 0,
-                                        height: '30rem',
-                                        marginLeft: '10rem',
-                                        width: '80rem',
-                                    }}
-                                />
                                 <Box
-                                    sx = {{
-                                        textAlign: 'start'
-                                    }}
-                                >   
-                                <Typography 
-                                    variant = 'h3'
-                                    sx = {{
-                                        
+                                    sx={{
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        marginTop: '6rem'
                                     }}
                                 >
-                                Tier: 
-                                </Typography>
-                                    <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.tier}
-                                    </Typography>
-                                    <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.nation}
-                                    </Typography>
-                                    <Typography
-                                        variant='h3'
-                                        >
-                                        {tank.price}
-                                    </Typography>
+                                    <CardMedia
+                                        component='img'
+                                        image={tank.image}
+                                        alt={`${tank.name}`}
+                                        sx={{
+                                            flexShrink: 0,
+                                            alignItems: 'center',
+                                            width: '25rem',
+                                        }}
+                                    />
                                 </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        marginLeft: '2rem',
+                                        marginBottom: '1rem'
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => handleShow('information')}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            marginRight: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <GiBattleTank
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                        {expand.information ? 'Hide Tank Information' : 'Show Tank Information'}
+                                    </Button>
+                                    <Button
+                                        onClick={() => toggleShowAll()}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <MdOutlineExpandCircleDown
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                                transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                                            }}
+                                        />
+                                        {showAllInfo ? 'Hide All' : 'Show All'}
+                                    </Button>
+                                </Box>
+                                {expand.information && (
+                                    <>
+                                        <Box
+                                            sx={{
+                                                alignItems: 'center',
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    marginRight: '.5rem'
+                                                }}
+                                            >
+                                                Tier:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c'
+                                                }}
+                                            >
+                                                {tank.tier}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    marginRight: '.5rem'
+                                                }}
+                                            >
+                                                Nation:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c'
+                                                }}
+                                            >
+                                                {tank.nation}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    marginRight: '.5rem'
+                                                }}
+                                            >
+                                                Price:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c'
+                                                }}
+                                            >
+                                                {tank.price}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    marginRight: '.5rem'
+                                                }}
+                                            >
+                                                Description:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                noWrap={!expand.description}
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    maxWidth: '40rem'
+                                                }}
+                                            >
+                                                {tank.description}
+                                            </Typography>
+                                            <Box
+
+                                            >
+
+                                                <Button
+                                                    onClick={() => handleShow('description')}
+                                                    variant="filled"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        color: '#900C3F',
+                                                        backgroundColor: '#2b2a2e',
+                                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                                        fontStyle: 'bold',
+                                                        fontSize: '1rem',
+                                                        marginLeft: '1rem',
+                                                        '&:hover': {
+                                                            backgroundColor: '#ab003c',
+                                                            color: '#2b2a2e',
+                                                        },
+                                                    }}
+                                                >
+                                                    <MdOutlineExpandCircleDown
+                                                        style={{
+                                                            marginRight: '.5rem',
+                                                            transition: 'color 0.3s ease',
+                                                            transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                                                        }}
+                                                    />
+                                                    {expand.description ? 'Hide Description' : 'Show Description'}
+                                                </Button>
+                                            </Box>
+                                        </Box>
+                                    </>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        marginLeft: '2rem',
+                                        marginBottom: '1rem',
+                                        marginTop: '1rem'
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => handleShow('survivability')}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <GiChemicalTank
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                        {expand.survivability ? 'Hide Survivability' : 'Show Survivability'}
+                                    </Button>
+                                </Box>
+                                {expand.survivability && (
+                                    <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                HP:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile['hp']}
+                                            </Typography>
+                                        </Box>
+                                        {tank.default_profile.armor && tank.default_profile.armor.turret !== null ? (
+                                            <>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'start',
+                                                        marginLeft: '4rem',
+                                                        marginRight: '4rem'
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant='h5'
+                                                    >
+                                                        Hull Armor:
+                                                    </Typography>
+                                                    <Typography
+                                                        variant='h5'
+                                                        sx={{
+                                                            color: '#ab003c',
+                                                            marginLeft: '.5rem'
+                                                        }}
+                                                    >
+                                                        {tank.default_profile.armor.hull['front']}/{tank.default_profile.armor.hull['rear']}/{tank.default_profile.armor.hull['sides']}
+                                                    </Typography>
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'start',
+                                                        marginLeft: '4rem',
+                                                        marginRight: '4rem'
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant='h5'
+                                                    >
+                                                        Turret Armor:
+                                                    </Typography>
+                                                    <Typography
+                                                        variant='h5'
+                                                        sx={{
+                                                            color: '#ab003c',
+                                                            marginLeft: '.5rem'
+                                                        }}
+                                                    >
+                                                        {tank.default_profile.armor.turret['front']}/{tank.default_profile.armor.turret['rear']}/{tank.default_profile.armor.turret['sides']}
+                                                    </Typography>
+                                                </Box>
+                                            </>
+                                        ) : (
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'start',
+                                                    marginLeft: '4rem',
+                                                    marginRight: '4rem'
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant='h5'
+                                                >
+                                                    Hull Armor:
+                                                </Typography>
+                                                <Typography
+                                                    variant='h5'
+                                                    sx={{
+                                                        color: '#ab003c',
+                                                        marginLeft: '.5rem'
+                                                    }}
+                                                >
+                                                    {tank.default_profile.armor.hull['front']}/{tank.default_profile.armor.hull['rear']}/{tank.default_profile.armor.hull['sides']}
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        marginLeft: '2rem',
+                                        marginBottom: '1rem',
+                                        marginTop: '1rem'
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => handleShow('mobility')}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <GiGreatWarTank
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                        {expand.mobility ? 'Hide Mobility' : 'Show Mobility'}
+                                    </Button>
+                                </Box>
+                                {expand.mobility && (
+                                    <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Chance of Fire:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile.engine['fire_chance']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Engine Power:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile.engine['power']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Load Limit:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile['max_weight']} Tons
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Top Speed Backward:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile['speed_backward']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Top Speed Forward:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile['speed_forward']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Traverse Speed:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile.suspension['traverse_speed']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Weight:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile['weight']} Tons
+                                            </Typography>
+                                        </Box>
+                                    </>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        marginLeft: '2rem',
+                                        marginBottom: '1rem',
+                                        marginTop: '1rem'
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => handleShow('spotting')}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <MdRemoveRedEye
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                        {expand.spotting ? 'Hide Spotting' : 'Show Spotting'}
+                                    </Button>
+                                </Box>
+                                {expand.spotting && (
+                                    <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                View Range:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile.turret['view_range']}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem',
+                                                marginBottom: '2rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Signal Range:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.default_profile.radio['signal_range']}
+                                            </Typography>
+                                        </Box>
+                                    </>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        marginLeft: '2rem',
+                                        marginBottom: '1rem',
+                                        marginTop: '1rem'
+                                    }}
+                                >
+                                    <Button
+                                        onClick={() => handleShow('crew')}
+                                        variant="filled"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#2b2a2e',
+                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <SlPeople
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                        {expand.crew ? 'Hide Crew' : 'Show Crew'}
+                                    </Button>
+                                </Box>
+                                {expand.crew && (
+                                    <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem'
+                                            }}
+                                        >
+                                            <Typography
+                                                variant='h5'
+                                            >
+                                                Crew Members:
+                                            </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    color: '#ab003c',
+                                                    marginLeft: '.5rem'
+                                                }}
+                                            >
+                                                {tank.crew.length}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'start',    
+                                                gap: '1rem',
+                                                marginTop: '1rem',
+                                                marginLeft: '4rem',
+                                                marginRight: '4rem',
+                                                marginBottom: '2rem'
+                                            }}
+                                        >
+                                            {tank.crew.map((crewMember, index) => (
+                                                <Box
+                                                    key={`crew-member-${index}`}
+                                                    sx={{
+                                                        textAlign: 'start',
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={`https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/${tank.nation.toLowerCase()}-face-${index + 1}.png`}
+                                                        alt={crewMember.member_id}
+                                                        style={{
+                                                            width: '6rem',
+                                                            height: '5rem',
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{
+                                                            marginTop: '0.5rem',
+                                                            color: '#fafafa',
+                                                        }}
+                                                    >
+                                                        {crewMember.member_id.toUpperCase()}
+                                                    </Typography>
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                    </>
+                                )}
                             </Card>
                         </>
                     )}
@@ -129,3 +884,7 @@ function Tank() {
 }
 
 export default Tank;
+
+// https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/uk-face-6.png
+// //na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/italy-face-1.png
+// `https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/${ tank.nation.toLowerCase() }-face-${ tank.crew.length }.png`

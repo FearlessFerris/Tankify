@@ -154,6 +154,8 @@ class Tank( Base ):
     description = Column( String, nullable = False )
     price = Column( String, nullable = False )
     vehicle_type = Column( String, nullable = False )
+    tier = Column( String, nullable = False )
+    type = Column( String, nullable = False )
     nation = Column( String, nullable = False )
     nation_flag = Column( String, nullable = False )
     image = Column( String, nullable = False )
@@ -166,7 +168,7 @@ class Tank( Base ):
     suspensions = Column( JSONB, nullable = False )
     turrets = Column( JSONB, nullable = False )
 
-    def __init__( self, name, tag, description, price, vehicle_type, nation, nation_flag, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
+    def __init__( self, name, tag, description, price, vehicle_type, tier, type, nation, nation_flag, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
         """ Initialize Tank Class """
 
         self.name = name 
@@ -174,6 +176,8 @@ class Tank( Base ):
         self.description = description
         self.price = price
         self.vehicle_type = vehicle_type
+        self.tier = tier
+        self.type = type
         self.nation = nation 
         self.nation_flag = nation_flag 
         self.image = image 
@@ -194,9 +198,11 @@ class Tank( Base ):
             'name': self.name,
             'description': self.description,
             'price': self.price,
+            'tier': self.tier, 
+            'type': self.type,
             'nation': self.nation,
             'nation_flag': self.nation_flag,
-            'image': f'{ WOT_CDN_BASE }{ self.tag.lower() }/{ self.tag.lower() }_image.png', 
+            'image': self.image,
             'crew': self.crew,
             'default_profile': self.default_profile,
             'guns': self.guns,
