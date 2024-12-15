@@ -70,7 +70,7 @@ function Login() {
             <form
                 onSubmit = { handleSubmit }
                 style={{
-                    backgroundColor: '#2b2a2e',
+                    backgroundColor: '#161616',
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
@@ -239,13 +239,17 @@ function Login() {
 
                         <Button
                             onClick = { handleSubmit }
-                            variant='outlined'
+                            variant='filled'
                             size='large'
                             sx={{
-                                color: '#fafafa',
+                                color: '#ab003c',
                                 display: 'flex',
-                                border: '.2rem solid #ab003c',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                width: '8rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa'
+                                }
                             }}
                         >
                             Login

@@ -9,6 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ClassIcon from '@mui/icons-material/Class';
 import FlagIcon from '@mui/icons-material/Flag';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import { keyframes } from '@mui/system';
 
 
 // Components & Necessary Files
@@ -17,6 +18,17 @@ import apiClient from '../api/apiClient';
 
 // Carousel Component
 function Carousel() {
+
+    const fadeIn = keyframes`
+    0% {
+      opacity: 0;
+      transform: translateY(10px); /* Slight upward motion */
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0); /* Settle into position */
+    }
+  `;
 
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
@@ -107,7 +119,7 @@ function Carousel() {
         const matchesSearch = tank.name.toLowerCase().includes(filters.search.toLowerCase());
         return matchesSearch;
     });
-
+    
     return (
         <div
             className='carousel-container'
@@ -127,7 +139,7 @@ function Carousel() {
             </Typography>
             <Box
                 sx={{
-                    backgroundColor: '#2b2a2e',
+                    backgroundColor: '#161616',
                     display: 'flex',
                     alignItems: 'center',
                     borderRadius: '1rem',
@@ -191,7 +203,8 @@ function Carousel() {
                                 key={tier}
                                 onClick={() => handleFilterChange('tier', tier)}
                                 sx={{
-                                    backgroundColor: filters.tier === tier ? '#ab003c' : 'inherit',
+                                    color: '#fafafa',
+                                    backgroundColor: filters.tier === tier ? '#ab003c' : '#161616',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
                                         color: '#fafafa'
@@ -228,7 +241,8 @@ function Carousel() {
                                 key={type}
                                 onClick={() => handleFilterChange('type', type)}
                                 sx={{
-                                    backgroundColor: filters.type === type ? '#ab003c' : 'inherit',
+                                    color: '#fafafa',
+                                    backgroundColor: filters.type === type ? '#ab003c' : '#161616',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
                                         color: '#fafafa'
@@ -265,7 +279,8 @@ function Carousel() {
                                 key={nation}
                                 onClick={() => handleFilterChange('nation', nation)}
                                 sx={{
-                                    backgroundColor: filters.nation === nation ? '#ab003c' : 'inherit',
+                                    color: '#fafafa',
+                                    backgroundColor: filters.nation === nation ? '#ab003c' : '#161616',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
                                         color: '#fafafa'
@@ -286,8 +301,7 @@ function Carousel() {
                             onClick={() => navigate(`/tank/${tank.id}`)}
                             sx={{
                                 alignItems: 'center',
-                                backgroundColor: '#2b2a2e',
-                                border: '.1rem solid #0f0e0e',
+                                backgroundColor: '#161616',
                                 borderRadius: '1rem',
                                 display: 'flex',
                                 margin: '2rem',
@@ -296,6 +310,8 @@ function Carousel() {
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                 overflow: 'visible',
                                 position: 'relative',
+                                animation: `${fadeIn} 1.5s ease-in-out`,
+                                animationFillMode: 'both',
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                 cursor: 'pointer',
                                 '&:hover': {

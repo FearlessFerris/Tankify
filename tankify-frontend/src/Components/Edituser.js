@@ -132,7 +132,7 @@ function EditUser({ user, onClose }) {
                 <Box
                     sx={{
                         alignItems: 'center',
-                        backgroundColor: '#2b2a2e',
+                        backgroundColor: '#161616',
                         borderRadius: '1rem',
                         border: '.1rem solid ##0f0e0e',
                         display: 'flex',
@@ -604,24 +604,32 @@ function EditUser({ user, onClose }) {
                     >
 
                         <Button
-                            variant="outlined"
+                            variant="filled"
                             onClick={handleSaveChanges}
                             sx={{
-                                backgroundColor: '#2b2a2e',
-                                border: '.2rem solid #ab003c',
-                                color: '#fafafa',
+                                color: '#ab003c',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                width: '8rem',
+                                '&:hover':{
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa'
+                                }
                             }}
                         >
                             Save Changes
                         </Button>
                         <Button
-                            variant="outlined"
+                            variant="filled"
                             onClick={onClose}
                             sx={{
-                                backgroundColor: '#2b2a2e',
-                                border: '.2rem solid #ab003c',
-                                color: '#fafafa',
+                                color: '#ab003c',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                 marginLeft: '1rem',
+                                width: '8rem',
+                                '&:hover':{
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa'
+                                }
                             }}
                         >
                             Cancel

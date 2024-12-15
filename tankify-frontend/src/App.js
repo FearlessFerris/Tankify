@@ -4,7 +4,7 @@
 // Dependencies 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
@@ -18,6 +18,7 @@ import Profile from './Components/Profile';
 import Shop from './Components/Shop';
 import Tank from './Components/Tank';
 import './Static/App.css'
+import PinkLavaCanvas from './Components/PinkLavaCanvas';
 
 
 // Context Providers 
@@ -32,7 +33,7 @@ const theme = createTheme({
     },
     palette: {
         background: {
-            default: '#263238',
+            default: '#0c1418',
         },
     },
 });
@@ -46,15 +47,16 @@ function App() {
                 <AlertProvider>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <Navbar />
-                        <Routes>
-                            <Route exact path='/' element={<Home />} />
-                            <Route exact path = '/shop' element = { <Shop /> } /> 
-                            <Route exact path = '/tank/:tank_id' element = { <Tank /> } /> 
-                            <Route exact path='/user/create' element={<CreateUser />} />
-                            <Route exact path='/user/profile' element={<Profile />} />
-                            <Route exact path='/user/login' element={<Login />} />
-                        </Routes>
+                        <PinkLavaCanvas /> 
+                            <Navbar />
+                            <Routes>
+                                <Route exact path="/" element={<Home />} />
+                                <Route exact path="/shop" element={<Shop />} />
+                                <Route exact path="/tank/:tank_id" element={<Tank />} />
+                                <Route exact path="/user/create" element={<CreateUser />} />
+                                <Route exact path="/user/profile" element={<Profile />} />
+                                <Route exact path="/user/login" element={<Login />} />
+                            </Routes>
                     </ThemeProvider>
                 </AlertProvider>
             </UserProvider>

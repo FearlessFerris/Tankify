@@ -101,8 +101,7 @@ function Tank() {
                 <Paper
                     elevation={3}
                     style={{
-                        backgroundColor: '#2b2a2e',
-                        border: '.1rem solid #0f0e0e',
+                        backgroundColor: '#161616',
                         color: '#fafafa',
                         textAlign: 'center',
                         width: '70rem'
@@ -112,11 +111,12 @@ function Tank() {
                         <>
                             <Card
                                 sx={{
-                                    backgroundColor: '#2b2a2e',
+                                    backgroundColor: '#161616',
                                     color: '#fafafa',
                                     minHeight: expand.description ? '60rem' : '40rem',
                                     textAlign: 'center',
                                     transition: 'height 0.3s ease-in-out',
+                                    boxShadow: '0px 6px 6px rgba(0, 0, 0.4, 0.4)'
                                 }}
                             >
                                 <Typography
@@ -161,8 +161,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             marginRight: '1rem',
@@ -188,8 +188,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             '&:hover': {
@@ -324,11 +324,11 @@ function Tank() {
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         color: '#900C3F',
-                                                        backgroundColor: '#2b2a2e',
-                                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                                        backgroundColor: '#161616',
+                                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                                         fontStyle: 'bold',
                                                         fontSize: '1rem',
-                                                        marginLeft: '1rem',
+                                                        marginLeft: '.5rem',
                                                         '&:hover': {
                                                             backgroundColor: '#ab003c',
                                                             color: '#2b2a2e',
@@ -364,8 +364,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             '&:hover': {
@@ -501,8 +501,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             '&:hover': {
@@ -702,8 +702,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             '&:hover': {
@@ -789,8 +789,8 @@ function Tank() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: '#900C3F',
-                                            backgroundColor: '#2b2a2e',
-                                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                             fontStyle: 'bold',
                                             fontSize: '1rem',
                                             '&:hover': {

@@ -60,7 +60,7 @@ function Navbar() {
         <AppBar
             position="fixed"
             sx={{
-                backgroundColor: '#263238',
+                backgroundColor: '#0c1418',
                 overflow: 'hidden',
                 padding: '0 2rem',
             }}
@@ -119,17 +119,23 @@ function Navbar() {
                         <Button
                             component={Link}
                             to="/"
-                            variant="outlined"
+                            variant="filled"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('home')}
                             onMouseLeave={() => handleTooltipClose('home')}
                             sx={{
-                                backgroundColor: '#2b2a2e',
-                                border: '.1rem solid #0f0e0e',
-                                color: '#eceff1',
-                                fontSize: '1.2rem',
-                                minWidth: '8rem',
-                                padding: '.2rem 1.5rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#fafafa',
+                                backgroundColor: '#161616',
+                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                fontStyle: 'bold',
+                                fontSize: '1rem',
+                                width: '8rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                },
                             }}
                         >
                             Home
@@ -146,17 +152,23 @@ function Navbar() {
                         <Button
                             component={Link}
                             to="/shop"
-                            variant="outlined"
+                            variant="filled"
                             size="large"
                             onMouseEnter={() => handleTooltipOpen('shop')}
                             onMouseLeave={() => handleTooltipClose('shop')}
                             sx={{
-                                backgroundColor: '#2b2a2e',
-                                border: '.1rem solid #0f0e0e',
-                                color: '#eceff1',
-                                fontSize: '1.2rem',
-                                minWidth: '8rem',
-                                padding: '.2rem 1.5rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#fafafa',
+                                backgroundColor: '#161616',
+                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                fontStyle: 'bold',
+                                fontSize: '1rem',
+                                width: '8rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                },
                             }}
                         >
                             Shop
@@ -175,17 +187,23 @@ function Navbar() {
                                 <Button
                                     component={Link}
                                     to="/user/profile"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="large"
                                     onMouseEnter={() => handleTooltipOpen('profile')}
                                     onMouseLeave={() => handleTooltipClose('profile')}
                                     sx={{
-                                        backgroundColor: '#2b2a2e',
-                                        border: '.1rem solid #0f0e0e',
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         color: '#fafafa',
-                                        fontSize: '1.2rem',
-                                        minWidth: '8rem',
-                                        padding: '.2rem 1.5rem',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#fafafa',
+                                        },
                                     }}
                                 >
                                     Profile
@@ -199,16 +217,22 @@ function Navbar() {
                                 onMouseLeave={() => handleTooltipClose('logout')}
                             >
                                 <Button
-                                    variant="outlined"
+                                    variant="filled"
                                     size="large"
                                     onClick={() => logout()}
                                     sx={{
-                                        backgroundColor: '#2b2a2e',
-                                        border: '.1rem solid #0f0e0e',
-                                        color: '#eceff1',
-                                        fontSize: '1.2rem',
-                                        minWidth: '8rem',
-                                        padding: '.2rem 1.5rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#fafafa',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#fafafa',
+                                        },
                                     }}
                                 >
                                     Logout
@@ -227,17 +251,23 @@ function Navbar() {
                                 <Button
                                     component={Link}
                                     to="/user/create"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="large"
                                     onMouseEnter={() => handleTooltipOpen('create')}
                                     onMouseLeave={() => handleTooltipClose('create')}
                                     sx={{
-                                        backgroundColor: '#2b2a2e',
-                                        border: '.1rem solid #0f0e0e',
-                                        color: '#eceff1',
-                                        fontSize: '1.2rem',
-                                        minWidth: '8rem',
-                                        padding: '.2rem 1.5rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#fafafa',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#fafafa',
+                                        },
                                     }}
                                 >
                                     Create
@@ -254,17 +284,23 @@ function Navbar() {
                                 <Button
                                     component={Link}
                                     to="/user/login"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="large"
                                     onMouseEnter={() => handleTooltipOpen('login')}
                                     onMouseLeave={() => handleTooltipClose('login')}
                                     sx={{
-                                        backgroundColor: '#2b2a2e',
-                                        border: '.1rem solid #0f0e0e',
-                                        color: '#eceff1',
-                                        fontSize: '1.2rem',
-                                        minWidth: '8rem',
-                                        padding: '.2rem 1.5rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#fafafa',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#fafafa',
+                                        },
                                     }}
                                 >
                                     Login

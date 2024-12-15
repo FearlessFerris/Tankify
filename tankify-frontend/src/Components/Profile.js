@@ -38,7 +38,7 @@ function Profile() {
         <div
             className='profile-container'
             style={{
-                backgroundColor: '#2b2a2e',
+                backgroundColor: '#161616',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -173,12 +173,16 @@ function Profile() {
                 <Button 
                     onClick = { onOpen }
                     size = 'large'
-                    variant = 'outlined'
-                    startIcon = { <EditIcon sx = {{ color: '#ab003c' }} /> }
+                    variant = 'filled'
+                    startIcon = { <EditIcon sx = {{ transition: 'color 0.3s ease' }} /> }
                     sx={{
-                        color: '#fafafa',
-                        border: '.2rem solid #ab003c',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                        color: '#ab003c',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                        width: '8rem',
+                        '&:hover': {
+                            backgroundColor: '#ab003c',
+                            color: '#fafafa'
+                        }
                     }}
                 >
                 Edit
