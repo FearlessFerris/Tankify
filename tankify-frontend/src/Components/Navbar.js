@@ -61,8 +61,11 @@ function Navbar() {
             position="fixed"
             sx={{
                 backgroundColor: '#0c1418',
-                overflow: 'hidden',
                 padding: '0 2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
             }}
         >
             <Box
@@ -70,9 +73,10 @@ function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    width: '100%',
+                    width: '100%'
                 }}
             >
+                {/* Left Section: Logo */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -92,49 +96,36 @@ function Navbar() {
                         variant="h3"
                         color="#fafafa"
                         sx={{
-                            marginRight: '1rem',
+                            marginRight: '11rem',
                         }}
                     >
                         Tankify
                     </Typography>
                 </Box>
 
+                {/* Center Section: Buttons */}
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'flex-start', 
+                        justifyContent: 'center',
                         alignItems: 'center',
-                        flexGrow: 1,
-                        ml: '30%', 
                         gap: '1rem',
+                        flexGrow: 1,
                     }}
                 >
-                    <Tooltip
-                        title="Home"
-                        arrow
-                        open={Boolean(openTooltip.home)}
-                        onMouseEnter={() => handleTooltipOpen('home')}
-                        onMouseLeave={() => handleTooltipClose('home')}
-                    >
+                    <Tooltip title="Home" arrow open={Boolean(openTooltip.home)}>
                         <Button
                             component={Link}
                             to="/"
                             variant="filled"
                             size="large"
-                            onMouseEnter={() => handleTooltipOpen('home')}
-                            onMouseLeave={() => handleTooltipClose('home')}
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
                                 color: '#fafafa',
                                 backgroundColor: '#161616',
                                 boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                fontStyle: 'bold',
-                                fontSize: '1rem',
                                 width: '8rem',
                                 '&:hover': {
                                     backgroundColor: '#ab003c',
-                                    color: '#fafafa',
                                 },
                             }}
                         >
@@ -142,32 +133,19 @@ function Navbar() {
                         </Button>
                     </Tooltip>
 
-                    <Tooltip
-                        title="Shop"
-                        arrow
-                        open={Boolean(openTooltip.shop)}
-                        onMouseEnter={() => handleTooltipOpen('shop')}
-                        onMouseLeave={() => handleTooltipClose('shop')}
-                    >
+                    <Tooltip title="Shop" arrow open={Boolean(openTooltip.shop)}>
                         <Button
                             component={Link}
                             to="/shop"
                             variant="filled"
                             size="large"
-                            onMouseEnter={() => handleTooltipOpen('shop')}
-                            onMouseLeave={() => handleTooltipClose('shop')}
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
                                 color: '#fafafa',
                                 backgroundColor: '#161616',
                                 boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                fontStyle: 'bold',
-                                fontSize: '1rem',
                                 width: '8rem',
                                 '&:hover': {
                                     backgroundColor: '#ab003c',
-                                    color: '#fafafa',
                                 },
                             }}
                         >
@@ -177,61 +155,37 @@ function Navbar() {
 
                     {user ? (
                         <>
-                            <Tooltip
-                                title="Profile"
-                                arrow
-                                open={Boolean(openTooltip.profile)}
-                                onMouseEnter={() => handleTooltipOpen('profile')}
-                                onMouseLeave={() => handleTooltipClose('profile')}
-                            >
+                            <Tooltip title="Profile" arrow open={Boolean(openTooltip.profile)}>
                                 <Button
                                     component={Link}
                                     to="/user/profile"
                                     variant="filled"
                                     size="large"
-                                    onMouseEnter={() => handleTooltipOpen('profile')}
-                                    onMouseLeave={() => handleTooltipClose('profile')}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
                                         color: '#fafafa',
                                         backgroundColor: '#161616',
                                         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        fontStyle: 'bold',
-                                        fontSize: '1rem',
                                         width: '8rem',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#fafafa',
                                         },
                                     }}
                                 >
                                     Profile
                                 </Button>
                             </Tooltip>
-                            <Tooltip
-                                title="Logout"
-                                arrow
-                                open={Boolean(openTooltip.logout)}
-                                onMouseEnter={() => handleTooltipOpen('logout')}
-                                onMouseLeave={() => handleTooltipClose('logout')}
-                            >
+                            <Tooltip title="Logout" arrow open={Boolean(openTooltip.logout)}>
                                 <Button
                                     variant="filled"
                                     size="large"
                                     onClick={() => logout()}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
                                         color: '#fafafa',
                                         backgroundColor: '#161616',
                                         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        fontStyle: 'bold',
-                                        fontSize: '1rem',
                                         width: '8rem',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#fafafa',
                                         },
                                     }}
                                 >
@@ -241,65 +195,38 @@ function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Tooltip
-                                title="Create"
-                                arrow
-                                open={Boolean(openTooltip.create)}
-                                onMouseEnter={() => handleTooltipOpen('create')}
-                                onMouseLeave={() => handleTooltipClose('create')}
-                            >
+                            <Tooltip title="Create" arrow open={Boolean(openTooltip.create)}>
                                 <Button
                                     component={Link}
                                     to="/user/create"
                                     variant="filled"
                                     size="large"
-                                    onMouseEnter={() => handleTooltipOpen('create')}
-                                    onMouseLeave={() => handleTooltipClose('create')}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
                                         color: '#fafafa',
                                         backgroundColor: '#161616',
                                         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        fontStyle: 'bold',
-                                        fontSize: '1rem',
                                         width: '8rem',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#fafafa',
                                         },
                                     }}
                                 >
                                     Create
                                 </Button>
                             </Tooltip>
-
-                            <Tooltip
-                                title="Login"
-                                arrow
-                                open={Boolean(openTooltip.login)}
-                                onMouseEnter={() => handleTooltipOpen('login')}
-                                onMouseLeave={() => handleTooltipClose('login')}
-                            >
+                            <Tooltip title="Login" arrow open={Boolean(openTooltip.login)}>
                                 <Button
                                     component={Link}
                                     to="/user/login"
                                     variant="filled"
                                     size="large"
-                                    onMouseEnter={() => handleTooltipOpen('login')}
-                                    onMouseLeave={() => handleTooltipClose('login')}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
                                         color: '#fafafa',
                                         backgroundColor: '#161616',
                                         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        fontStyle: 'bold',
-                                        fontSize: '1rem',
                                         width: '8rem',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#fafafa',
                                         },
                                     }}
                                 >
@@ -309,6 +236,8 @@ function Navbar() {
                         </>
                     )}
                 </Box>
+
+                {/* Right Section: Search and Avatar */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -321,8 +250,6 @@ function Navbar() {
                             title="User Profile"
                             arrow
                             open={Boolean(openTooltip.avatar)}
-                            onMouseEnter={() => handleTooltipOpen('avatar')}
-                            onMouseLeave={() => handleTooltipClose('avatar')}
                         >
                             <Avatar
                                 src={user.image}
