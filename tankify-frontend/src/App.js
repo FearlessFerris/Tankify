@@ -19,7 +19,7 @@ import Shop from './Components/Shop';
 import Tank from './Components/Tank';
 import './Static/App.css'
 import PinkLavaCanvas from './Components/PinkLavaCanvas';
-
+import PaymentForm from './Components/PaymentForm';
 
 // Context Providers 
 import { AlertProvider } from './ContextDirectory/AlertContext';

@@ -122,3 +122,5 @@ def edit_user(user_id):
     except Exception as e:
         print(f'Error updating user: {e}')
         return jsonify({'message': 'Unable to update user profile. Please try again!'}), 500
+    
+

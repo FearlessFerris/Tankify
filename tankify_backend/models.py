@@ -40,6 +40,7 @@ class User( Base ):
     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
 
     # Relationships with back_populates and overlaps
+    payment_methods = relationship( 'PaymentMethods', back_populates = 'user', lazy = 'select' )
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
 
     def __init__( self, username, password, email, balance = 1000, image = None ):
@@ -222,69 +223,47 @@ class Tank( Base ):
         tanks = cls.query.all()
         tank_list = [ tank.__repr__() for tank in tanks ]
         return tank_list
-    
-     
-
-# class Tank( Base ): 
-#     """ Tank Model """
-
-#     __tablename__ = 'tanks'
-#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-#     name = Column( String, nullable = False )
-#     tag = Column( String, nullable = False )
-#     description = Column( String, nullable = False )
-#     price = Column( String, nullable = False )
-#     type = Column( String, nullable = False )
-#     nation = Column( String, nullable = False )
-#     nation_flag = Column( String, nullable = False )
-#     tier = Column( String, nullable = False )
-#     carousel_image = Column( String, nullable = False )
-#     hd_image = Column( String, nullable = False )
-#     created_at = Column( DateTime, server_default = func.now() )
-
-#     # Relationships 
 
 
-#     # Instance Methods 
-#     def __init__( self, name, tag, description, price, type, nation, nation_flag, tier, hd_image, carousel_image ): 
-#         self.name = name 
-#         self.tag = tag 
-#         self.description = description
-#         self.price = price 
-#         self.type = type
-#         self.nation = nation
-#         self.nation_flag = nation_flag
-#         self.tier = tier
-#         self.hd_image = hd_image 
-#         self.carousel_image = carousel_image
+class PaymentMethods( Base ): 
+    """ Payment Mehtod Model """
 
-#     def show_info( self ): 
-#         """ Retrieves Tank Information """
+    __tablename__ = 'payment_methods'
+    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+    type = Column( String, nullable = False )
+    details = Column( JSONB, nullable = False )
+    created_at = Column( DateTime, server_default = func.now() )
 
-#         tank = {
-#             'id': str( self.id ),
-#             'name': self.name,
-#             'tag': self.tag,
-#             'description': self.description,
-#             'price': self.price,
-#             'type': self.type, 
-#             'nation': self.nation, 
-#             'nation_flag': self.nation_flag, 
-#             'tier': self.tier,
-#             'hd_image': f'{ WOT_CDN_BASE }{ self.tag.lower() }/{ self.tag.lower() }_image.png',
-#             'carousel_image': self.carousel_image,
+    # Relationships 
+    user = relationship( 'User', back_populates = 'payment_methods', lazy = 'select' )
 
-#         }
-#         return tank 
-    
-#     # Class Methods 
-#     @classmethod
-#     def get_all_tanks( cls ): 
-#         """ Retrieves all Tanks from Database """
+    def __init__( self, user_id, type, details ):
+        """ Initiates PaymentMethod Instance """
 
-#         tanks = cls.query.all()
-#         tank_list = [ tank.show_info() for tank in tanks ]
-#         return tank_list
+        self.user_id = user_id 
+        self.type = type 
+        self.details = details 
+
+    def __repr__( self ): 
+        """ PaymentMethod Representation Method for Instance """
+
+        payment_method = {
+            'id': str( self.id ),
+            'user_id': self.user_id,
+            'type': self.type,
+            'details': self.details
+        }
+
+        return payment_method 
+
+    @classmethod
+    def add_payment_method( cls, user_id, type, details ):
+        """ Create New PaymentMethod Instance """
+
+        payment_method = cls( user_id = user_id, type = type, details = details )
+        user = User.query.filter_by( user_id = user_id )
+        print( user )
 
 
 class Transaction( Base ):
