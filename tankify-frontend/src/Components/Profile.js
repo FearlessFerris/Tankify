@@ -2,7 +2,7 @@
 
 
 // Dependencies 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { Avatar, Backdrop, Box, Button, Typography, TextField } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
@@ -25,6 +25,22 @@ function Profile() {
     const { user } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
+    const [ paymentMethods, setPaymentMethods ] = useState([]);
+    useEffect( () => {
+        const fetchPaymentMethods = async ( userId ) => {
+            try{
+                const response = await apiClient.get( `/payments/${ userId }/all` );
+                console.log( response.data );
+                setPaymentMethods( response.data );
+            }   
+            catch( error ){
+                console.error( 'Error fetching user payment methods', error );
+            }
+        }
+        if( user?.id ){
+            fetchPaymentMethods( user.id )
+        }
+    }, [ user?.id ] )
 
     const onOpen = () => {
         setOpen(true);

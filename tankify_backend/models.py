@@ -256,6 +256,13 @@ class PaymentMethods( Base ):
         }
 
         return payment_method 
+    
+    @classmethod 
+    def get_payment_method( cls, user_id ): 
+        """ Retrieves all Instances of a Users PaymentMethods """
+
+        payment_methods = cls.query.filter( cls.user_id == user_id ).all() 
+        return [ pm.to_dict() for pm in payment_methods ]
 
     @classmethod
     def add_payment_method( cls, user_id, type, details ):

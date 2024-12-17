@@ -9,7 +9,7 @@ from sqlalchemy import func
 
 
 # Necessary Files 
-from models import db, Tank, User 
+from models import db, Tank, User, PaymentMethods 
 
 
 # Define a blueprint for routes 
@@ -26,8 +26,12 @@ def get_payment_methods( user_id ):
 
     try:    
         user = User.query.get( user_id )
-        print( user )
-        return jsonify({ 'message': 'Successfully retrieved payment methods', 'data': user.get_user_profile() })
+        if not user: 
+            return jsonify({ 'message': 'User not found' }), 404 
+        
+        payment_methods = PaymentMethods.get_payment_method( user_id )
+        return jsonify({ 'message': 'Successfully retrieved payment methods', 'data': payment_methods }), 200 
+
     except Exception as e: 
         print( f'Error occurred while retrieving payment methods: { e }' )
         return jsonify({ 'message': 'Failed to retireve payment methods' }), 500 
