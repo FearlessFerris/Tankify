@@ -1,130 +1,203 @@
+// Dependencies
 import React, { useState } from 'react';
-import { Box, Grid2, TextField, Typography, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button } from '@mui/material';
 
-const PaymentForm = () => {
-  const [cardDetails, setCardDetails] = useState({
-    cardholderName: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-  });
+// Components & Necessary Files
+import cardImage from '../Static/card.png';
 
-  const handleInputChange = (field, value) => {
-    setCardDetails((prev) => ({ ...prev, [field]: value }));
-  };
+// Payment Form
+function PaymentForm() {
+    const [paymentInformation, setPaymentInformation] = useState({
+        cardholderName: '',
+        cardNumber: '',
+        expiry: '',
+        cvv: ''
+    });
 
-  return (
-    <Grid2 container spacing={3} justifyContent="center" alignItems="center" sx={{ padding: '2rem' }}>
-      {/* Debit Card Display */}
-      <Grid2 item xs={12} md={6}>
+    const handlePaymentInformation = (field, value) => {
+        setPaymentInformation((prev) => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+    const handleSubmit = () => {
+        // Simple Validation
+        const { cardholderName, cardNumber, expiry, cvv } = paymentInformation;
+        if (!cardholderName || !cardNumber || !expiry || !cvv) {
+            alert('Please fill out all fields.');
+            return;
+        }
+        alert('Payment information submitted successfully!');
+        console.log('Payment Information:', paymentInformation);
+    };
+
+    return (
         <Box
-          sx={{
-            width: '350px',
-            height: '200px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #ab003c, #87002e)',
-            color: '#fff',
-            padding: '1rem',
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
-            position: 'relative',
-            fontFamily: 'Arial, sans-serif',
-          }}
+            sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                backgroundColor: '#121212',
+                padding: '2rem'
+            }}
         >
-          {/* Chip */}
-          <Box
-            sx={{
-              width: '50px',
-              height: '30px',
-              borderRadius: '4px',
-              backgroundColor: '#ffc107',
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-            }}
-          />
-          {/* Card Number */}
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: '4rem',
-              textAlign: 'center',
-              letterSpacing: '2px',
-            }}
-          >
-            {cardDetails.cardNumber || '#### #### #### ####'}
-          </Typography>
-          {/* Cardholder Name and Expiry */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: '2rem',
-              padding: '0 1rem',
-            }}
-          >
-            <Box>
-              <Typography variant="caption">CARDHOLDER</Typography>
-              <Typography variant="subtitle1">{cardDetails.cardholderName || 'FULL NAME'}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="caption">EXPIRY</Typography>
-              <Typography variant="subtitle1">{cardDetails.expiry || 'MM/YY'}</Typography>
-            </Box>
-          </Box>
-          {/* CVV Placeholder */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-            }}
-          >
-            <Typography variant="caption">CVV</Typography>
-            <Typography variant="subtitle1">{cardDetails.cvv || '***'}</Typography>
-          </Box>
-        </Box>
-      </Grid2>
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    backgroundColor: '#161616',
+                    borderRadius: '.3rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    padding: '2rem',
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
+                    width: '45rem'
+                }}
+            >
+                <Typography
+                    variant='h4'
+                    sx={{
+                        color: '#fafafa',
+                        marginBottom: '2rem'
+                    }}
+                >
+                    Add <span style={{ color: '#ab003c' }}> Card </span>
+                </Typography>
+                {/* Card Preview */}
+                <Box
+                    sx={{
+                        borderRadius: '1.2rem',
+                        backgroundImage: `url(${cardImage})`,
+                        backgroundSize: 'cover',
+                        color: '#fafafa',
+                        height: '12rem',
+                        marginBottom: '2rem',
+                        padding: '1rem',
+                        position: 'relative',
+                        width: '23rem',
+                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
+                    }}
+                >
+                    <Typography
+                        variant='h6'
+                        sx={{
+                            marginTop: '4rem',
+                            textAlign: 'center',
+                            letterSpacing: '.2rem',
+                            color: '#ab003c',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {paymentInformation.cardNumber || '#### #### #### ####'}
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            marginTop: '1rem',
+                            marginLeft: '1rem',
+                            marginRight: '1rem'
+                        }}
+                    >
+                        <Box>
+                            <Typography variant='caption'>CARDHOLDER</Typography>
+                            <Typography variant='subtitle1'>
+                                {paymentInformation.cardholderName || 'FULL NAME'}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant='caption'>EXPIRY</Typography>
+                            <Typography variant='subtitle1'>
+                                {paymentInformation.expiry || 'MM/YY'}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
 
-      {/* Form for Input */}
-      <Grid2 item xs={12} md={6}>
-        <Box component="form" sx={{ maxWidth: '400px', width: '100%' }}>
-          <TextField
-            fullWidth
-            label="Cardholder Name"
-            variant="outlined"
-            margin="normal"
-            value={cardDetails.cardholderName}
-            onChange={(e) => handleInputChange('cardholderName', e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="Card Number"
-            variant="outlined"
-            margin="normal"
-            value={cardDetails.cardNumber}
-            onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="Expiry Date (MM/YY)"
-            variant="outlined"
-            margin="normal"
-            value={cardDetails.expiry}
-            onChange={(e) => handleInputChange('expiry', e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="CVV"
-            variant="outlined"
-            margin="normal"
-            value={cardDetails.cvv}
-            onChange={(e) => handleInputChange('cvv', e.target.value)}
-            type="password"
-          />
+                {/* Form Fields */}
+                <Box
+    sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '45rem',
+        gap: '.5rem', // Adds spacing between fields
+    }}
+>
+    {['cardholderName', 'cardNumber', 'expiry', 'cvv'].map((field) => (
+        <TextField
+            key={field}
+            id={field}
+            label={
+                field === 'cardholderName'
+                    ? 'Cardholder Name'
+                    : field === 'cardNumber'
+                    ? 'Card Number'
+                    : field === 'expiry'
+                    ? 'Expiry'
+                    : 'CVV'
+            }
+            placeholder={
+                field === 'cardholderName'
+                    ? 'Ex: Billy Bob Thorton'
+                    : field === 'cardNumber'
+                    ? 'Ex: 1234 5678 9101 1123'
+                    : field === 'expiry'
+                    ? 'Ex: 11/23'
+                    : 'Ex: 123'
+            }
+            variant='outlined'
+            size='small'
+            type={field === 'cvv' ? 'password' : 'text'}
+            onChange={(e) => handlePaymentInformation(field, e.target.value)}
+            value={paymentInformation[field]}
+            sx={{
+                marginBottom: '1rem',
+                input: { color: '#fafafa' },
+                label: { color: '#fafafa' },
+                '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                        border: '.2rem solid #ab003c',
+                    },
+                    '&:hover fieldset': {
+                        borderColor: '#ab003c',
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#ab003c',
+                    },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                    color: '#fafafa',
+                },
+                width: '18rem', // Set the width here
+                alignSelf: 'center', // Centers the input fields
+            }}
+        />
+    ))}
+</Box>
+
+
+                {/* Submit Button */}
+                <Button
+                    variant='contained'
+                    sx={{
+                        marginTop: '1rem',
+                        backgroundColor: '#ab003c',
+                        '&:hover': {
+                            backgroundColor: '#8b002f'
+                        },
+                        color: '#fafafa',
+                        fontWeight: 'bold'
+                    }}
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </Button>
+            </Box>
         </Box>
-      </Grid2>
-    </Grid2>
-  );
-};
+    );
+}
 
 export default PaymentForm;

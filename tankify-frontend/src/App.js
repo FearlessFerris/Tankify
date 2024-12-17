@@ -61,6 +61,7 @@ function App() {
                 </AlertProvider>
             </UserProvider>
         </Router>
+        // <PaymentForm /> 
     );
 }
 
