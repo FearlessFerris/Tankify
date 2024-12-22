@@ -231,6 +231,10 @@ class PaymentMethods( Base ):
     __tablename__ = 'payment_methods'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+    cardholder_name = Column( String, nullable = False )
+    card_number = Column( String, nullable = False )
+    expiry = Column( String, nullable = False )
+    cvv = Column( String, nullable = False )
     type = Column( String, nullable = False )
     details = Column( JSONB, nullable = False )
     created_at = Column( DateTime, server_default = func.now() )
@@ -238,10 +242,14 @@ class PaymentMethods( Base ):
     # Relationships 
     user = relationship( 'User', back_populates = 'payment_methods', lazy = 'select' )
 
-    def __init__( self, user_id, type, details ):
+    def __init__( self, user_id, type, cardholder_name, card_number, expiry, cvv, details ):
         """ Initiates PaymentMethod Instance """
 
         self.user_id = user_id 
+        self.cardholder_name = cardholder_name 
+        self.card_number = card_number
+        self.expiry = expiry 
+        self.cvv = cvv  
         self.type = type 
         self.details = details 
 
@@ -251,12 +259,29 @@ class PaymentMethods( Base ):
         payment_method = {
             'id': str( self.id ),
             'user_id': self.user_id,
+            'cardholder_name': self.cardholder_name, 
+            'card_number': self.card_number, 
+            'expiry': self.expiry, 
+            'cvv': self.cvv,
             'type': self.type,
             'details': self.details
         }
-
         return payment_method 
-    
+
+    def to_dict( self ): 
+        """ Converts PaymentMethod Instance to Dictionary """
+
+        return {
+            'id': str( self.id ),
+            'user_id': str( self.user_id ),
+            'cardholder_name': self.cardholder_name,
+            'card_number': self.card_number[ -4: ],
+            'expiry': self.expiry,
+            'type': self.type,
+            'details': self.details,
+            'creaded_at': self.created_at.isoformat(),
+        }
+
     @classmethod 
     def get_payment_method( cls, user_id ): 
         """ Retrieves all Instances of a Users PaymentMethods """
@@ -265,13 +290,47 @@ class PaymentMethods( Base ):
         return [ pm.to_dict() for pm in payment_methods ]
 
     @classmethod
-    def add_payment_method( cls, user_id, type, details ):
+    def add_payment_method( cls, user_id, cardholder_name, card_number, expiry, cvv, type, details ):
         """ Create New PaymentMethod Instance """
 
-        payment_method = cls( user_id = user_id, type = type, details = details )
-        user = User.query.filter_by( user_id = user_id )
-        print( user )
+        user = User.query.filter_by( id = user_id ).first() 
+        if not user: 
+            print( f'User { user_id } not found' )
+            return None
 
+        if not ( cardholder_name and card_number and expiry and cvv and type ):
+            print( f'Missing required payment method fields' )
+            return None
+        
+        payment_method = cls( 
+            user_id = user_id, 
+            cardholder_name = cardholder_name, 
+            card_number = card_number, 
+            expiry = expiry, 
+            cvv = cvv, 
+            type = type, 
+            details = details 
+            )
+        db.session.add( payment_method )
+        db.session.commit() 
+        print( f'Payment method for user { user_id } added successfully' )
+        return payment_method
+    
+    @classmethod
+    def remove_payment_method( cls, card_id ):
+        """ Removes PaymentMethod Instance """
+
+        try:
+            payment_method = cls.query.filter_by( id = card_id ).first() 
+            if not payment_method: 
+                return { 'message': 'Payment method not found' }
+            db.session.delete( payment_method )
+            db.session.commit() 
+            return { 'message': 'Payment method successfully removed' }
+        except Exception as e: 
+            db.session.rollback()
+            print( f'Error occurred while removing payment method: { e }' )
+            return { 'message': 'Failed to remove payment method' }
 
 class Transaction( Base ):
     """ Transaction Model """

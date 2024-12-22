@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import apiClient from '../api/apiClient';
 import EditUser from './Edituser';
 import PaymentForm from './PaymentForm';
+import cardImage from '../Static/card.png';
 
 
 // Context Providers 
@@ -25,44 +26,45 @@ function Profile() {
 
     const { user } = useUser();
     const [hover, setHover] = useState(false);
-    const [ open, setOpen ] = useState( false );
-    const [ editOpen, setEditOpen ] = useState(false);
-    const [ cardAddOpen, setCardAddOpen ] = useState( false );
-    const [ paymentMethods, setPaymentMethods ] = useState([]);
-    useEffect( () => {
-        const fetchPaymentMethods = async ( userId ) => {
-            try{
-                const response = await apiClient.get( `/payments/${ userId }/all` );
-                console.log( response.data );
-                setPaymentMethods( response.data );
-            }   
-            catch( error ){
-                console.error( 'Error fetching user payment methods', error );
-            }
+    const [open, setOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [cardAddOpen, setCardAddOpen] = useState(false);
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const fetchPaymentMethods = async (userId) => {
+        try {
+            const response = await apiClient.get(`/payments/${userId}/all`);
+            console.log(response.data);
+            setPaymentMethods(response.data.data);
         }
-        if( user?.id ){
-            fetchPaymentMethods( user.id )
+        catch (error) {
+            console.error('Error fetching user payment methods', error);
         }
-    }, [ user?.id ] )
+    }
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchPaymentMethods(user.id);
+        }
+    }, [user?.id]);
 
     const onEditOpen = () => {
-        setOpen( true );
+        setOpen(true);
         setEditOpen(true);
     }
 
     const onEditClose = () => {
-        setOpen( false );
+        setOpen(false);
         setEditOpen(false);
     }
 
     const onCardOpen = () => {
-        setOpen( true );
-        setCardAddOpen( true );
+        setOpen(true);
+        setCardAddOpen(true);
     }
 
     const onCardClose = () => {
-        setOpen( false );
-        setCardAddOpen( false );
+        setOpen(false);
+        setCardAddOpen(false);
     }
 
     return (
@@ -256,14 +258,106 @@ function Profile() {
                     >
                         Payment <span style={{ color: '#ab003c' }}> Methods </span>
                     </Typography>
+                    <Box
+                        sx={{
+                            marginTop: '2rem',
+                            width: '30rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1.5rem',
+                        }}
+                    >
+                        {paymentMethods.length > 0 ? (
+                            paymentMethods.map((method, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        position: 'relative', 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        backgroundColor: '#161616',
+                                        borderRadius: '1rem',
+                                        padding: '1rem',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: '8rem',
+                                            height: '5rem',
+                                            backgroundImage: `url(${cardImage})`,
+                                            backgroundSize: 'cover',
+                                            borderRadius: '0.5rem',
+                                            marginRight: '1rem',
+                                        }}
+                                    />
+                                    <Box sx={{ flex: 1, position: 'relative' }}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{
+                                                color: '#fafafa',
+                                                marginBottom: '0.5rem',
+                                            }}
+                                        >
+                                            {method.cardholder_name}
+                                        </Typography>
+                                        <Typography
+                                            variant="body1"
+                                            sx={{
+                                                color: '#fafafa',
+                                            }}
+                                        >
+                                            {method.type} - **** {method.card_number.slice(-4)}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: '#fafafa',
+                                                opacity: 0.7,
+                                            }}
+                                        >
+                                            Expires: {method.expiry}
+                                        </Typography>
 
+                                        <Button
+                                            variant="filled"
+                                            sx={{
+                                                position: 'absolute',
+                                                bottom: '0.5rem',
+                                                right: '0.5rem',
+                                                color: '#ab003c',
+                                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                                padding: '0.5rem 1rem',
+                                                '&:hover': {
+                                                    backgroundColor: '#ab003c',
+                                                    color: '#fafafa',
+                                                },
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            ))
+                        ) : (
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    color: '#fafafa',
+                                    marginTop: '2rem',
+                                }}
+                            >
+                                No payment methods added yet.
+                            </Typography>
+                        )}
+                    </Box>
                     <Box
                         sx={{
                             marginTop: '2rem'
                         }}
                     >
                         <Button
-                            onClick = { onCardOpen }
+                            onClick={onCardOpen}
                             variant='filled'
                             sx={{
                                 color: '#ab003c',
@@ -303,8 +397,8 @@ function Profile() {
                 }}
             >
                 <Backdrop
-                    open={ open }
-                    onClose={ () => {
+                    open={open}
+                    onClose={() => {
                         onEditClose();
                         onCardClose();
                     }}
@@ -315,11 +409,11 @@ function Profile() {
                         justifyContent: 'center',
                     }}
                 >
-                    { editOpen && (
+                    {editOpen && (
                         <EditUser user={user} onClose={onEditClose} />
                     )}
-                    { cardAddOpen && (
-                        <PaymentForm onClose = { onCardClose } /> 
+                    {cardAddOpen && (
+                        <PaymentForm onClose={onCardClose} refreshPaymentMethods={() => fetchPaymentMethods(user.id)} />
                     )}
                 </Backdrop>
             </Box>

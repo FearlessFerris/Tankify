@@ -36,7 +36,9 @@ const theme = createTheme({
             default: '#0c1418',
         },
     },
-});
+});  
+
+
 
 
 // Tankify Application 
@@ -61,7 +63,6 @@ function App() {
                 </AlertProvider>
             </UserProvider>
         </Router>
-        // <PaymentForm /> 
     );
 }
 
