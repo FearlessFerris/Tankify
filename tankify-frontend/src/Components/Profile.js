@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
 import EditUser from './Edituser';
+import PaymentForm from './PaymentForm';
 
 
 // Context Providers 
@@ -24,7 +25,9 @@ function Profile() {
 
     const { user } = useUser();
     const [hover, setHover] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [ open, setOpen ] = useState( false );
+    const [ editOpen, setEditOpen ] = useState(false);
+    const [ cardAddOpen, setCardAddOpen ] = useState( false );
     const [ paymentMethods, setPaymentMethods ] = useState([]);
     useEffect( () => {
         const fetchPaymentMethods = async ( userId ) => {
@@ -42,12 +45,24 @@ function Profile() {
         }
     }, [ user?.id ] )
 
-    const onOpen = () => {
-        setOpen(true);
+    const onEditOpen = () => {
+        setOpen( true );
+        setEditOpen(true);
     }
 
-    const onClose = () => {
-        setOpen(false);
+    const onEditClose = () => {
+        setOpen( false );
+        setEditOpen(false);
+    }
+
+    const onCardOpen = () => {
+        setOpen( true );
+        setCardAddOpen( true );
+    }
+
+    const onCardClose = () => {
+        setOpen( false );
+        setCardAddOpen( false );
     }
 
     return (
@@ -188,7 +203,7 @@ function Profile() {
                     </Box>
                 </Box>
                 <Button
-                    onClick={onOpen}
+                    onClick={onEditOpen}
                     size='large'
                     variant='filled'
                     startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
@@ -207,19 +222,20 @@ function Profile() {
             </div>
             <div
                 style={{
+                    alignItems: 'center',
                     backgroundColor: '#161616',
+                    border: '.1rem solid #0f0e0e',
+                    borderRadius: '.3rem',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
                     marginTop: '2rem',
                     maxWidth: '45rem',
                     marginLeft: 'auto',
                     marginRight: 'auto',
-                    border: '.1rem solid #0f0e0e',
-                    borderRadius: '.3rem',
-                    padding: '2rem',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                    overflow: 'hidden'
+                    marginBottom: '6rem',
+                    overflow: 'hidden',
+                    padding: '2rem'
                 }}
             >
 
@@ -247,6 +263,7 @@ function Profile() {
                         }}
                     >
                         <Button
+                            onClick = { onCardOpen }
                             variant='filled'
                             sx={{
                                 color: '#ab003c',
@@ -286,14 +303,23 @@ function Profile() {
                 }}
             >
                 <Backdrop
-                    open={open}
-                    onClose={onClose}
+                    open={ open }
+                    onClose={ () => {
+                        onEditClose();
+                        onCardClose();
+                    }}
                     sx={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.85)'
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                 >
-                    {open && (
-                        <EditUser user={user} onClose={onClose} />
+                    { editOpen && (
+                        <EditUser user={user} onClose={onEditClose} />
+                    )}
+                    { cardAddOpen && (
+                        <PaymentForm onClose = { onCardClose } /> 
                     )}
                 </Backdrop>
             </Box>

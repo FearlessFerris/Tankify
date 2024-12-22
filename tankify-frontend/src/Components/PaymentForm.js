@@ -1,12 +1,17 @@
+// PaymentForm Component Implementation 
+
+
 // Dependencies
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button } from '@mui/material';
 
+
 // Components & Necessary Files
 import cardImage from '../Static/card.png';
 
+
 // Payment Form
-function PaymentForm() {
+function PaymentForm({ onClose }) {
     const [paymentInformation, setPaymentInformation] = useState({
         cardholderName: '',
         cardNumber: '',
@@ -14,15 +19,51 @@ function PaymentForm() {
         cvv: ''
     });
 
+    const formatCardNumber = (value) => {
+        const digits = value.replace(/\D/g, '').slice(0, 16);
+        const formatted = digits.replace(/(\d{4})/g, '$1 ').trim();
+        return formatted;
+    };
+
+    const formatExpiry = (value) => {
+        const digits = value.replace(/\D/g, '').slice(0, 4); 
+        if (digits.length > 2) {
+            return digits.slice(0, 2) + '/' + digits.slice(2);
+        }
+        return digits;
+    };
+
+    const formatCvv = ( value ) => { 
+        const digits = value.replace( /\D/g, '').slice( 0, 3 );
+        return digits;
+    }
+
     const handlePaymentInformation = (field, value) => {
-        setPaymentInformation((prev) => ({
-            ...prev,
-            [field]: value
-        }));
+        if (field === 'cardNumber') {
+            setPaymentInformation((prev) => ({
+                ...prev,
+                cardNumber: formatCardNumber(value)
+            }));
+        } else if (field === 'expiry') {
+            setPaymentInformation((prev) => ({
+                ...prev,
+                expiry: formatExpiry(value)
+            }));
+        } else if ( field === 'cvv' ){
+            setPaymentInformation(( prev ) => ({
+                ...prev,
+                cvv: formatCvv( value )
+            }));
+        }
+        else {
+            setPaymentInformation((prev) => ({
+                ...prev,
+                [field]: value
+            }));
+        }
     };
 
     const handleSubmit = () => {
-        // Simple Validation
         const { cardholderName, cardNumber, expiry, cvv } = paymentInformation;
         if (!cardholderName || !cardNumber || !expiry || !cvv) {
             alert('Please fill out all fields.');
@@ -33,27 +74,17 @@ function PaymentForm() {
     };
 
     return (
-        <Box
-            sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center',
-                minHeight: '100vh',
-                backgroundColor: '#121212',
-                padding: '2rem'
-            }}
-        >
             <Box
                 sx={{
                     alignItems: 'center',
                     backgroundColor: '#161616',
-                    borderRadius: '.3rem',
+                    borderRadius: '1rem',
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     padding: '2rem',
-                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
-                    width: '45rem'
+                    width: '30rem'
                 }}
             >
                 <Typography
@@ -65,7 +96,6 @@ function PaymentForm() {
                 >
                     Add <span style={{ color: '#ab003c' }}> Card </span>
                 </Typography>
-                {/* Card Preview */}
                 <Box
                     sx={{
                         borderRadius: '1.2rem',
@@ -116,87 +146,97 @@ function PaymentForm() {
                     </Box>
                 </Box>
 
-                {/* Form Fields */}
-                <Box
-    sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        width: '45rem',
-        gap: '.5rem', // Adds spacing between fields
-    }}
->
-    {['cardholderName', 'cardNumber', 'expiry', 'cvv'].map((field) => (
-        <TextField
-            key={field}
-            id={field}
-            label={
-                field === 'cardholderName'
-                    ? 'Cardholder Name'
-                    : field === 'cardNumber'
-                    ? 'Card Number'
-                    : field === 'expiry'
-                    ? 'Expiry'
-                    : 'CVV'
-            }
-            placeholder={
-                field === 'cardholderName'
-                    ? 'Ex: Billy Bob Thorton'
-                    : field === 'cardNumber'
-                    ? 'Ex: 1234 5678 9101 1123'
-                    : field === 'expiry'
-                    ? 'Ex: 11/23'
-                    : 'Ex: 123'
-            }
-            variant='outlined'
-            size='small'
-            type={field === 'cvv' ? 'password' : 'text'}
-            onChange={(e) => handlePaymentInformation(field, e.target.value)}
-            value={paymentInformation[field]}
-            sx={{
-                marginBottom: '1rem',
-                input: { color: '#fafafa' },
-                label: { color: '#fafafa' },
-                '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                        border: '.2rem solid #ab003c',
-                    },
-                    '&:hover fieldset': {
-                        borderColor: '#ab003c',
-                    },
-                    '&.Mui-focused fieldset': {
-                        borderColor: '#ab003c',
-                    },
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#fafafa',
-                },
-                width: '18rem', // Set the width here
-                alignSelf: 'center', // Centers the input fields
-            }}
-        />
-    ))}
-</Box>
+                {['cardholderName', 'cardNumber', 'expiry', 'cvv'].map((field) => (
+                    <TextField
+                        key={field}
+                        id={field}
+                        label={
+                            field === 'cardholderName'
+                                ? 'Cardholder Name'
+                                : field === 'cardNumber'
+                                ? 'Card Number'
+                                : field === 'expiry'
+                                ? 'Expiry'
+                                : 'CVV'
+                        }
+                        placeholder={
+                            field === 'cardholderName'
+                                ? 'Ex: Billy Bob Thorton'
+                                : field === 'cardNumber'
+                                ? '#### #### #### ####'
+                                : field === 'expiry'
+                                ? 'MM/YY'
+                                : 'Ex: 123'
+                        }
+                        variant='outlined'
+                        size='small'
+                        onChange={(e) => handlePaymentInformation(field, e.target.value)}
+                        value={paymentInformation[field]}
+                        sx={{
+                            marginBottom: '1.5rem',
+                            input: { color: '#fafafa', width: '18rem' },
+                            label: { color: '#fafafa' },
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    border: '.2rem solid #ab003c',
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: '#ab003c',
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: '#ab003c',
+                                },
+                            },
+                            '& .MuiInputLabel-root.Mui-focused': {
+                                color: '#fafafa',
+                            },
+                            width: '18rem',
+                            alignSelf: 'center',
+                        }}
+                    />
+                ))}
 
-
-                {/* Submit Button */}
-                <Button
-                    variant='contained'
-                    sx={{
-                        marginTop: '1rem',
-                        backgroundColor: '#ab003c',
-                        '&:hover': {
-                            backgroundColor: '#8b002f'
-                        },
-                        color: '#fafafa',
-                        fontWeight: 'bold'
+                <Box 
+                    sx = {{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginTop: '2rem'
                     }}
-                    onClick={handleSubmit}
                 >
+
+                <Button
+                    onClick={handleSubmit}
+                    variant='filled'
+                    sx={{
+                        color: '#ab003c',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                        marginRight: '1rem',
+                        width: '9rem',
+                        '&:hover': {
+                            backgroundColor: '#ab003c',
+                            color: '#fafafa'
+                        }
+                    }}
+                    >
                     Submit
                 </Button>
+                <Button 
+                    onClick = { onClose }
+                    variant = 'filled'
+                    sx = {{
+                        color: '#ab003c',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                        width: '9rem',
+                        '&:hover': {
+                            backgroundColor: '#ab003c',
+                            color: '#fafafa'
+                        }
+                    }}
+                    >
+                    Cancel
+                </Button>    
+                </Box>
             </Box>
-        </Box>
     );
 }
 
