@@ -11,9 +11,9 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
+import cardImage from '../Static/card.png';
 import EditUser from './Edituser';
 import PaymentForm from './PaymentForm';
-import cardImage from '../Static/card.png';
 
 
 // Context Providers 
@@ -29,11 +29,12 @@ function Profile() {
     const { user } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
+    const [editUserOpen, setEditUserOpen] = useState(false);
+    const [editPaymentOpen, setEditPaymentOpen] = useState(null);
     const [cardAddOpen, setCardAddOpen] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState([]);
-    const [ removingMethods, setRemovingMethods ] = useState( false );
-    
+    const [removingMethods, setRemovingMethods] = useState(false);
+
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -45,21 +46,29 @@ function Profile() {
         }
     }
 
-    const removePaymentMethod = async ( card_id ) => {
-        try{
-            const response = await apiClient.delete( `/payments/${ card_id}` );
-            if ( response.status === 200 ){
-                showAlert( response.data.message, 'success' )
-                await fetchPaymentMethods( user.id ); 
+    const removePaymentMethod = async (cardId) => {
+        try {
+            const response = await apiClient.delete(`/payments/${cardId}`);
+            if (response.status === 200) {
+                showAlert(response.data.message, 'success')
+                await fetchPaymentMethods(user.id);
             }
             else {
-                showAlert( response.data.message, 'error' );
+                showAlert(response.data.message, 'error');
             }
         }
-        catch( error ){
-            console.error( 'Error removing payment method', error )
+        catch (error) {
+            console.error('Error removing payment method', error)
         }
     }
+
+    const updatePaymentMethod = (updatedCard) => {
+        setPaymentMethods((prevMethods) =>
+            prevMethods.map((method) =>
+                method.id === updatedCard.id ? updatedCard : method
+            )
+        );
+    };
 
     useEffect(() => {
         if (user?.id) {
@@ -67,14 +76,24 @@ function Profile() {
         }
     }, [user?.id]);
 
-    const onEditOpen = () => {
+    const oneditUserOpen = () => {
         setOpen(true);
-        setEditOpen(true);
+        setEditUserOpen(true);
     }
 
-    const onEditClose = () => {
+    const oneditUserClose = () => {
         setOpen(false);
-        setEditOpen(false);
+        setEditUserOpen(false);
+    }
+
+    const onEditPaymentOpen = (cardId) => {
+        setOpen(true);
+        setEditPaymentOpen(cardId);
+    }
+
+    const onEditPaymentClose = () => {
+        setOpen(false);
+        setEditPaymentOpen(null);
     }
 
     const onCardOpen = () => {
@@ -88,7 +107,7 @@ function Profile() {
     }
 
     const handleRemovingMethods = () => {
-        setRemovingMethods(( previous ) => !previous );
+        setRemovingMethods((previous) => !previous);
     }
 
     return (
@@ -229,7 +248,7 @@ function Profile() {
                     </Box>
                 </Box>
                 <Button
-                    onClick={onEditOpen}
+                    onClick={oneditUserOpen}
                     size='large'
                     variant='filled'
                     startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
@@ -296,7 +315,7 @@ function Profile() {
                                 <Box
                                     key={index}
                                     sx={{
-                                        position: 'relative', 
+                                        position: 'relative',
                                         display: 'flex',
                                         alignItems: 'center',
                                         backgroundColor: '#161616',
@@ -344,7 +363,7 @@ function Profile() {
                                         </Typography>
 
                                         <Button
-                                            onClick = {() => removingMethods ? removePaymentMethod( method.id ) : onEditOpen() }
+                                            onClick={() => removingMethods ? removePaymentMethod(method.id) : onEditPaymentOpen(method.id)}
                                             variant="filled"
                                             sx={{
                                                 position: 'absolute',
@@ -359,7 +378,7 @@ function Profile() {
                                                 },
                                             }}
                                         >
-                                        { removingMethods ? 'Remove' : 'Edit' }
+                                            {removingMethods ? 'Remove' : 'Edit'}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -370,6 +389,7 @@ function Profile() {
                                 sx={{
                                     color: '#fafafa',
                                     marginTop: '2rem',
+                                    textAlign: 'center'
                                 }}
                             >
                                 No payment methods added yet.
@@ -395,10 +415,10 @@ function Profile() {
                                 }
                             }}
                         >
-                        Add
+                            Add
                         </Button>
                         <Button
-                            onClick = { handleRemovingMethods }
+                            onClick={handleRemovingMethods}
                             variant='filled'
                             sx={{
                                 color: '#ab003c',
@@ -410,7 +430,7 @@ function Profile() {
                                 }
                             }}
                         >
-                        { removingMethods ? 'Done' : 'Remove' }
+                            {removingMethods ? 'Done' : 'Remove'}
                         </Button>
                     </Box>
                 </Box>
@@ -425,8 +445,10 @@ function Profile() {
                 <Backdrop
                     open={open}
                     onClose={() => {
-                        onEditClose();
-                        onCardClose();
+                        setOpen(false);
+                        setEditUserOpen(false);
+                        setEditPaymentOpen(null);
+                        setCardAddOpen(false);
                     }}
                     sx={{
                         backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -435,12 +457,27 @@ function Profile() {
                         justifyContent: 'center',
                     }}
                 >
-                    {editOpen && (
-                        <EditUser user={user} onClose={onEditClose} />
+                    {editUserOpen && (
+                        <EditUser
+                            user={user}
+                            onClose={oneditUserClose}
+                        />
                     )}
-                    {cardAddOpen && (
-                        <PaymentForm onClose={onCardClose} refreshPaymentMethods={() => fetchPaymentMethods(user.id)} />
-                    )}
+                    {editPaymentOpen ? (
+                        <PaymentForm
+                            onClose={onCardClose}
+                            refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                            cardId={editPaymentOpen}
+                            updatePaymentMethod={updatePaymentMethod}
+                            userId={user.id}
+                        />
+                    ) : cardAddOpen ? (
+                        <PaymentForm
+                            onClose={onCardClose}
+                            refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                            userId={user.id}
+                        />
+                    ) : null}
                 </Backdrop>
             </Box>
         </>

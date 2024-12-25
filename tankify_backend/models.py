@@ -277,6 +277,22 @@ class PaymentMethods( Base ):
             'cardholder_name': self.cardholder_name,
             'card_number': self.card_number[ -4: ],
             'expiry': self.expiry,
+            'cvv': self.cvv,
+            'type': self.type,
+            'details': self.details,
+            'creaded_at': self.created_at.isoformat(),
+        }
+    
+    def to_dict_full_card( self ): 
+        """ Converts PaymentMethod Instance to Dictionary with Full Card Number """
+
+        return {
+            'id': str( self.id ),
+            'user_id': str( self.user_id ),
+            'cardholder_name': self.cardholder_name,
+            'card_number': self.card_number,
+            'expiry': self.expiry,
+            'cvv': self.cvv,
             'type': self.type,
             'details': self.details,
             'creaded_at': self.created_at.isoformat(),

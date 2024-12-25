@@ -3,7 +3,7 @@
 
 # Dependencies 
 from flask import Flask, request, jsonify, session, Blueprint 
-import requests 
+import requests, re 
 import os 
 from sqlalchemy import func
 
@@ -37,6 +37,23 @@ def get_payment_methods( user_id ):
         return jsonify({ 'message': 'Failed to retireve payment methods' }), 500 
 
 
+@payment_routes.route('/api/payments/<user_id>/card/<card_id>', methods=['GET'])
+def get_payment_method(user_id, card_id):
+    """ Get Payment Method Details for a Specific Card """
+    
+    try:
+        # Fetch the payment method by user_id and card_id
+        payment_method = PaymentMethods.query.filter_by(id=card_id, user_id=user_id).first()
+        if not payment_method:
+            return jsonify({'message': 'Payment method not found'}), 404
+
+        # Convert payment method to dictionary
+        return jsonify(payment_method.to_dict_full_card() ), 200
+    except Exception as e:
+        print('Error fetching payment method:', e)
+        return jsonify({'message': 'Internal server error'}), 500
+
+
 @payment_routes.route( '/api/payments/<user_id>', methods = [ 'POST' ] )
 def add_payment_method( user_id ): 
     """ Add a Payment Method to a User Instance """
@@ -65,6 +82,40 @@ def add_payment_method( user_id ):
     except Exception as e: 
         print( f'Error occurred while adding new payment method: { e }' )
         return jsonify({ 'message': 'Failed to add new payment method' }), 500 
+
+
+@payment_routes.route('/api/payments/edit/<user_id>/<card_id>', methods=['PATCH'])
+def edit_payment_method(user_id, card_id):
+    """ Edit a Specific Payment Method Instance """
+    
+    data = request.json
+    print(data)
+
+    try:
+        payment_method = PaymentMethods.query.filter_by(id=card_id, user_id=user_id).first()
+        if not payment_method:
+            return jsonify({'message': 'Payment method not found'}), 404
+
+        if 'cardholderName' in data:
+            payment_method.cardholder_name = data['cardholderName']
+        if 'cardNumber' in data:
+            payment_method.card_number = data['cardNumber']
+        if 'expiry' in data:
+            payment_method.expiry = data['expiry']
+        if 'cvv' in data:
+            payment_method.cvv = data['cvv']
+        if 'type' in data:
+            if data['type'] not in ['Credit', 'Debit']:
+                return jsonify({'message': 'Invalid card type. Must be Credit or Debit.'}), 400
+            payment_method.type = data['type']
+
+        db.session.commit()
+        return jsonify({'message': 'Payment method updated successfully', 'data': payment_method.to_dict_full_card() }), 200
+    except Exception as e:
+        db.session.rollback()
+        print('Error updating payment method:', e)
+        return jsonify({'message': 'Internal server error'}), 500
+
 
 
 @payment_routes.route( '/api/payments/<card_id>', methods = [ 'DELETE' ] )

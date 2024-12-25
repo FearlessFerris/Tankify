@@ -1,27 +1,28 @@
-// PaymentForm Component Implementation 
+// Payment Form Component Implementation 
 
 
-// Dependencies
-import React, { useState } from 'react';
-import { Box, FormControlLabel, Switch, Typography, TextField, Button } from '@mui/material';
+// Dependencies 
+import React, { useCallback, useState, useEffect } from 'react';
+import { Box, Button, FormControlLabel, Switch, TextField, Typography } from '@mui/material';
 
 
-// Components & Necessary Files
-import cardImage from '../Static/card.png';
+// Components & Necessary Files 
 import apiClient from '../api/apiClient';
+import cardImage from '../Static/card.png';
 
 
-// Context Providers
+// Context Directories 
 import { useAlert } from '../ContextDirectory/AlertContext';
 import { useUser } from '../ContextDirectory/UserContext';
 
 
-// Payment Form
-function PaymentForm({ onClose, refreshPaymentMethods }) {
+// Payment Form Component 
+function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, cardId = null, userId = null }) {
 
     const { user } = useUser();
     const showAlert = useAlert();
-    const [ isCreditCard, setIsCreditCard ] = useState( false );
+    const [isCreditCard, setIsCreditCard] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false);
     const [paymentInformation, setPaymentInformation] = useState({
         cardholderName: '',
         cardNumber: '',
@@ -30,6 +31,41 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
         type: 'Debit',
         details: ''
     });
+
+    const userIdToUse = userId || user?.id;
+
+    useEffect(() => {
+        if (cardId && userIdToUse) {
+            const fetchCardDetails = async () => {
+                try {
+                    const response = await apiClient.get(`/payments/${userIdToUse}/card/${cardId}`);
+                    const cardData = response.data;
+                    setPaymentInformation({
+                        cardholderName: cardData.cardholder_name,
+                        cardNumber: cardData.card_number,
+                        expiry: cardData.expiry,
+                        cvv: cardData.cvv,
+                        type: cardData.type,
+                        details: cardData.details,
+                    });
+                    setIsCreditCard(cardData.type === 'Credit');
+                } catch (error) {
+                    console.error('Error fetching payment information:', error);
+                }
+            };
+            fetchCardDetails();
+        } else {
+            setPaymentInformation({
+                cardholderName: '',
+                cardNumber: '',
+                expiry: '',
+                cvv: '',
+                type: 'Debit',
+                details: '',
+            });
+            setIsCreditCard(false);
+        }
+    }, [cardId, userIdToUse]);
 
     const formatCardNumber = (value) => {
         const digits = value.replace(/\D/g, '').slice(0, 16);
@@ -74,38 +110,56 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
             }));
         }
     };
-
     const toggleCreditCard = () => {
         setIsCreditCard((previous) => !previous);
-        setPaymentInformation(( previous ) => ({
+        setPaymentInformation((previous) => ({
             ...previous,
-            type: !isCreditCard ? 'Credit' : 'Debit'
+            type: !isCreditCard ? 'Credit' : 'Debit',
         }));
-    }
+    };
+
+    const handleCvvFocus = () => setIsFlipped(true);
+    const handleCvvBlur = () => setIsFlipped(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { cardholderName, cardNumber, expiry, cvv } = paymentInformation;
+        console.log(paymentInformation);
         if (!cardholderName || !cardNumber || !expiry || !cvv) {
-            showAlert( 'Please fill out all required fields!', 'error' );
+            showAlert('Please fill out all required fields!', 'error');
             return;
-        }  
-        const response = await apiClient.post(`/payments/${user.id}`, paymentInformation );
-        console.log(response.data.data );
-        if ( response.status === 200 ){
-            setPaymentInformation({ 
+        }
+
+        try {
+            if (cardId) {
+                const response = await apiClient.patch(`/payments/edit/${userId}/${cardId}`, paymentInformation);
+                const updatedCard = response.data;
+                showAlert('Card updated successfully!', 'success');
+                updatePaymentMethod(updatedCard)
+            }
+            else {
+                const response = await apiClient.post(`/payments/${userId}`, paymentInformation);
+                const newCard = response.data;
+                showAlert('Card added successfully!', 'success');
+                refreshPaymentMethods()
+            }
+            setPaymentInformation({
                 cardholderName: '',
                 cardNumber: '',
                 expiry: '',
                 cvv: '',
-                type: 'debit',
+                type: 'Debit',
                 details: ''
             });
-            onClose();
             refreshPaymentMethods();
-            showAlert(`Card: ${ response.data.data[ 'card_number' ] } was successfully added to your payment methods`, 'success' );
+            onClose();
         }
-    };
+        catch (error) {
+            console.error('Error saving payment information:', error);
+            showAlert('Failed to save payment information', 'error');
+        }
+    }
+
 
     return (
         <Box
@@ -119,17 +173,18 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                 justifyContent: 'center',
                 marginTop: '10rem',
                 padding: '2rem',
-                width: '30rem'
+                width: '30rem',
             }}
         >
             <Typography
-                variant='h3'
+                variant="h3"
                 sx={{
                     color: '#fafafa',
-                    marginBottom: '1rem'
+                    marginBottom: '1.5rem',
                 }}
             >
-                Add <span style={{ color: '#ab003c' }}> { isCreditCard ? 'Credit' : 'Debit' } </span> Card 
+                {cardId ? 'Edit' : 'Add'}
+                <span style={{ color: '#ab003c' }}> {isCreditCard ? 'Credit' : 'Debit'} </span> Card
             </Typography>
             <FormControlLabel
                 control={
@@ -149,60 +204,120 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                 label={isCreditCard ? 'Credit Card' : 'Debit Card'}
                 sx={{
                     color: '#fafafa',
-                    marginBottom: '1rem',
+                    marginBottom: '2rem',
                 }}
             />
             <Box
                 sx={{
-                    backgroundImage: `url(${cardImage})`,
-                    backgroundSize: 'cover',
-                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
-                    borderRadius: '1.2rem',
-                    color: '#fafafa',
+                    perspective: '1000px',
+                    width: '23rem',
                     height: '12rem',
                     marginBottom: '2rem',
-                    padding: '1rem',
-                    position: 'relative',
-                    width: '23rem',
                 }}
             >
-                <Typography
-                    varaint='caption'
-                >
-                    {isCreditCard ? 'CREDIT' : 'DEBIT'}
-                </Typography>
-                <Typography
-                    variant='h6'
-                    sx={{
-                        marginTop: '1rem',
-                        textAlign: 'center',
-                        letterSpacing: '.2rem',
-                        color: '#ab003c',
-                        fontWeight: 'bold',
-                    }}
-                >
-                    {paymentInformation.cardNumber || '#### #### #### ####'}
-                </Typography>
                 <Box
                     sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginTop: '1rem',
-                        marginLeft: '1rem',
-                        marginRight: '1rem'
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '1.2rem',
+                        position: 'relative',
+                        transformStyle: 'preserve-3d',
+                        transition: 'transform 0.6s',
+                        transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.6)',
                     }}
                 >
-                    <Box>
-                        <Typography variant='caption'>CARDHOLDER</Typography>
-                        <Typography variant='subtitle1'>
-                            {paymentInformation.cardholderName || 'FULL NAME'}
+                    <Box
+                        sx={{
+                            backgroundImage: `url(${cardImage})`,
+                            backgroundSize: 'cover',
+                            backfaceVisibility: 'hidden',
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '1.2rem',
+                            padding: '1rem',
+                            color: '#fafafa',
+                        }}
+                    >
+                        <Typography
+                            varaint='caption'
+                        >
+                            {isCreditCard ? 'CREDIT' : 'DEBIT'}
                         </Typography>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                marginTop: '1rem',
+                                textAlign: 'center',
+                                letterSpacing: '.2rem',
+                                color: '#ab003c',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {paymentInformation.cardNumber || '#### #### #### ####'}
+                        </Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginTop: '2rem',
+                                marginLeft: '1rem',
+                                marginRight: '1rem',
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="caption">CARDHOLDER</Typography>
+                                <Typography variant="subtitle1">FULL NAME</Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="caption">EXPIRY</Typography>
+                                <Typography variant="subtitle1">MM/YY</Typography>
+                            </Box>
+                        </Box>
                     </Box>
-                    <Box>
-                        <Typography variant='caption'>EXPIRY</Typography>
-                        <Typography variant='subtitle1'>
-                            {paymentInformation.expiry || 'MM/YY'}
-                        </Typography>
+                    <Box
+                        sx={{
+                            backgroundImage: `url(${cardImage})`,
+                            backgroundSize: 'cover',
+                            backfaceVisibility: 'hidden',
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '1.2rem',
+                            padding: '1rem',
+                            transform: 'rotateY(180deg)',
+                            color: '#fafafa',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                backgroundColor: '#000',
+                                height: '2rem',
+                                marginTop: '3rem',
+                            }}
+                        />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                marginTop: '1rem',
+                                paddingRight: '1rem',
+                            }}
+                        >
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    backgroundColor: '#fff',
+                                    color: '#000',
+                                    padding: '0.2rem 0.5rem',
+                                    borderRadius: '0.2rem',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {paymentInformation.cvv || '###'}
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
@@ -222,20 +337,22 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                     }
                     placeholder={
                         field === 'cardholderName'
-                            ? 'Ex: Billy Bob Thorton'
+                            ? 'Ex: John Doe'
                             : field === 'cardNumber'
                                 ? '#### #### #### ####'
                                 : field === 'expiry'
                                     ? 'MM/YY'
                                     : 'Ex: 123'
                     }
-                    variant='outlined'
-                    size='small'
+                    variant="outlined"
+                    size="small"
                     onChange={(e) => handlePaymentInformation(field, e.target.value)}
                     value={paymentInformation[field]}
+                    onFocus={field === 'cvv' ? handleCvvFocus : undefined}
+                    onBlur={field === 'cvv' ? handleCvvBlur : undefined}
                     sx={{
                         marginBottom: '1.5rem',
-                        input: { color: '#fafafa', width: '18rem' },
+                        input: { color: '#fafafa' },
                         label: { color: '#fafafa' },
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
@@ -252,22 +369,13 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                             color: '#fafafa',
                         },
                         width: '18rem',
-                        alignSelf: 'center',
                     }}
                 />
             ))}
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginTop: '2rem'
-                }}
-            >
-
+            <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '2rem' }}>
                 <Button
                     onClick={handleSubmit}
-                    variant='filled'
+                    variant="filled"
                     sx={{
                         color: '#ab003c',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
@@ -275,23 +383,23 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                         width: '9rem',
                         '&:hover': {
                             backgroundColor: '#ab003c',
-                            color: '#fafafa'
-                        }
+                            color: '#fafafa',
+                        },
                     }}
                 >
                     Submit
                 </Button>
                 <Button
                     onClick={onClose}
-                    variant='filled'
+                    variant="filled"
                     sx={{
                         color: '#ab003c',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                         width: '9rem',
                         '&:hover': {
                             backgroundColor: '#ab003c',
-                            color: '#fafafa'
-                        }
+                            color: '#fafafa',
+                        },
                     }}
                 >
                     Cancel
@@ -301,4 +409,4 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
     );
 }
 
-export default PaymentForm;
+export default NewPaymentForm;
