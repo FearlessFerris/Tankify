@@ -67,7 +67,7 @@ def add_payment_method( user_id ):
         return jsonify({ 'message': 'Failed to add new payment method' }), 500 
 
 
-@payment_routes.route( '/api/payments/<card_id<', methods = [ 'DELETE' ] )
+@payment_routes.route( '/api/payments/<card_id>', methods = [ 'DELETE' ] )
 def remove_payment_method( card_id ):
     """ Remove Payment Method from User Instance based on UUID """
 

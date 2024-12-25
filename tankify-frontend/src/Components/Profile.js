@@ -18,18 +18,22 @@ import cardImage from '../Static/card.png';
 
 // Context Providers 
 import { useUser } from '../ContextDirectory/UserContext';
+import { useAlert } from '../ContextDirectory/AlertContext';
 import { formControlClasses } from '@mui/material';
 
 
 // Profile Component 
 function Profile() {
 
+    const showAlert = useAlert();
     const { user } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [cardAddOpen, setCardAddOpen] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState([]);
+    const [ removingMethods, setRemovingMethods ] = useState( false );
+    
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -38,6 +42,22 @@ function Profile() {
         }
         catch (error) {
             console.error('Error fetching user payment methods', error);
+        }
+    }
+
+    const removePaymentMethod = async ( card_id ) => {
+        try{
+            const response = await apiClient.delete( `/payments/${ card_id}` );
+            if ( response.status === 200 ){
+                showAlert( response.data.message, 'success' )
+                await fetchPaymentMethods( user.id ); 
+            }
+            else {
+                showAlert( response.data.message, 'error' );
+            }
+        }
+        catch( error ){
+            console.error( 'Error removing payment method', error )
         }
     }
 
@@ -65,6 +85,10 @@ function Profile() {
     const onCardClose = () => {
         setOpen(false);
         setCardAddOpen(false);
+    }
+
+    const handleRemovingMethods = () => {
+        setRemovingMethods(( previous ) => !previous );
     }
 
     return (
@@ -320,6 +344,7 @@ function Profile() {
                                         </Typography>
 
                                         <Button
+                                            onClick = {() => removingMethods ? removePaymentMethod( method.id ) : onEditOpen() }
                                             variant="filled"
                                             sx={{
                                                 position: 'absolute',
@@ -334,7 +359,7 @@ function Profile() {
                                                 },
                                             }}
                                         >
-                                            Edit
+                                        { removingMethods ? 'Remove' : 'Edit' }
                                         </Button>
                                     </Box>
                                 </Box>
@@ -370,9 +395,10 @@ function Profile() {
                                 }
                             }}
                         >
-                            Add Method
+                        Add
                         </Button>
                         <Button
+                            onClick = { handleRemovingMethods }
                             variant='filled'
                             sx={{
                                 color: '#ab003c',
@@ -384,7 +410,7 @@ function Profile() {
                                 }
                             }}
                         >
-                            Remove Method
+                        { removingMethods ? 'Done' : 'Remove' }
                         </Button>
                     </Box>
                 </Box>

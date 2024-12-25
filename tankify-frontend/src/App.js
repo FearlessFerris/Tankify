@@ -39,8 +39,6 @@ const theme = createTheme({
 });  
 
 
-
-
 // Tankify Application 
 function App() {
     return (

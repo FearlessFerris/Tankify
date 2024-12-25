@@ -49,8 +49,10 @@ function Login() {
             showAlert( response.data.message, 'success' );
             navigate( '/' );
         }
-        catch{
-            console.error( 'Error processing your request to login!' );
+        catch( error ){
+        const errorMessage = error.response && error.response.data && error.response.data.message ? error.response.data.message : 'An error occurred while logging in, please try again.';
+        showAlert( errorMessage, 'error' ); 
+        console.error( 'Error processing your request to login!' );
         }
     }
 

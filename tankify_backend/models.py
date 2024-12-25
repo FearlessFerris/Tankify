@@ -322,11 +322,13 @@ class PaymentMethods( Base ):
 
         try:
             payment_method = cls.query.filter_by( id = card_id ).first() 
+            card_number = payment_method.to_dict().get( 'card_number' )
+            print( card_number )
             if not payment_method: 
                 return { 'message': 'Payment method not found' }
             db.session.delete( payment_method )
             db.session.commit() 
-            return { 'message': 'Payment method successfully removed' }
+            return { 'message': f'Payment method ending in: { card_number } successfully removed' }
         except Exception as e: 
             db.session.rollback()
             print( f'Error occurred while removing payment method: { e }' )
