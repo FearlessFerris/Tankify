@@ -47,6 +47,7 @@ function Login() {
                 password: ''
             });
             showAlert( response.data.message, 'success' );
+            console.log( response.data.message );
             navigate( '/' );
         }
         catch( error ){

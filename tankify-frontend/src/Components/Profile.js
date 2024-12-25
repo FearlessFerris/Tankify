@@ -328,7 +328,7 @@ function Profile() {
                                         <Typography
                                             variant="body1"
                                             sx={{
-                                                color: '#fafafa',
+                                                color: '#ab003c',
                                             }}
                                         >
                                             {method.type} - **** {method.card_number.slice(-4)}

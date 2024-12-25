@@ -87,7 +87,7 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
         e.preventDefault();
         const { cardholderName, cardNumber, expiry, cvv } = paymentInformation;
         if (!cardholderName || !cardNumber || !expiry || !cvv) {
-            alert('Please fill out all fields.');
+            showAlert( 'Please fill out all required fields!', 'error' );
             return;
         }  
         const response = await apiClient.post(`/payments/${user.id}`, paymentInformation );
@@ -117,6 +117,7 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                marginTop: '10rem',
                 padding: '2rem',
                 width: '30rem'
             }}
@@ -125,7 +126,7 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                 variant='h3'
                 sx={{
                     color: '#fafafa',
-                    marginBottom: '2rem'
+                    marginBottom: '1rem'
                 }}
             >
                 Add <span style={{ color: '#ab003c' }}> { isCreditCard ? 'Credit' : 'Debit' } </span> Card 
@@ -148,21 +149,21 @@ function PaymentForm({ onClose, refreshPaymentMethods }) {
                 label={isCreditCard ? 'Credit Card' : 'Debit Card'}
                 sx={{
                     color: '#fafafa',
-                    marginBottom: '2rem',
+                    marginBottom: '1rem',
                 }}
             />
             <Box
                 sx={{
-                    borderRadius: '1.2rem',
                     backgroundImage: `url(${cardImage})`,
                     backgroundSize: 'cover',
+                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
+                    borderRadius: '1.2rem',
                     color: '#fafafa',
                     height: '12rem',
                     marginBottom: '2rem',
                     padding: '1rem',
                     position: 'relative',
                     width: '23rem',
-                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
                 }}
             >
                 <Typography
