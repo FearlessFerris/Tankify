@@ -29,6 +29,7 @@ function Profile() {
     const { user } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
+    const [ openCount, setOpenCount ] = useState( 0 );
     const [editUserOpen, setEditUserOpen] = useState(false);
     const [editPaymentOpen, setEditPaymentOpen] = useState(null);
     const [cardAddOpen, setCardAddOpen] = useState(false);
@@ -81,13 +82,14 @@ function Profile() {
         setEditUserOpen(true);
     }
 
-    const oneditUserClose = () => {
+    const onEditUserClose = () => {
         setOpen(false);
         setEditUserOpen(false);
     }
 
     const onEditPaymentOpen = (cardId) => {
         setOpen(true);
+        setOpenCount(( previous ) => previous + 1 );
         setEditPaymentOpen(cardId);
     }
 
@@ -98,6 +100,7 @@ function Profile() {
 
     const onCardOpen = () => {
         setOpen(true);
+        setOpenCount(( previous ) => previous + 1 );
         setCardAddOpen(true);
     }
 
@@ -313,7 +316,7 @@ function Profile() {
                         {paymentMethods.length > 0 ? (
                             paymentMethods.map((method, index) => (
                                 <Box
-                                    key={index}
+                                    key={ method.id }
                                     sx={{
                                         position: 'relative',
                                         display: 'flex',
@@ -460,16 +463,17 @@ function Profile() {
                     {editUserOpen && (
                         <EditUser
                             user={user}
-                            onClose={oneditUserClose}
+                            onClose={onEditUserClose}
                         />
                     )}
                     {editPaymentOpen ? (
                         <PaymentForm
-                            onClose={onCardClose}
+                            onClose={onEditPaymentClose}
                             refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
                             cardId={editPaymentOpen}
                             updatePaymentMethod={updatePaymentMethod}
                             userId={user.id}
+                            openCount = { openCount }
                         />
                     ) : cardAddOpen ? (
                         <PaymentForm

@@ -42,46 +42,53 @@ def get_payment_method(user_id, card_id):
     """ Get Payment Method Details for a Specific Card """
     
     try:
-        # Fetch the payment method by user_id and card_id
         payment_method = PaymentMethods.query.filter_by(id=card_id, user_id=user_id).first()
         if not payment_method:
             return jsonify({'message': 'Payment method not found'}), 404
-
-        # Convert payment method to dictionary
         return jsonify(payment_method.to_dict_full_card() ), 200
     except Exception as e:
         print('Error fetching payment method:', e)
         return jsonify({'message': 'Internal server error'}), 500
 
 
-@payment_routes.route( '/api/payments/<user_id>', methods = [ 'POST' ] )
-def add_payment_method( user_id ): 
+@payment_routes.route('/api/payments/<user_id>', methods=['POST'])
+def add_payment_method(user_id): 
     """ Add a Payment Method to a User Instance """
-
+    
     data = request.json
-    cardholder_name = data.get( 'cardholderName' )
-    card_number = data.get( 'cardNumber' )
-    expiry = data.get( 'expiry' )
-    cvv = data.get( 'cvv' )
-    type = data.get( 'type' )
-    details = data.get( 'details' )
+    cardholder_name = data.get('cardholderName')
+    card_number = data.get('cardNumber')
+    expiry = data.get('expiry')
+    cvv = data.get('cvv')
+    type = data.get('type')
+    details = data.get('details')
+    default_method = data.get( 'defaultMethod' )
+    print( default_method )
 
     try:
-        user = User.query.get( user_id )
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+        
+        if default_method:
+            PaymentMethods.unset_default_for_user(user_id)
+
         payment_method = PaymentMethods.add_payment_method( 
-            user_id = user_id,
-            cardholder_name = cardholder_name,
-            card_number = card_number,
-            expiry = expiry,
-            cvv = cvv, 
-            type = type,
-            details = details
+            user_id=user_id,
+            cardholder_name=cardholder_name,
+            card_number=card_number,
+            expiry=expiry,
+            cvv=cvv, 
+            type=type,
+            details=details,
+            default_method=default_method
         )
-        return jsonify({ 'message': 'You have successfully added a payment method!', 'data': payment_method.to_dict() }), 200 
+        return jsonify({'message': 'You have successfully added a payment method!', 'data': payment_method.to_dict()}), 200 
 
     except Exception as e: 
-        print( f'Error occurred while adding new payment method: { e }' )
-        return jsonify({ 'message': 'Failed to add new payment method' }), 500 
+        print(f'Error occurred while adding new payment method: {e}')
+        return jsonify({'message': 'Failed to add new payment method'}), 500
+
 
 
 @payment_routes.route('/api/payments/edit/<user_id>/<card_id>', methods=['PATCH'])
@@ -108,13 +115,21 @@ def edit_payment_method(user_id, card_id):
             if data['type'] not in ['Credit', 'Debit']:
                 return jsonify({'message': 'Invalid card type. Must be Credit or Debit.'}), 400
             payment_method.type = data['type']
+        
+        if 'defaultMethod' in data:
+            if data['defaultMethod']:
+                PaymentMethods.unset_default_for_user(user_id)
+                print(f"Unset other default methods for user {user_id}")
+            payment_method.default_method = data['defaultMethod']
+            print(f"Set default_method for card {card_id} to {data['defaultMethod']}")
 
         db.session.commit()
-        return jsonify({'message': 'Payment method updated successfully', 'data': payment_method.to_dict_full_card() }), 200
+        return jsonify({'message': 'Payment method updated successfully', 'data': payment_method.to_dict_full_card()}), 200
     except Exception as e:
         db.session.rollback()
         print('Error updating payment method:', e)
         return jsonify({'message': 'Internal server error'}), 500
+
 
 
 

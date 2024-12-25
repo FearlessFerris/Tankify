@@ -48,7 +48,7 @@ function Carousel() {
             const response = await apiClient.get(
                 `/tanks/all?search=${ search || '' }&page=${ currentPage }&per_page=20&type=${ type || '' }&tier=${ tier || '' }&nation=${ nation || '' }`
             );
-            console.log("API Response:", response.data);
+            console.log( response.data.data );
             const apiTanks = response.data.data.flat();
             if (currentPage === 1) {
                 setTanks(apiTanks);

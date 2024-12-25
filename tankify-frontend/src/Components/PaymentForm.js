@@ -17,19 +17,21 @@ import { useUser } from '../ContextDirectory/UserContext';
 
 
 // Payment Form Component 
-function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, cardId = null, userId = null }) {
+function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, cardId = null, userId = null, openCount = 0 }) {
 
     const { user } = useUser();
     const showAlert = useAlert();
-    const [isCreditCard, setIsCreditCard] = useState(false);
-    const [isFlipped, setIsFlipped] = useState(false);
-    const [paymentInformation, setPaymentInformation] = useState({
+    const [ isCreditCard, setIsCreditCard ] = useState(false);
+    const [ isDefault, setIsDefault ] = useState( false );
+    const [ isFlipped, setIsFlipped ] = useState(false);
+    const [ paymentInformation, setPaymentInformation ] = useState({
         cardholderName: '',
         cardNumber: '',
         expiry: '',
         cvv: '',
         type: 'Debit',
-        details: ''
+        details: '',
+        defaultMethod: false,
     });
 
     const userIdToUse = userId || user?.id;
@@ -40,6 +42,7 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                 try {
                     const response = await apiClient.get(`/payments/${userIdToUse}/card/${cardId}`);
                     const cardData = response.data;
+                    console.log( cardData );
                     setPaymentInformation({
                         cardholderName: cardData.cardholder_name,
                         cardNumber: cardData.card_number,
@@ -47,8 +50,10 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                         cvv: cardData.cvv,
                         type: cardData.type,
                         details: cardData.details,
+                        defaultMethod: cardData.default_method,
                     });
                     setIsCreditCard(cardData.type === 'Credit');
+                    setIsDefault( cardData.default_method );
                 } catch (error) {
                     console.error('Error fetching payment information:', error);
                 }
@@ -62,10 +67,11 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                 cvv: '',
                 type: 'Debit',
                 details: '',
+                defaultMethod: false,
             });
             setIsCreditCard(false);
         }
-    }, [cardId, userIdToUse]);
+    }, [ cardId, userIdToUse, openCount ]);
 
     const formatCardNumber = (value) => {
         const digits = value.replace(/\D/g, '').slice(0, 16);
@@ -118,6 +124,16 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
         }));
     };
 
+    const toggleIsDefault = () => {
+        const newDefaultState = !isDefault;
+        setIsDefault(newDefaultState);
+        setPaymentInformation((previous) => ({
+            ...previous,
+            defaultMethod: newDefaultState, 
+        }));
+    };
+    
+
     const handleCvvFocus = () => setIsFlipped(true);
     const handleCvvBlur = () => setIsFlipped(false);
 
@@ -136,12 +152,14 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                 const updatedCard = response.data;
                 showAlert('Card updated successfully!', 'success');
                 updatePaymentMethod(updatedCard)
+                refreshPaymentMethods();
             }
             else {
                 const response = await apiClient.post(`/payments/${userId}`, paymentInformation);
                 const newCard = response.data;
-                showAlert('Card added successfully!', 'success');
-                refreshPaymentMethods()
+                const cardNumber = newCard.data[ 'card_number' ];
+                showAlert( `Payment Method: ${ cardNumber } added successfully!`, 'success' );
+                refreshPaymentMethods();
             }
             setPaymentInformation({
                 cardholderName: '',
@@ -149,7 +167,8 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                 expiry: '',
                 cvv: '',
                 type: 'Debit',
-                details: ''
+                details: '', 
+                defaultMethod: false,
             });
             refreshPaymentMethods();
             onClose();
@@ -186,11 +205,36 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                 {cardId ? 'Edit' : 'Add'}
                 <span style={{ color: '#ab003c' }}> {isCreditCard ? 'Credit' : 'Debit'} </span> Card
             </Typography>
+            <Box
+            >
+
             <FormControlLabel
                 control={
                     <Switch
-                        checked={isCreditCard}
-                        onChange={toggleCreditCard}
+                    checked={isCreditCard}
+                    onChange={toggleCreditCard}
+                    sx={{
+                        '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#ab003c',
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#ab003c',
+                        },
+                    }}
+                    />
+                }
+                label={isCreditCard ? 'Credit Card' : 'Debit Card'}
+                sx={{
+                    color: '#fafafa',
+                    marginBottom: '2rem',
+                    marginRight: '3rem'
+                }}
+                />
+                <FormControlLabel
+                control={
+                    <Switch
+                        checked={isDefault}
+                        onChange={toggleIsDefault}
                         sx={{
                             '& .MuiSwitch-switchBase.Mui-checked': {
                                 color: '#ab003c',
@@ -201,12 +245,13 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
                         }}
                     />
                 }
-                label={isCreditCard ? 'Credit Card' : 'Debit Card'}
+                label = { 'Set as Default' }
                 sx={{
                     color: '#fafafa',
                     marginBottom: '2rem',
                 }}
             />
+                </Box>
             <Box
                 sx={{
                     perspective: '1000px',
@@ -409,4 +454,4 @@ function NewPaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, c
     );
 }
 
-export default NewPaymentForm;
+export default PaymentForm;
