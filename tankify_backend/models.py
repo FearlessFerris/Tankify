@@ -397,6 +397,13 @@ class Transaction( Base ):
     tank = relationship( 'Tank', backref='transactions' )
 
 
+class Currency( Base ): 
+    """ Currency Model """
+
+    __tablename__ = 'currencies'
+    
+
+
 # class Review( Base ):
 #     """ Review Model """
 
