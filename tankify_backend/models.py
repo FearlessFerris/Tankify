@@ -3,7 +3,7 @@
 
 # Dependencies 
 from flask_sqlalchemy import SQLAlchemy 
-from sqlalchemy import Boolean, Column, String, DateTime, ForeignKey, Integer, Table, Text
+from sqlalchemy import Boolean, Column, String, DateTime, ForeignKey, Integer, Table, Text, Float
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
@@ -49,6 +49,11 @@ class User( Base ):
         self.email = email 
         self.balance = balance
         self.image = image
+
+    def __repr__(self):
+        return (f"<User(id='{self.id}', username='{self.username}', email='{self.email}', "
+                f"balance={self.balance}, image='{self.image}', created_at='{self.created_at}')>")
+
 
     def get_user_profile( self ):
         """ Retrieve entire User Profile """
@@ -191,30 +196,10 @@ class Tank( Base ):
         self.suspensions = suspensions 
         self.turrets = turrets 
 
-    def __repr__( self ): 
-        """ Representation Method for Tank Instance """
+    def __repr__(self):
+        return (f"<Tank(id='{self.id}', name='{self.name}', price='{self.price}', "
+                f"tier='{self.tier}', type='{self.type}', nation='{self.nation}')>")
 
-        tank = {
-            'id': str( self.id ),
-            'name': self.name,
-            'description': self.description,
-            'price': self.price,
-            'tier': self.tier, 
-            'type': self.type,
-            'nation': self.nation,
-            'nation_flag': self.nation_flag,
-            'image': self.image,
-            'crew': self.crew,
-            'default_profile': self.default_profile,
-            'guns': self.guns,
-            'modules_tree': self.modules_tree,
-            'next_tanks': self.next_tanks,
-            'radios': self.radios,
-            'suspensions': self.suspensions,
-            'turrets': self.turrets
-        }
-
-        return tank
 
     @classmethod
     def all_tanks( cls ):
@@ -397,11 +382,65 @@ class Transaction( Base ):
     tank = relationship( 'Tank', backref='transactions' )
 
 
-class Currency( Base ): 
-    """ Currency Model """
+# class Currency( Base ): 
+#     """ Currency Model """
 
-    __tablename__ = 'currencies'
+#     __tablename__ = 'currencies'
+#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+#     iso = Column( String, nullable = False )
+#     name = Column( String, nullable = False )
+#     symbol = Column( String, nullable = False )
+#     exchange_rate = Column( Float, nullable = False )
+#     country = Column( String, nullable = False )
+#     is_active = Column( Boolean, nullable = False, default = True )
+#     description = Column( String, nullable = False )
+#     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
+
+#     def __init__( self, iso, name, symbol, exchange_rate, country, is_active, description ):
+#         """ Initiates Currency Instance """
+        
+#         self.iso = iso 
+#         self.name = name 
+#         self.symbol = symbol 
+#         self.exchange_rate = exchange_rate 
+#         self.country = country 
+#         self.is_active = is_active 
+#         self.description = description 
     
+#     def __repr__( self ):
+#         """ Currency Representation Method for Instance """
+
+#         currency = {
+#             'id': str( self.id ),
+#             'iso': self.iso,
+#             'name': self.name,
+#             'symbol': self.symbol,
+#             'exchange_rate': self.exchange_rate,
+#             'country': self.country,
+#             'is_active': self.is_active,
+#             'description': self.description
+#         }
+        
+#         return currency
+    
+#     @classmethod 
+#     def add_currency( cls, iso, name, symbol, exchange_rate, country, is_active, description ): 
+#         """ Create New Currency Instance """
+
+#         new_currency = cls( 
+#             iso = iso, 
+#             name = name, 
+#             symbol = symbol, 
+#             exchange_rate = exchange_rate, 
+#             country = country, 
+#             is_active = is_active, 
+#             description = description 
+#         )
+
+#         db.session.add( new_currency )
+#         db.session.commit() 
+#         return new_currency
+
 
 
 # class Review( Base ):
