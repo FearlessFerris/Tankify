@@ -12,7 +12,7 @@ from PIL import Image, ImageOps
 
 # Necessary Files 
 from app import app, db
-from models import User, Tank, Transaction
+from models import User, Tank, Transaction, Currency 
 
 
 # Load Environmental Variables 
@@ -191,6 +191,20 @@ def seed_tanks():
         print(f"Error fetching tank data: {e}")
 
 
+# Seed Currencies 
+def seed_currencies( users ):
+    """ Seeds Currencies """
+
+    user_id = users[0].id
+    currencies = [
+        Currency.add_currency( user_id = user_id, iso = 'USD', name = 'United States Dollar', symbol = '$', exchange_rate = 1.0, country = 'United States', is_active = True, description = 'The official currency of the United States' ),
+        Currency.add_currency( user_id = user_id, iso = 'EUR', name = 'Euro', symbol = '€', exchange_rate = 0.85, country = 'Eurozone', is_active = True, description = 'The official currency of the Eurozone' )
+    ]
+    db.session.add_all( currencies )
+    db.session.commit()
+    return currencies
+    
+
 # Seed Transactions
 def seed_transactions(users, tanks):
     """Seeds the Transactions table."""
@@ -214,8 +228,12 @@ def seed_database():
         try:
             users = seed_users()
             seed_tanks()
-            tanks = Tank.query.all()  # Fetch tanks after seeding them
+            tanks = Tank.query.all()  
             seed_transactions(users, tanks)
+            currencies = seed_currencies( users )
+            for currency in currencies:
+                print( currency )
+            print( f'Successfully seeded currencies' )
             print('Seed data successfully added!')
         except Exception as e:
             print(f"Error occurred while seeding data: {e}")

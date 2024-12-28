@@ -9,7 +9,7 @@ from sqlalchemy import func
 
 
 # Necessary Files 
-from models import db, Tank, User, PaymentMethods 
+from models import db, Tank, User, PaymentMethod 
 
 
 # Define a blueprint for routes 
@@ -29,7 +29,7 @@ def get_payment_methods( user_id ):
         if not user: 
             return jsonify({ 'message': 'User not found' }), 404 
         
-        payment_methods = PaymentMethods.get_payment_method( user_id )
+        payment_methods = PaymentMethod.get_payment_method( user_id )
         return jsonify({ 'message': 'Successfully retrieved payment methods', 'data': payment_methods }), 200 
 
     except Exception as e: 
@@ -42,7 +42,7 @@ def get_payment_method(user_id, card_id):
     """ Get Payment Method Details for a Specific Card """
     
     try:
-        payment_method = PaymentMethods.query.filter_by(id=card_id, user_id=user_id).first()
+        payment_method = PaymentMethod.query.filter_by(id=card_id, user_id=user_id).first()
         if not payment_method:
             return jsonify({'message': 'Payment method not found'}), 404
         return jsonify(payment_method.to_dict_full_card() ), 200
@@ -71,9 +71,9 @@ def add_payment_method(user_id):
             return jsonify({'message': 'User not found'}), 404
         
         if default_method:
-            PaymentMethods.unset_default_for_user(user_id)
+            PaymentMethod.unset_default_for_user(user_id)
 
-        payment_method = PaymentMethods.add_payment_method( 
+        payment_method = PaymentMethod.add_payment_method( 
             user_id=user_id,
             cardholder_name=cardholder_name,
             card_number=card_number,
@@ -99,7 +99,7 @@ def edit_payment_method(user_id, card_id):
     print(data)
 
     try:
-        payment_method = PaymentMethods.query.filter_by(id=card_id, user_id=user_id).first()
+        payment_method = PaymentMethod.query.filter_by(id=card_id, user_id=user_id).first()
         if not payment_method:
             return jsonify({'message': 'Payment method not found'}), 404
 
@@ -118,7 +118,7 @@ def edit_payment_method(user_id, card_id):
         
         if 'defaultMethod' in data:
             if data['defaultMethod']:
-                PaymentMethods.unset_default_for_user(user_id)
+                PaymentMethod.unset_default_for_user(user_id)
                 print(f"Unset other default methods for user {user_id}")
             payment_method.default_method = data['defaultMethod']
             print(f"Set default_method for card {card_id} to {data['defaultMethod']}")
@@ -132,13 +132,12 @@ def edit_payment_method(user_id, card_id):
 
 
 
-
 @payment_routes.route( '/api/payments/<card_id>', methods = [ 'DELETE' ] )
 def remove_payment_method( card_id ):
     """ Remove Payment Method from User Instance based on UUID """
 
     try:
-        result= PaymentMethods.remove_payment_method( card_id )
+        result= PaymentMethod.remove_payment_method( card_id )
         if 'successfully' in result.get( 'message', '' ):
             return jsonify( result ), 200 
         else: 

@@ -51,8 +51,16 @@ class User( Base ):
         self.image = image
 
     def __repr__(self):
-        return (f"<User(id='{self.id}', username='{self.username}', email='{self.email}', "
-                f"balance={self.balance}, image='{self.image}', created_at='{self.created_at}')>")
+        """ User Representation Method for Instance """
+        
+        return (
+            f"<User(id='{self.id}', "
+            f"username='{self.username}', "
+            f"email='{self.email}', "
+            f"balance='{self.balance}', "
+            f"image='{self.image}', "
+            f"created_at='{self.created_at}')>"
+        )
 
 
     def get_user_profile( self ):
@@ -197,9 +205,27 @@ class Tank( Base ):
         self.turrets = turrets 
 
     def __repr__(self):
-        return (f"<Tank(id='{self.id}', name='{self.name}', price='{self.price}', "
-                f"tier='{self.tier}', type='{self.type}', nation='{self.nation}')>")
-
+        return( 
+            f"<Tank( id = '{ self.id }',"
+            f"name = '{ self.name }',"
+            f"tag = '{ self.tag }',"
+            f"description = '{ self.description }',"
+            f"price = '{ self.price }',"
+            f"vehicle_type = '{ self.vehicle_type }',"
+            f"tier = '{ self.tier }',"
+            f"type = '{ self.type }',"
+            f"nation = '{ self.nation }',"
+            f"nation_flag = '{ self.nation_flag }',"
+            f"image = '{ self.image }',"
+            f"crew = '{ self.crew }',"
+            f"default_profile = '{ self.default_profile }',"
+            f"guns = '{ self.guns }',"
+            f"modules_tree = '{ self.modules_tree }',"
+            f"next_tanks = '{ self.next_tanks }',"
+            f"radios = '{ self.radios }',"
+            f"suspensions = '{ self.suspensions }',"
+            f"turrets = '{ self.turrets }')>"
+        )
 
     @classmethod
     def all_tanks( cls ):
@@ -210,7 +236,7 @@ class Tank( Base ):
         return tank_list
 
 
-class PaymentMethods( Base ): 
+class PaymentMethod( Base ): 
     """ Payment Mehtod Model """
 
     __tablename__ = 'payment_methods'
@@ -242,19 +268,17 @@ class PaymentMethods( Base ):
 
     def __repr__( self ): 
         """ PaymentMethod Representation Method for Instance """
-
-        payment_method = {
-            'id': str( self.id ),
-            'user_id': self.user_id,
-            'cardholder_name': self.cardholder_name, 
-            'card_number': self.card_number, 
-            'expiry': self.expiry, 
-            'cvv': self.cvv,
-            'type': self.type,
-            'details': self.details,
-            'default_method': self.default_method
-        }
-        return payment_method 
+    
+        return ( 
+            f"<PaymentMethod(id = '{ self.id }',"
+            f"user_id = '{ self.user_id }',"
+            f"cardholder_name = '{ self.cardholder_name }',"
+            f"card_number = '{ self.card_number }',"
+            f"expiry = '{ self.expiry }',"
+            f"cvv = '{ self.cvv }',"
+            f"type = '{ self.details }',"
+            f"default_method = '{ self.default_method }')>"
+        )
 
     def to_dict( self ): 
         """ Converts PaymentMethod Instance to Dictionary """
@@ -382,64 +406,61 @@ class Transaction( Base ):
     tank = relationship( 'Tank', backref='transactions' )
 
 
-# class Currency( Base ): 
-#     """ Currency Model """
+class Currency( Base ): 
+    """ Currency Model """
 
-#     __tablename__ = 'currencies'
-#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-#     iso = Column( String, nullable = False )
-#     name = Column( String, nullable = False )
-#     symbol = Column( String, nullable = False )
-#     exchange_rate = Column( Float, nullable = False )
-#     country = Column( String, nullable = False )
-#     is_active = Column( Boolean, nullable = False, default = True )
-#     description = Column( String, nullable = False )
-#     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
+    __tablename__ = 'currencies'
+    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+    iso = Column( String, nullable = False )
+    name = Column( String, nullable = False )
+    symbol = Column( String, nullable = False )
+    exchange_rate = Column( Float, nullable = False )
+    country = Column( String, nullable = False )
+    is_active = Column( Boolean, nullable = False, default = True )
+    description = Column( String, nullable = False )
+    updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
 
-#     def __init__( self, iso, name, symbol, exchange_rate, country, is_active, description ):
-#         """ Initiates Currency Instance """
+    def __init__( self, iso, name, symbol, exchange_rate, country, is_active, description ):
+        """ Initiates Currency Instance """
         
-#         self.iso = iso 
-#         self.name = name 
-#         self.symbol = symbol 
-#         self.exchange_rate = exchange_rate 
-#         self.country = country 
-#         self.is_active = is_active 
-#         self.description = description 
+        self.iso = iso 
+        self.name = name 
+        self.symbol = symbol 
+        self.exchange_rate = exchange_rate 
+        self.country = country 
+        self.is_active = is_active 
+        self.description = description 
     
-#     def __repr__( self ):
-#         """ Currency Representation Method for Instance """
+    def __repr__( self ):
+        """ Currency Representation Method for Instance """
 
-#         currency = {
-#             'id': str( self.id ),
-#             'iso': self.iso,
-#             'name': self.name,
-#             'symbol': self.symbol,
-#             'exchange_rate': self.exchange_rate,
-#             'country': self.country,
-#             'is_active': self.is_active,
-#             'description': self.description
-#         }
-        
-#         return currency
+        return( 
+            f"<Currency( id = '{ self.id }',"
+            f"iso = '{ self.iso }',"
+            f"symbol = '{ self.symbol }',"
+            f"exchange_rate = '{ self.exchange_rate }',"
+            f"country = '{ self.country }',"
+            f"is_active = '{ self.is_active }',"
+            f"description = '{ self.description }')>"
+        )
     
-#     @classmethod 
-#     def add_currency( cls, iso, name, symbol, exchange_rate, country, is_active, description ): 
-#         """ Create New Currency Instance """
+    @classmethod 
+    def add_currency( cls, iso, name, symbol, exchange_rate, country, is_active, description ): 
+        """ Create New Currency Instance """
 
-#         new_currency = cls( 
-#             iso = iso, 
-#             name = name, 
-#             symbol = symbol, 
-#             exchange_rate = exchange_rate, 
-#             country = country, 
-#             is_active = is_active, 
-#             description = description 
-#         )
+        new_currency = cls( 
+            iso = iso, 
+            name = name, 
+            symbol = symbol, 
+            exchange_rate = exchange_rate, 
+            country = country, 
+            is_active = is_active, 
+            description = description 
+        )
 
-#         db.session.add( new_currency )
-#         db.session.commit() 
-#         return new_currency
+        db.session.add( new_currency )
+        db.session.commit() 
+        return new_currency
 
 
 
