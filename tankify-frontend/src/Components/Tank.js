@@ -132,9 +132,23 @@ function Tank() {
                                         alignItems: 'center',
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        marginTop: '6rem'
+                                        marginTop: '6rem',
+                                        marginBottom: '6rem'
                                     }}
                                 >
+                                    <Box
+                                        sx={{
+                                            opacity: '5%',
+                                            position: 'absolute',
+                                            width: '40rem',
+                                            height: '23rem',
+                                            backgroundImage: `url(${ tank.nation_flag_hd })`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            borderRadius: '1rem', 
+                                            zIndex: 0,
+                                        }}
+                                    />
                                     <CardMedia
                                         component='img'
                                         image={tank.image}
@@ -143,6 +157,7 @@ function Tank() {
                                             flexShrink: 0,
                                             alignItems: 'center',
                                             width: '25rem',
+                                            zIndex: 1
                                         }}
                                     />
                                 </Box>

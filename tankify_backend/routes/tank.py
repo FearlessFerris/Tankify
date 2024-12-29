@@ -55,7 +55,7 @@ def all_tanks():
 
         paginated_result = query.paginate(page=page, per_page=per_page, error_out=False)
         tanks = paginated_result.items
-        tank_list = [tank.__repr__() for tank in tanks]
+        tank_list = [tank.to_dict() for tank in tanks]
 
         return jsonify({
             'message': 'Successfully retrieved tanks!',
@@ -74,12 +74,11 @@ def get_tank( tank_id ):
     """ Retrieve Tank by ID """
 
     try:
-        
         tank = Tank.query.get( tank_id )
         if tank: 
             return jsonify({ 
                 'message': 'Successfully retrieved tank!', 
-                'data': tank.__repr__() 
+                'data': tank.to_dict() 
             })
         else:
             return jsonify({ 'message': 'Error, tank not found' }), 404 

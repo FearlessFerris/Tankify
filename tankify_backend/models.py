@@ -39,8 +39,10 @@ class User( Base ):
     created_at = Column( DateTime, server_default = func.now() )
     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
 
-    # Relationships with back_populates and overlaps
-    payment_methods = relationship( 'PaymentMethods', back_populates = 'user', lazy = 'select' )
+    # Relationships 
+    default_currency_id = Column( UUID( as_uuid = True ), ForeignKey( 'currencies.id' ), nullable = True )
+    default_currency = relationship( 'Currency', back_populates = 'users' )
+    payment_methods = relationship( 'PaymentMethod', back_populates = 'user', lazy = 'select' )
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
 
     def __init__( self, username, password, email, balance = 1000, image = None ):
@@ -139,6 +141,15 @@ class User( Base ):
             db.session.rollback()
             return {'success': False, 'error': str(e)}
 
+    def set_default_currency( self, currency_id ):
+        """ Sets Default currency of a User Instance """
+
+        currency = Currency.query.filter_by( id = currency_id ).first() 
+        if not currency: 
+            raise ValueError( 'Currency not found' )
+        self.default_currency_id = currency_id
+        db.session.commit() 
+
     @classmethod 
     def create_user( cls, username, password, email, image = None ):
         """ Create New User Instance """
@@ -172,6 +183,7 @@ class Tank( Base ):
     type = Column( String, nullable = False )
     nation = Column( String, nullable = False )
     nation_flag = Column( String, nullable = False )
+    nation_flag_hd = Column( String, nullable = False )
     image = Column( String, nullable = False )
     crew = Column( JSONB, nullable = False )
     default_profile = Column( JSONB, nullable = False )
@@ -182,7 +194,7 @@ class Tank( Base ):
     suspensions = Column( JSONB, nullable = False )
     turrets = Column( JSONB, nullable = False )
 
-    def __init__( self, name, tag, description, price, vehicle_type, tier, type, nation, nation_flag, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
+    def __init__( self, name, tag, description, price, vehicle_type, tier, type, nation, nation_flag, nation_flag_hd, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
         """ Initialize Tank Class """
 
         self.name = name 
@@ -193,7 +205,8 @@ class Tank( Base ):
         self.tier = tier
         self.type = type
         self.nation = nation 
-        self.nation_flag = nation_flag 
+        self.nation_flag = nation_flag
+        self.nation_flag_hd = nation_flag_hd 
         self.image = image 
         self.crew = crew 
         self.default_profile = default_profile 
@@ -216,6 +229,7 @@ class Tank( Base ):
             f"type = '{ self.type }',"
             f"nation = '{ self.nation }',"
             f"nation_flag = '{ self.nation_flag }',"
+            f"nation_flag_hd = '{ self.nation_flag_hd }'," 
             f"image = '{ self.image }',"
             f"crew = '{ self.crew }',"
             f"default_profile = '{ self.default_profile }',"
@@ -226,13 +240,39 @@ class Tank( Base ):
             f"suspensions = '{ self.suspensions }',"
             f"turrets = '{ self.turrets }')>"
         )
+    
+    def to_dict(self):
+        """ Serialize Tank to Dictionary """
+
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "tag": self.tag,
+            "description": self.description,
+            "price": self.price,
+            "vehicle_type": self.vehicle_type,
+            "tier": self.tier,
+            "type": self.type,
+            "nation": self.nation,
+            "nation_flag": self.nation_flag,
+            "nation_flag_hd": self.nation_flag_hd,
+            "image": self.image,
+            "crew": self.crew,
+            "default_profile": self.default_profile,
+            "guns": self.guns,
+            "modules_tree": self.modules_tree,
+            "next_tanks": self.next_tanks,
+            "radios": self.radios,
+            "suspensions": self.suspensions,
+            "turrets": self.turrets
+        }
 
     @classmethod
     def all_tanks( cls ):
         """ Retrieve all Tanks """
 
         tanks = cls.query.all()
-        tank_list = [ tank.__repr__() for tank in tanks ]
+        tank_list = [ tank.to_dict() for tank in tanks ]
         return tank_list
 
 
@@ -316,7 +356,12 @@ class PaymentMethod( Base ):
     def get_payment_method( cls, user_id ): 
         """ Retrieves all Instances of a Users PaymentMethods """
 
-        payment_methods = cls.query.filter( cls.user_id == user_id ).all() 
+        payment_methods = (
+            cls.query
+            .filter( cls.user_id == user_id )
+            .order_by( cls.default_method.desc(), cls.created_at.desc() )
+            .all()
+        )
         return [ pm.to_dict() for pm in payment_methods ]
 
     @classmethod
@@ -369,23 +414,35 @@ class PaymentMethod( Base ):
             print( f'Error occurred while removing payment method: { e }' )
             return { 'message': 'Failed to remove payment method' }
 
-    @classmethod 
-    def set_default_method( cls, user_id, payment_method_id ):
-        """ Set a Payment Method as Default """
+    @classmethod
+    def set_default_method(cls, user_id, payment_method_id):
+        """Toggle a payment method as default."""
 
-        payment_method = cls.query.filter_by( id = payment_method_id, user_id = user_id ).first() 
-        if not payment_method: 
-            return { 'message': 'Payment method not found' }
-        cls.query.filter_by( user_id = user_id, default_method = True ).update({ 'default_method': False })
+        payment_method = cls.query.filter_by(id=payment_method_id, user_id=user_id).first()
+        if not payment_method:
+            return {'message': 'Payment method not found', 'success': False}
+
+        card_number = payment_method.card_number[-4:]
+        if payment_method.default_method:
+            payment_method.default_method = False
+            db.session.commit()
+            return {
+                'message': f'Payment method {card_number} has been removed as the default payment method',
+                'success': True
+            }
+
+        cls.query.filter_by(user_id=user_id, default_method=True).update({'default_method': False})
         db.session.commit()
         payment_method.default_method = True
-        card_number = payment_method.to_dict().get( 'card_number' )
-        db.session.commit() 
-        return { 'message': f'Payment method { card_number } set as default' }
+        db.session.commit()
+
+        return { 'message': f'Payment method {card_number} set as default', 'success': True }
+
 
     @classmethod
     def unset_default_for_user(cls, user_id):
         """ Unset all default methods for a user """
+
         rows_updated = cls.query.filter_by(user_id=user_id, default_method=True).update({'default_method': False})
         db.session.commit()
         print(f"Unset default for user {user_id}. Rows updated: {rows_updated}")
@@ -411,7 +468,7 @@ class Currency( Base ):
 
     __tablename__ = 'currencies'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-    iso = Column( String, nullable = False )
+    iso = Column( String, unique = True, nullable = False )
     name = Column( String, nullable = False )
     symbol = Column( String, nullable = False )
     exchange_rate = Column( Float, nullable = False )
@@ -419,6 +476,9 @@ class Currency( Base ):
     is_active = Column( Boolean, nullable = False, default = True )
     description = Column( String, nullable = False )
     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
+
+    # Relationships 
+    users = relationship( 'User', back_populates = 'default_currency', lazy = 'select' )
 
     def __init__( self, iso, name, symbol, exchange_rate, country, is_active, description ):
         """ Initiates Currency Instance """
@@ -444,8 +504,21 @@ class Currency( Base ):
             f"description = '{ self.description }')>"
         )
     
+    def to_dict( self ): 
+        """ Converts Currency Instance to Dictionary """
+
+        return { 
+            'id': str( self.id ),
+            'iso': self.iso, 
+            'symbol': self.symbol, 
+            'exchange_rate': self.exchange_rate,
+            'country': self.country, 
+            'is_active': self.is_active,
+            'description': self.description
+        }
+
     @classmethod 
-    def add_currency( cls, iso, name, symbol, exchange_rate, country, is_active, description ): 
+    def add_currency( cls, iso, name, symbol, exchange_rate, country, is_active = True, description = '' ): 
         """ Create New Currency Instance """
 
         new_currency = cls( 
@@ -462,6 +535,13 @@ class Currency( Base ):
         db.session.commit() 
         return new_currency
 
+    @classmethod 
+    def get_all_currencies( cls ):
+        """ Returns all Currencies within Database """
+
+        currencies = cls.query.all()
+        currency_list = [ currency.to_dict() for currency in currencies ]
+        return currency_list
 
 
 # class Review( Base ):

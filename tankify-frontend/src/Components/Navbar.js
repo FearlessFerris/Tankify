@@ -18,42 +18,12 @@ import { useUser } from '../ContextDirectory/UserContext';
 
 // // Navbar Component 
 function Navbar() {
+
     const { user, logout } = useUser();
-    const [openTooltip, setOpenTooltip] = useState({
-        avatar: false,
-        home: false,
-        shop: false,
-        create: false,
-        login: false,
-        logout: false,
-        profile: false,
-    });
+    const [hoveredTooltip, setHoveredTooltip] = useState(null);
 
-    const timeoutRefs = useRef({
-        avatar: null,
-        home: null,
-        shop: null,
-        create: null,
-        login: null,
-        logout: null,
-        profile: null,
-    });
-
-    const handleTooltipOpen = (key) => {
-        if (timeoutRefs.current[key]) {
-            clearTimeout(timeoutRefs.current[key]);
-        }
-        timeoutRefs.current[key] = setTimeout(() => {
-            setOpenTooltip((prev) => ({ ...prev, [key]: true }));
-        }, 500);
-    };
-
-    const handleTooltipClose = (key) => {
-        if (timeoutRefs.current[key]) {
-            clearTimeout(timeoutRefs.current[key]);
-            timeoutRefs.current[key] = null;
-        }
-        setOpenTooltip((prev) => ({ ...prev, [key]: false }));
+    const handleTooltipToggle = (key, isOpen) => {
+        setHoveredTooltip(isOpen ? key : null);
     };
 
     return (
@@ -73,10 +43,9 @@ function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    width: '100%'
+                    width: '100%',
                 }}
             >
-                {/* Left Section: Logo */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -102,8 +71,6 @@ function Navbar() {
                         Tankify
                     </Typography>
                 </Box>
-
-                {/* Center Section: Buttons */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -113,7 +80,13 @@ function Navbar() {
                         flexGrow: 1,
                     }}
                 >
-                    <Tooltip title="Home" arrow open={Boolean(openTooltip.home)}>
+                    <Tooltip
+                        title="Home"
+                        arrow
+                        open={hoveredTooltip === 'home'}
+                        onOpen={() => handleTooltipToggle('home', true)}
+                        onClose={() => handleTooltipToggle('home', false)}
+                    >
                         <Button
                             component={Link}
                             to="/"
@@ -132,8 +105,13 @@ function Navbar() {
                             Home
                         </Button>
                     </Tooltip>
-
-                    <Tooltip title="Shop" arrow open={Boolean(openTooltip.shop)}>
+                    <Tooltip
+                        title="Shop"
+                        arrow
+                        open={hoveredTooltip === 'shop'}
+                        onOpen={() => handleTooltipToggle('shop', true)}
+                        onClose={() => handleTooltipToggle('shop', false)}
+                    >
                         <Button
                             component={Link}
                             to="/shop"
@@ -152,10 +130,15 @@ function Navbar() {
                             Shop
                         </Button>
                     </Tooltip>
-
                     {user ? (
                         <>
-                            <Tooltip title="Profile" arrow open={Boolean(openTooltip.profile)}>
+                            <Tooltip
+                                title="Profile"
+                                arrow
+                                open={hoveredTooltip === 'profile'}
+                                onOpen={() => handleTooltipToggle('profile', true)}
+                                onClose={() => handleTooltipToggle('profile', false)}
+                            >
                                 <Button
                                     component={Link}
                                     to="/user/profile"
@@ -174,7 +157,13 @@ function Navbar() {
                                     Profile
                                 </Button>
                             </Tooltip>
-                            <Tooltip title="Logout" arrow open={Boolean(openTooltip.logout)}>
+                            <Tooltip
+                                title="Logout"
+                                arrow
+                                open={hoveredTooltip === 'logout'}
+                                onOpen={() => handleTooltipToggle('logout', true)}
+                                onClose={() => handleTooltipToggle('logout', false)}
+                            >
                                 <Button
                                     variant="filled"
                                     size="large"
@@ -195,7 +184,13 @@ function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Tooltip title="Create" arrow open={Boolean(openTooltip.create)}>
+                            <Tooltip
+                                title="Create"
+                                arrow
+                                open={hoveredTooltip === 'create'}
+                                onOpen={() => handleTooltipToggle('create', true)}
+                                onClose={() => handleTooltipToggle('create', false)}
+                            >
                                 <Button
                                     component={Link}
                                     to="/user/create"
@@ -214,7 +209,13 @@ function Navbar() {
                                     Create
                                 </Button>
                             </Tooltip>
-                            <Tooltip title="Login" arrow open={Boolean(openTooltip.login)}>
+                            <Tooltip
+                                title="Login"
+                                arrow
+                                open={hoveredTooltip === 'login'}
+                                onOpen={() => handleTooltipToggle('login', true)}
+                                onClose={() => handleTooltipToggle('login', false)}
+                            >
                                 <Button
                                     component={Link}
                                     to="/user/login"
@@ -236,31 +237,34 @@ function Navbar() {
                         </>
                     )}
                 </Box>
-
-                {/* Right Section: Search and Avatar */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <MenuSearch />
                     {user && (
                         <Tooltip
                             title="User Profile"
                             arrow
-                            open={Boolean(openTooltip.avatar)}
+                            open={hoveredTooltip === 'avatar'}
+                            onOpen={() => handleTooltipToggle('avatar', true)}
+                            onClose={() => handleTooltipToggle('avatar', false)}
                         >
-                            <Avatar
-                                src={user.image}
-                                alt="User profile"
-                                sx={{
-                                    border: '.1rem solid #ab003c',
-                                    marginLeft: '1rem',
-                                    width: '3rem',
-                                    height: '3rem',
+                            <Link
+                                to='/user/profile'
+                                style={{
+                                    textDecoration: 'none'
                                 }}
-                            />
+                            >
+
+                                <Avatar
+                                    src={user.image}
+                                    alt="User profile"
+                                    sx={{
+                                        border: '.1rem solid #ab003c',
+                                        marginLeft: '1rem',
+                                        width: '3rem',
+                                        height: '3rem',
+                                    }}
+                                />
+                            </Link>
                         </Tooltip>
                     )}
                 </Box>

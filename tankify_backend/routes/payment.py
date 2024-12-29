@@ -30,11 +30,11 @@ def get_payment_methods( user_id ):
             return jsonify({ 'message': 'User not found' }), 404 
         
         payment_methods = PaymentMethod.get_payment_method( user_id )
-        return jsonify({ 'message': 'Successfully retrieved payment methods', 'data': payment_methods }), 200 
+        return jsonify({ 'message': 'Successfully retrieved payment methods', 'data': payment_methods, 'success': True }), 200 
 
     except Exception as e: 
         print( f'Error occurred while retrieving payment methods: { e }' )
-        return jsonify({ 'message': 'Failed to retireve payment methods' }), 500 
+        return jsonify({ 'message': 'Failed to retireve payment methods', 'success': False }), 500 
 
 
 @payment_routes.route('/api/payments/<user_id>/card/<card_id>', methods=['GET'])
@@ -90,16 +90,15 @@ def add_payment_method(user_id):
         return jsonify({'message': 'Failed to add new payment method'}), 500
 
 
-
-@payment_routes.route('/api/payments/edit/<user_id>/<card_id>', methods=['PATCH'])
-def edit_payment_method(user_id, card_id):
+@payment_routes.route('/api/payments/edit/<user_id>/<payment_method_id>', methods=['PATCH'])
+def edit_payment_method(user_id, payment_method_id):
     """ Edit a Specific Payment Method Instance """
     
     data = request.json
     print(data)
 
     try:
-        payment_method = PaymentMethod.query.filter_by(id=card_id, user_id=user_id).first()
+        payment_method = PaymentMethod.query.filter_by(id=payment_method_id, user_id=user_id).first()
         if not payment_method:
             return jsonify({'message': 'Payment method not found'}), 404
 
@@ -121,7 +120,7 @@ def edit_payment_method(user_id, card_id):
                 PaymentMethod.unset_default_for_user(user_id)
                 print(f"Unset other default methods for user {user_id}")
             payment_method.default_method = data['defaultMethod']
-            print(f"Set default_method for card {card_id} to {data['defaultMethod']}")
+            print(f"Set default_method for card { payment_method_id } to {data['defaultMethod']}")
 
         db.session.commit()
         return jsonify({'message': 'Payment method updated successfully', 'data': payment_method.to_dict_full_card()}), 200
@@ -131,13 +130,22 @@ def edit_payment_method(user_id, card_id):
         return jsonify({'message': 'Internal server error'}), 500
 
 
+@payment_routes.route( '/api/payments/<user_id>/card/<payment_method_id>', methods = [ 'PATCH' ] )
+def toggle_default_payment_method( user_id, payment_method_id ): 
+    """ Toggles Users Selected Default Payment Method """
 
-@payment_routes.route( '/api/payments/<card_id>', methods = [ 'DELETE' ] )
-def remove_payment_method( card_id ):
+    result = PaymentMethod.set_default_method( user_id = user_id, payment_method_id = payment_method_id )
+    if result[ 'success' ]: 
+        return jsonify( result ), 200 
+    return jsonify( result ), 400 
+
+
+@payment_routes.route( '/api/payments/<payment_method_id>', methods = [ 'DELETE' ] )
+def remove_payment_method( payment_method_id ):
     """ Remove Payment Method from User Instance based on UUID """
 
     try:
-        result= PaymentMethod.remove_payment_method( card_id )
+        result= PaymentMethod.remove_payment_method( payment_method_id )
         if 'successfully' in result.get( 'message', '' ):
             return jsonify( result ), 200 
         else: 

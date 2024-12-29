@@ -110,6 +110,7 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
             }));
         }
         else {
+            console.log( field, value );
             setPaymentInformation((prev) => ({
                 ...prev,
                 [field]: value
@@ -313,11 +314,11 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
                         >
                             <Box>
                                 <Typography variant="caption">CARDHOLDER</Typography>
-                                <Typography variant="subtitle1">FULL NAME</Typography>
+                                <Typography variant="subtitle1"> { paymentInformation.cardholderName ? paymentInformation.cardholderName : 'Full Name'} </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="caption">EXPIRY</Typography>
-                                <Typography variant="subtitle1">MM/YY</Typography>
+                                <Typography variant="subtitle1"> { paymentInformation.expiry ? paymentInformation.expiry : 'MM/YY' }</Typography>
                             </Box>
                         </Box>
                     </Box>

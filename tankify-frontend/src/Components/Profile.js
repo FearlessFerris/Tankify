@@ -2,9 +2,10 @@
 
 
 // Dependencies 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, Backdrop, Box, Button, Typography, TextField } from '@mui/material';
+import { Avatar, Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Menu, MenuItem, Select, Switch, TextField, Tooltip, Typography } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -29,13 +30,17 @@ function Profile() {
     const { user } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
-    const [ openCount, setOpenCount ] = useState( 0 );
+    const [openCount, setOpenCount] = useState(0);
+    const [ isDefault, setIsDefault ] = useState( false );
+    const [ currencies, setCurrencies ] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState(user?.default_currency_id || '');
+    const [ anchorEl, setAnchorEl ] = useState( null );
     const [editUserOpen, setEditUserOpen] = useState(false);
     const [editPaymentOpen, setEditPaymentOpen] = useState(null);
     const [cardAddOpen, setCardAddOpen] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
-
+   
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -47,6 +52,41 @@ function Profile() {
         }
     }
 
+    const fetchCurrencies = useCallback( async () => {
+        try {
+            const response = await apiClient.get('/currencies/all');
+            setCurrencies(response.data.data || []);
+        } catch (error) {
+            console.error('Error fetching currencies:', error);
+        }
+    }, [] )
+
+    const handleCurrencyChange = async (currencyId) => {
+        if (!user?.id) {
+            showAlert('User not logged in', 'error');
+            return;
+        }
+
+        setSelectedCurrency(currencyId);
+        setAnchorEl(null); 
+        try {
+            const response = await apiClient.patch(`/users/${user.id}/default-currency`, {
+                currency_id: currencyId,
+            });
+
+            if (response.status === 200) {
+                showAlert(response.data.message, 'success');
+            } else {
+                showAlert('Failed to update default currency.', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating default currency:', error);
+            showAlert('Failed to update default currency.', 'error');
+        }
+    };
+
+
+    const selectedCurrencyName = currencies.find((c) => c.id === selectedCurrency)?.name || 'Select Currency';
     const removePaymentMethod = async (cardId) => {
         try {
             const response = await apiClient.delete(`/payments/${cardId}`);
@@ -63,6 +103,23 @@ function Profile() {
         }
     }
 
+    const setDefaultPaymentMethod = async ( paymentId ) => {
+        try{
+            const response = await apiClient.patch( `/payments/${ user.id }/card/${ paymentId }` );
+            if ( response.status === 200 ){
+                await fetchPaymentMethods( user.id );
+                showAlert( response.data.message, 'success' );
+            }
+            else{
+                showAlert( response.data.message, 'error' );
+            }
+        }
+        catch( error ){ 
+            console.error( 'Error setting the default payment method', error );
+            showAlert( 'Failed to update the default payment method', 'error' )
+        }
+    }
+
     const updatePaymentMethod = (updatedCard) => {
         setPaymentMethods((prevMethods) =>
             prevMethods.map((method) =>
@@ -72,10 +129,16 @@ function Profile() {
     };
 
     useEffect(() => {
-        if (user?.id) {
-            fetchPaymentMethods(user.id);
-        }
-    }, [user?.id]);
+        fetchCurrencies();
+    }, [fetchCurrencies]);
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     const oneditUserOpen = () => {
         setOpen(true);
@@ -89,7 +152,7 @@ function Profile() {
 
     const onEditPaymentOpen = (cardId) => {
         setOpen(true);
-        setOpenCount(( previous ) => previous + 1 );
+        setOpenCount((previous) => previous + 1);
         setEditPaymentOpen(cardId);
     }
 
@@ -100,7 +163,7 @@ function Profile() {
 
     const onCardOpen = () => {
         setOpen(true);
-        setOpenCount(( previous ) => previous + 1 );
+        setOpenCount((previous) => previous + 1);
         setCardAddOpen(true);
     }
 
@@ -178,78 +241,145 @@ function Profile() {
                 >
                     Welcome, <span style={{ color: '#ab003c' }}>{user.username}</span>
                 </Typography>
+
                 <Box
                     sx={{
+                        backgroundColor: '#161616',
+                        borderRadius: '1rem',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
                         display: 'flex',
-                        width: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '1rem',
+                        flexDirection: 'column',
+                        marginTop: '2rem',
+                        marginBottom: '2rem',
+                        padding: '1rem',
+                        width: '35rem'
                     }}
                 >
-                    <Typography
-                        variant='h4'
-                        sx={{ color: '#ab003c' }}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
                     >
-                        Email:
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography
-                            variant='h4'
-                            sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                            variant="h5"
+                            sx={{
+                                color: '#ab003c',
+                            }}
                         >
-                            {user.email}
+                            Email:
                         </Typography>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        width: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '1rem',
-                    }}
-                >
-                    <Typography
-                        variant='h4'
-                        sx={{ color: '#ab003c' }}
-                    >
-                        Balance:
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography
-                            variant='h4'
-                            sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                        <Tooltip
+                            arrow
+                            title='Email'
+                            placement = 'bottom'
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [0, -10], 
+                                            },
+                                        },
+                                    ],
+                                }}
+                            }
                         >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#fafafa',
+                                }}
+                            >
+                                {user.email}
+                            </Typography>
+                        </Tooltip>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                color: '#ab003c',
+                            }}
+                        >
+                            Balance:
+                        </Typography>
+                        <Tooltip 
+                            arrow 
+                            title = 'Balance'
+                            placement = 'bottom'
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [0, -10], 
+                                            },
+                                        },
+                                    ],
+                                }}
+                            }
+                        >
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                color: '#fafafa',
+                            }}
+                            >
                             ${user.balance}
                         </Typography>
+                            </Tooltip>
                     </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        width: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '1rem',
-                    }}
-                >
-                    <Typography
-                        variant='h4'
-                        sx={{ color: '#ab003c' }}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
                     >
-                        Account Created:
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography
-                            variant='h4'
-                            sx={{ color: '#fafafa', marginRight: '0.5rem' }}
+                            variant="h5"
+                            sx={{
+                                color: '#ab003c',
+                            }}
                         >
+                            Account Created:
+                        </Typography>
+                        <Tooltip 
+                            arrow 
+                            title = 'Created At'
+                            placement = 'bottom'
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [0, -10], 
+                                            },
+                                        },
+                                    ],
+                                }}
+                            }
+                        >
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                color: '#fafafa',
+                            }}
+                            >
                             {new Date(user.created_at).toLocaleDateString()}
                         </Typography>
+                            </Tooltip>
                     </Box>
                 </Box>
+
                 <Button
                     onClick={oneditUserOpen}
                     size='large'
@@ -281,12 +411,11 @@ function Profile() {
                     maxWidth: '45rem',
                     marginLeft: 'auto',
                     marginRight: 'auto',
-                    marginBottom: '6rem',
+                    marginBottom: '2rem',
                     overflow: 'hidden',
                     padding: '2rem'
                 }}
             >
-
                 <Box
                     sx={{
                         alignItems: 'center',
@@ -307,7 +436,7 @@ function Profile() {
                     <Box
                         sx={{
                             marginTop: '2rem',
-                            width: '30rem',
+                            width: '35rem',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '1.5rem',
@@ -316,7 +445,7 @@ function Profile() {
                         {paymentMethods.length > 0 ? (
                             paymentMethods.map((method, index) => (
                                 <Box
-                                    key={ method.id }
+                                    key={method.id}
                                     sx={{
                                         position: 'relative',
                                         display: 'flex',
@@ -364,7 +493,29 @@ function Profile() {
                                         >
                                             Expires: {method.expiry}
                                         </Typography>
-
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked = { method.default_method }
+                                                    onChange = { () => setDefaultPaymentMethod( method.id ) }
+                                                    sx={{
+                                                        '& .MuiSwitch-switchBase.Mui-checked': {
+                                                            color: '#ab003c',
+                                                        },
+                                                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                            backgroundColor: '#ab003c',
+                                                        },
+                                                    }}
+                                                />
+                                            }
+                                            label="Default"
+                                            sx={{
+                                                position: 'absolute',
+                                                top: '0rem',
+                                                right: '0.1rem',
+                                                color: '#fafafa'
+                                            }}
+                                        />
                                         <Button
                                             onClick={() => removingMethods ? removePaymentMethod(method.id) : onEditPaymentOpen(method.id)}
                                             variant="filled"
@@ -438,6 +589,134 @@ function Profile() {
                     </Box>
                 </Box>
             </div>
+            <div
+                style={{
+                    alignItems: 'center',
+                    backgroundColor: '#161616',
+                    border: '.1rem solid #0f0e0e',
+                    borderRadius: '.3rem',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    maxWidth: '45rem',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    marginBottom: '6rem',
+                    overflow: 'hidden',
+                    padding: '2rem'
+                }}
+            >
+                <Box
+                    sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        width: '45rem'
+                    }}
+                >
+                    <Typography
+                        variant='h3'
+                        sx={{
+                            color: '#fafafa'
+                        }}
+                    >
+                        Settings
+                    </Typography>
+                    <Box
+                        sx={{
+                            backgroundColor: '#161616',
+                            borderRadius: '1rem',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginTop: '2rem',
+                            marginBottom: '2rem',
+                            padding: '1rem',
+                            width: '35rem'
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#ab003c',
+                                }}
+                            >
+                                Default Currency:
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h5" sx={{ color: '#fafafa', marginRight: '0.5rem' }}>
+                        {selectedCurrencyName}
+                    </Typography>
+                    <Tooltip title="Change Currency">
+                        <IconButton
+                            onClick={handleMenuOpen}
+                            sx={{
+                                color: '#fafafa',
+                                '&:hover': {
+                                    color: '#ab003c',
+                                },
+                            }}
+                        >
+                            <ArrowDropDownIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                        sx={{
+                            '& .MuiPaper-root': {
+                                backgroundColor: '#161616',
+                                color: '#fafafa',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                            },
+                        }}
+                    >
+                        {currencies.map((currency) => (
+                            <MenuItem
+                                key={currency.id}
+                                onClick={() => handleCurrencyChange(currency.id)}
+                                sx={{
+                                    backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa',
+                                    },
+                                }}
+                            >
+                                {currency.name} ({currency.symbol})
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </Box>
+                        </Box>
+                    </Box>
+                    <Button
+                        size='large'
+                        variant='filled'
+                        startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
+                        sx={{
+                            color: '#ab003c',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            width: '8rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#fafafa'
+                            }
+                        }}
+                    >
+                        Edit
+                    </Button>
+
+                </Box>
+            </div>
             <Box
                 sx={{
                     display: 'flex',
@@ -473,7 +752,7 @@ function Profile() {
                             cardId={editPaymentOpen}
                             updatePaymentMethod={updatePaymentMethod}
                             userId={user.id}
-                            openCount = { openCount }
+                            openCount={openCount}
                         />
                     ) : cardAddOpen ? (
                         <PaymentForm
