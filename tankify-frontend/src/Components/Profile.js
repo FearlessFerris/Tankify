@@ -129,8 +129,12 @@ function Profile() {
     };
 
     useEffect(() => {
-        fetchCurrencies();
-    }, [fetchCurrencies]);
+        if (user?.id) {
+            fetchPaymentMethods(user.id);
+            fetchCurrencies();
+        }
+    }, [user, fetchCurrencies]); 
+    
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);

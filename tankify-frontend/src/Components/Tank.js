@@ -12,7 +12,7 @@ import { SlPeople } from "react-icons/sl";
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
-
+import TorchImageWithSparks from './TorchImageWithSparks';
 
 // Tank Component 
 function Tank() {
@@ -127,37 +127,39 @@ function Tank() {
                                 >
                                     {tank.name}
                                 </Typography>
+
                                 <Box
                                     sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        justifyContent: 'center',
+                                        position: 'relative',
+                                        display: 'inline-block',
+                                        width: '50rem',
+                                        height: '25rem',
                                         marginTop: '6rem',
-                                        marginBottom: '6rem'
+                                        marginBottom: '10rem',
                                     }}
                                 >
                                     <Box
                                         sx={{
-                                            opacity: '5%',
                                             position: 'absolute',
-                                            width: '40rem',
-                                            height: '23rem',
-                                            backgroundImage: `url(${ tank.nation_flag_hd })`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            borderRadius: '1rem', 
-                                            zIndex: 0,
+                                            top: 0,
+                                            left: 0,
+                                            zIndex: 0
                                         }}
-                                    />
+                                    >
+                                        <TorchImageWithSparks src={tank.nation_flag_hd} />
+                                    </Box>
+
                                     <CardMedia
                                         component='img'
                                         image={tank.image}
                                         alt={`${tank.name}`}
                                         sx={{
-                                            flexShrink: 0,
-                                            alignItems: 'center',
-                                            width: '25rem',
-                                            zIndex: 1
+                                            position: 'absolute',
+                                            top: '65%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            zIndex: 1,
+                                            width: '23rem',
                                         }}
                                     />
                                 </Box>
@@ -852,7 +854,7 @@ function Tank() {
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                justifyContent: 'start',    
+                                                justifyContent: 'start',
                                                 gap: '1rem',
                                                 marginTop: '1rem',
                                                 marginLeft: '4rem',
