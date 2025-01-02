@@ -14,6 +14,7 @@ import { SlPeople } from "react-icons/sl";
 import apiClient from '../api/apiClient';
 import TorchImageWithSparks from './TorchImageWithSparks';
 
+
 // Tank Component 
 function Tank() {
 
@@ -132,9 +133,9 @@ function Tank() {
                                     sx={{
                                         position: 'relative',
                                         display: 'inline-block',
-                                        width: '50rem',
+                                        width: '60rem',
                                         height: '25rem',
-                                        marginTop: '6rem',
+                                        marginTop: '4rem',
                                         marginBottom: '10rem',
                                     }}
                                 >
@@ -155,7 +156,7 @@ function Tank() {
                                         alt={`${tank.name}`}
                                         sx={{
                                             position: 'absolute',
-                                            top: '65%',
+                                            top: '70%',
                                             left: '50%',
                                             transform: 'translate(-50%, -50%)',
                                             zIndex: 1,
@@ -167,7 +168,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '2rem',
+                                        marginLeft: '6rem',
                                         marginBottom: '1rem'
                                     }}
                                 >
@@ -220,7 +221,7 @@ function Tank() {
                                             style={{
                                                 marginRight: '.5rem',
                                                 transition: 'color 0.3s ease',
-                                                transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                                                transform: showAllInfo ? 'rotate(180deg)' : 'rotate(0deg)'
                                             }}
                                         />
                                         {showAllInfo ? 'Hide All' : 'Show All'}
@@ -233,7 +234,7 @@ function Tank() {
                                                 alignItems: 'center',
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
+                                                marginLeft: '6rem',
                                                 marginRight: '4rem'
                                             }}
                                         >
@@ -258,7 +259,7 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
+                                                marginLeft: '6rem',
                                                 marginRight: '4rem'
                                             }}
                                         >
@@ -283,7 +284,7 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
+                                                marginLeft: '6rem',
                                                 marginRight: '4rem'
                                             }}
                                         >
@@ -308,8 +309,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -325,7 +326,7 @@ function Tank() {
                                                 noWrap={!expand.description}
                                                 sx={{
                                                     color: '#ab003c',
-                                                    maxWidth: '40rem'
+                                                    maxWidth: '36rem'
                                                 }}
                                             >
                                                 {tank.description}
@@ -369,7 +370,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '2rem',
+                                        marginLeft: '6rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -407,8 +408,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -432,8 +433,8 @@ function Tank() {
                                                     sx={{
                                                         display: 'flex',
                                                         justifyContent: 'start',
-                                                        marginLeft: '4rem',
-                                                        marginRight: '4rem'
+                                                        marginLeft: '6rem',
+                                                        marginRight: '6rem'
                                                     }}
                                                 >
                                                     <Typography
@@ -455,8 +456,8 @@ function Tank() {
                                                     sx={{
                                                         display: 'flex',
                                                         justifyContent: 'start',
-                                                        marginLeft: '4rem',
-                                                        marginRight: '4rem'
+                                                        marginLeft: '6rem',
+                                                        marginRight: '6rem'
                                                     }}
                                                 >
                                                     <Typography
@@ -480,8 +481,8 @@ function Tank() {
                                                 sx={{
                                                     display: 'flex',
                                                     justifyContent: 'start',
-                                                    marginLeft: '4rem',
-                                                    marginRight: '4rem'
+                                                    marginLeft: '6rem',
+                                                    marginRight: '6rem'
                                                 }}
                                             >
                                                 <Typography
@@ -506,7 +507,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '2rem',
+                                        marginLeft: '6rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -544,8 +545,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -567,8 +568,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -590,8 +591,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -613,8 +614,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -636,8 +637,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -659,8 +660,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -682,8 +683,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -707,7 +708,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '2rem',
+                                        marginLeft: '6rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -745,8 +746,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -768,8 +769,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem',
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem',
                                                 marginBottom: '2rem'
                                             }}
                                         >
@@ -794,7 +795,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '2rem',
+                                        marginLeft: '6rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -832,8 +833,8 @@ function Tank() {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem'
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem'
                                             }}
                                         >
                                             <Typography
@@ -857,8 +858,8 @@ function Tank() {
                                                 justifyContent: 'start',
                                                 gap: '1rem',
                                                 marginTop: '1rem',
-                                                marginLeft: '4rem',
-                                                marginRight: '4rem',
+                                                marginLeft: '6rem',
+                                                marginRight: '6rem',
                                                 marginBottom: '2rem'
                                             }}
                                         >

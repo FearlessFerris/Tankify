@@ -71,8 +71,8 @@ function TorchImageWithSparks({ src }) {
         /* The image itself */
         .torch-image {
           display: block;
-          width: 50rem;
-          height: auto;
+          width: 60rem;
+          height: 32rem;
           border-radius: 4px;
         }
 
