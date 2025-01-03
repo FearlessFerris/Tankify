@@ -28,23 +28,23 @@ function Profile() {
 
     const showAlert = useAlert();
     const { user } = useUser();
-    const [hover, setHover] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [openCount, setOpenCount] = useState(0);
+    const [ hover, setHover ] = useState(false);
+    const [ open, setOpen ] = useState(false);
+    const [ openCount, setOpenCount ] = useState(0);
     const [ isDefault, setIsDefault ] = useState( false );
     const [ currencies, setCurrencies ] = useState([]);
-    const [selectedCurrency, setSelectedCurrency] = useState(user?.default_currency_id || '');
+    const [ selectedCurrency, setSelectedCurrency ] = useState('');
     const [ anchorEl, setAnchorEl ] = useState( null );
-    const [editUserOpen, setEditUserOpen] = useState(false);
-    const [editPaymentOpen, setEditPaymentOpen] = useState(null);
-    const [cardAddOpen, setCardAddOpen] = useState(false);
-    const [paymentMethods, setPaymentMethods] = useState([]);
-    const [removingMethods, setRemovingMethods] = useState(false);
-   
+    const [ editUserOpen, setEditUserOpen ] = useState(false);
+    const [ editPaymentOpen, setEditPaymentOpen ] = useState(null);
+    const [ cardAddOpen, setCardAddOpen ] = useState(false);
+    const [ paymentMethods, setPaymentMethods ] = useState([]);
+    const [ removingMethods, setRemovingMethods ] = useState(false);
+    
+    console.log( 'Selected Currency', selectedCurrency );
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
-            console.log(response.data);
             setPaymentMethods(response.data.data);
         }
         catch (error) {
@@ -61,20 +61,31 @@ function Profile() {
         }
     }, [] )
 
+    const fetchDefaultCurrency = async ( userId ) => {
+        try{
+            const response = await apiClient.get( `/users/${ userId }/default-currency` );
+            if ( response.status === 200 ){ 
+                const defaultCurrency = response.data.data;
+                setSelectedCurrency( defaultCurrency.iso );
+            }
+        }
+        catch( error ){
+            console.error( 'Error fetching default currency' );
+            showAlert( `Failed to retrieve default currency`, 'error' );
+        }
+    } 
+
     const handleCurrencyChange = async (currencyId) => {
         if (!user?.id) {
             showAlert('User not logged in', 'error');
             return;
         }
-
-        setSelectedCurrency(currencyId);
-        setAnchorEl(null); 
         try {
             const response = await apiClient.patch(`/users/${user.id}/default-currency`, {
                 currency_id: currencyId,
             });
-
             if (response.status === 200) {
+                setSelectedCurrency( response.data.data.iso );
                 showAlert(response.data.message, 'success');
             } else {
                 showAlert('Failed to update default currency.', 'error');
@@ -82,11 +93,11 @@ function Profile() {
         } catch (error) {
             console.error('Error updating default currency:', error);
             showAlert('Failed to update default currency.', 'error');
+        } finally {
+            setAnchorEl( null );
         }
     };
 
-
-    const selectedCurrencyName = currencies.find((c) => c.id === selectedCurrency)?.name || 'Select Currency';
     const removePaymentMethod = async (cardId) => {
         try {
             const response = await apiClient.delete(`/payments/${cardId}`);
@@ -131,9 +142,10 @@ function Profile() {
     useEffect(() => {
         if (user?.id) {
             fetchPaymentMethods(user.id);
+            fetchDefaultCurrency( user.id );
             fetchCurrencies();
         }
-    }, [user, fetchCurrencies]); 
+    }, [user, fetchCurrencies ]); 
     
 
     const handleMenuOpen = (event) => {
@@ -656,7 +668,7 @@ function Profile() {
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="h5" sx={{ color: '#fafafa', marginRight: '0.5rem' }}>
-                        {selectedCurrencyName}
+                        { selectedCurrency }
                     </Typography>
                     <Tooltip title="Change Currency">
                         <IconButton

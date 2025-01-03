@@ -101,6 +101,7 @@ function Carousel() {
         if ( filterType === 'search' ){
             fetchTanks( 1, updatedFilters )
         }
+        handleMenuClose( filterType );
     };
 
     const handleMenuOpen = (event, type) => {

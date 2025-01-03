@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, session, Blueprint
 
 
 # Necessary Files 
-from models import db, User 
+from models import db, User, Currency
 from .error_handlers import error_handler
 
 
@@ -124,3 +124,38 @@ def edit_user(user_id):
         return jsonify({'message': 'Unable to update user profile. Please try again!'}), 500
     
 
+# Set User Default Currency
+@user_routes.route( '/api/users/<user_id>/default-currency', methods = [ 'PATCH' ] )
+@error_handler( 400, 'Bad Request - Unable to update user profile' )
+def set_user_default_currency( user_id ):
+    """ Sets Default Currency for a User Instance """
+
+    data = request.json
+    currency_id = data.get( 'currency_id' )
+    user = User.query.filter_by( id = user_id ).first() 
+    if not user: 
+        return jsonify({ 'success': False, 'message': 'User not found' })
+    result = user.set_default_currency( currency_id )
+    print( result )
+    if result[ 'success' ]:
+        return jsonify( result ), 200
+    else:
+        return jsonify( result ), 400 
+    
+
+# Get User Default Currency 
+@user_routes.route( '/api/users/<user_id>/default-currency', methods = [ 'GET' ] )
+@error_handler( 400, 'Bad Request - Unable to update user profile' )
+def get_user_default_currency( user_id ):
+    """ Retrieves Default Currency of User Instance """
+
+    user = User.query.filter_by( id = user_id ).first()
+    if not user: 
+        return jsonify({ 'success': False, 'message': 'User not found' }), 404
+    if not user.default_currency_id:
+        return jsonify({ 'success': False, 'message': 'Default currency not set for this user' }), 404
+    
+    currency = Currency.query.filter_by( id = user.default_currency_id ).first() 
+    if not currency:
+        return jsonify({ 'success': False, 'message': 'Default currency data unavailable' }), 404
+    return jsonify({ 'success': True, 'data': currency.to_dict() }), 200 

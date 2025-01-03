@@ -144,11 +144,17 @@ class User( Base ):
     def set_default_currency( self, currency_id ):
         """ Sets Default currency of a User Instance """
 
-        currency = Currency.query.filter_by( id = currency_id ).first() 
-        if not currency: 
-            raise ValueError( 'Currency not found' )
+        currency = Currency.query.filter_by(id=currency_id).first()
+        if not currency:
+            return {'success': False, 'message': f'Currency with id {currency_id} not found.'}
         self.default_currency_id = currency_id
-        db.session.commit() 
+        set_currency = Currency.query.filter_by( id = currency_id ).first()
+        try:
+            db.session.commit()
+            return {'success': True, 'message': f"Default currency set to {currency.name} for user '{self.username}'.", 'data': set_currency.to_dict() }
+        except Exception as e:
+            db.session.rollback()
+            return {'success': False, 'message': str(e)}
 
     @classmethod 
     def create_user( cls, username, password, email, image = None ):
@@ -542,7 +548,7 @@ class Currency( Base ):
         currencies = cls.query.all()
         currency_list = [ currency.to_dict() for currency in currencies ]
         return currency_list
-
+    
 
 # class Review( Base ):
 #     """ Review Model """

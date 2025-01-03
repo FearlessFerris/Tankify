@@ -796,7 +796,7 @@ function Tank() {
                                         display: 'flex',
                                         justifyContent: 'start',
                                         marginLeft: '6rem',
-                                        marginBottom: '1rem',
+                                        marginBottom: '2rem',
                                         marginTop: '1rem'
                                     }}
                                 >
