@@ -67,12 +67,14 @@ def seed_users(currencies):
     """Seeds the Users table with initial mock data."""
     users = [
         User(username='Jack Sparrow', password='IamAsuperSecretPassword', email='jacksparrow@thesevenseas.org', image='https://lumiere-a.akamaihd.net/v1/images/bluesteel_d0f846ee.jpeg'),
-        User(username='Lara Croft', password='AnotherSecretPassword', email='lara.croft@tombraider.com', image='https://example.com/lara_croft_image.png')
+        User(username='Lara Croft', password='AnotherSecretPassword', email='lara.croft@tombraider.com', image='https://example.com/lara_croft_image.png'),
+        User( username = 'Terminator', password = 'atheman1', email = 'savesarahconnor@cyberdyne.com', image = 'https://img.goodfon.com/wallpaper/big/1/aa/terminator-2-judgment-day.webp' )
     ]
     
     # Assign default currencies
     users[0].default_currency_id = currencies[0].id 
     users[1].default_currency_id = currencies[1].id 
+    users[2].default_currency_id = currencies[0].id
 
     db.session.add_all(users)
     db.session.commit()

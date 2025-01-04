@@ -35,7 +35,8 @@ class User( Base ):
     password_hash = Column( String, nullable = False )
     email = Column( String, unique = True, nullable = False )
     image = Column( String, nullable = True )
-    balance = Column( Integer, default = 1000 )
+    gold_balance = Column( Integer, default = 0 )
+    credit_balance = Column( Integer, default = 1000000 )
     created_at = Column( DateTime, server_default = func.now() )
     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
 
@@ -45,11 +46,12 @@ class User( Base ):
     payment_methods = relationship( 'PaymentMethod', back_populates = 'user', lazy = 'select' )
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
 
-    def __init__( self, username, password, email, balance = 1000, image = None ):
+    def __init__( self, username, password, email, gold_balance = 0, credit_balance = 1000000, image = None ):
         self.username = username 
         self.set_password( password )
         self.email = email 
-        self.balance = balance
+        self.gold_balance = gold_balance
+        self.credit_balance = credit_balance
         self.image = image
 
     def __repr__(self):
@@ -59,7 +61,8 @@ class User( Base ):
             f"<User(id='{self.id}', "
             f"username='{self.username}', "
             f"email='{self.email}', "
-            f"balance='{self.balance}', "
+            f"gold_balance='{self.gold_balance}', "
+            f"credit_balance='{ self.credit_balance }',"
             f"image='{self.image}', "
             f"created_at='{self.created_at}')>"
         )
@@ -72,7 +75,8 @@ class User( Base ):
             'id': str( self.id ),
             'username': self.username,
             'email': self.email,
-            'balance': self.balance,
+            'gold_balance': self.gold_balance,
+            'credit_balance': self.credit_balance,
             'image': self.image,
             'created_at': self.created_at
         }
@@ -151,7 +155,7 @@ class User( Base ):
         set_currency = Currency.query.filter_by( id = currency_id ).first()
         try:
             db.session.commit()
-            return {'success': True, 'message': f"Default currency set to {currency.name} for user '{self.username}'.", 'data': set_currency.to_dict() }
+            return {'success': True, 'message': f'Default currency set to {currency.name}', 'data': set_currency.to_dict() }
         except Exception as e:
             db.session.rollback()
             return {'success': False, 'message': str(e)}
@@ -293,6 +297,7 @@ class PaymentMethod( Base ):
     expiry = Column( String, nullable = False )
     cvv = Column( String, nullable = False )
     type = Column( String, nullable = False )
+    balance = Column( Integer, default = 1000000 )
     details = Column( JSONB, nullable = False )
     default_method = Column( Boolean, nullable = False, default = False )
     created_at = Column( DateTime, server_default = func.now() )
@@ -300,7 +305,7 @@ class PaymentMethod( Base ):
     # Relationships 
     user = relationship( 'User', back_populates = 'payment_methods', lazy = 'select' )
 
-    def __init__( self, user_id, type, cardholder_name, card_number, expiry, cvv, details, default_method = False ):
+    def __init__( self, user_id, cardholder_name, card_number, expiry, cvv, type, balance, details, default_method = False ):
         """ Initiates PaymentMethod Instance """
 
         self.user_id = user_id 
@@ -309,6 +314,7 @@ class PaymentMethod( Base ):
         self.expiry = expiry 
         self.cvv = cvv  
         self.type = type 
+        self.balance = balance 
         self.details = details 
         self.default_method = default_method
 
@@ -322,7 +328,9 @@ class PaymentMethod( Base ):
             f"card_number = '{ self.card_number }',"
             f"expiry = '{ self.expiry }',"
             f"cvv = '{ self.cvv }',"
-            f"type = '{ self.details }',"
+            f"type = '{ self.type }',"
+            f"balance = '{ self.balance }',"
+            f"details = '{ self.details }',"
             f"default_method = '{ self.default_method }')>"
         )
 
@@ -337,6 +345,7 @@ class PaymentMethod( Base ):
             'expiry': self.expiry,
             'cvv': self.cvv,
             'type': self.type,
+            'balance': self.balance,
             'details': self.details,
             'default_method': self.default_method,
             'creaded_at': self.created_at.isoformat(),
@@ -353,6 +362,7 @@ class PaymentMethod( Base ):
             'expiry': self.expiry,
             'cvv': self.cvv,
             'type': self.type,
+            'balance': self.balance,
             'details': self.details,
             'default_method': self.default_method,
             'created_at': self.created_at.isoformat(),
@@ -371,7 +381,7 @@ class PaymentMethod( Base ):
         return [ pm.to_dict() for pm in payment_methods ]
 
     @classmethod
-    def add_payment_method( cls, user_id, cardholder_name, card_number, expiry, cvv, type, details, default_method = False ):
+    def add_payment_method( cls, user_id, cardholder_name, card_number, expiry, cvv, type, balance, details, default_method = False ):
         """ Create New PaymentMethod Instance """
 
         user = User.query.filter_by( id = user_id ).first() 
@@ -394,6 +404,7 @@ class PaymentMethod( Base ):
             expiry = expiry, 
             cvv = cvv, 
             type = type, 
+            balance = balance,
             details = details,
             default_method = default_method,
             )

@@ -28,20 +28,20 @@ function Profile() {
 
     const showAlert = useAlert();
     const { user } = useUser();
-    const [ hover, setHover ] = useState(false);
-    const [ open, setOpen ] = useState(false);
-    const [ openCount, setOpenCount ] = useState(0);
-    const [ isDefault, setIsDefault ] = useState( false );
-    const [ currencies, setCurrencies ] = useState([]);
-    const [ selectedCurrency, setSelectedCurrency ] = useState('');
-    const [ anchorEl, setAnchorEl ] = useState( null );
-    const [ editUserOpen, setEditUserOpen ] = useState(false);
-    const [ editPaymentOpen, setEditPaymentOpen ] = useState(null);
-    const [ cardAddOpen, setCardAddOpen ] = useState(false);
-    const [ paymentMethods, setPaymentMethods ] = useState([]);
-    const [ removingMethods, setRemovingMethods ] = useState(false);
-    
-    console.log( 'Selected Currency', selectedCurrency );
+    const [hover, setHover] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [openCount, setOpenCount] = useState(0);
+    const [isDefault, setIsDefault] = useState(false);
+    const [currencies, setCurrencies] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState('');
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [editUserOpen, setEditUserOpen] = useState(false);
+    const [editPaymentOpen, setEditPaymentOpen] = useState(null);
+    const [cardAddOpen, setCardAddOpen] = useState(false);
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const [removingMethods, setRemovingMethods] = useState(false);
+
+    console.log(user);
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -52,28 +52,28 @@ function Profile() {
         }
     }
 
-    const fetchCurrencies = useCallback( async () => {
+    const fetchCurrencies = useCallback(async () => {
         try {
             const response = await apiClient.get('/currencies/all');
             setCurrencies(response.data.data || []);
         } catch (error) {
             console.error('Error fetching currencies:', error);
         }
-    }, [] )
+    }, [])
 
-    const fetchDefaultCurrency = async ( userId ) => {
-        try{
-            const response = await apiClient.get( `/users/${ userId }/default-currency` );
-            if ( response.status === 200 ){ 
+    const fetchDefaultCurrency = async (userId) => {
+        try {
+            const response = await apiClient.get(`/users/${userId}/default-currency`);
+            if (response.status === 200) {
                 const defaultCurrency = response.data.data;
-                setSelectedCurrency( defaultCurrency.iso );
+                setSelectedCurrency(defaultCurrency.iso);
             }
         }
-        catch( error ){
-            console.error( 'Error fetching default currency' );
-            showAlert( `Failed to retrieve default currency`, 'error' );
+        catch (error) {
+            console.error('Error fetching default currency');
+            showAlert(`Failed to retrieve default currency`, 'error');
         }
-    } 
+    }
 
     const handleCurrencyChange = async (currencyId) => {
         if (!user?.id) {
@@ -85,7 +85,7 @@ function Profile() {
                 currency_id: currencyId,
             });
             if (response.status === 200) {
-                setSelectedCurrency( response.data.data.iso );
+                setSelectedCurrency(response.data.data.iso);
                 showAlert(response.data.message, 'success');
             } else {
                 showAlert('Failed to update default currency.', 'error');
@@ -94,7 +94,7 @@ function Profile() {
             console.error('Error updating default currency:', error);
             showAlert('Failed to update default currency.', 'error');
         } finally {
-            setAnchorEl( null );
+            setAnchorEl(null);
         }
     };
 
@@ -114,20 +114,20 @@ function Profile() {
         }
     }
 
-    const setDefaultPaymentMethod = async ( paymentId ) => {
-        try{
-            const response = await apiClient.patch( `/payments/${ user.id }/card/${ paymentId }` );
-            if ( response.status === 200 ){
-                await fetchPaymentMethods( user.id );
-                showAlert( response.data.message, 'success' );
+    const setDefaultPaymentMethod = async (paymentId) => {
+        try {
+            const response = await apiClient.patch(`/payments/${user.id}/card/${paymentId}`);
+            if (response.status === 200) {
+                await fetchPaymentMethods(user.id);
+                showAlert(response.data.message, 'success');
             }
-            else{
-                showAlert( response.data.message, 'error' );
+            else {
+                showAlert(response.data.message, 'error');
             }
         }
-        catch( error ){ 
-            console.error( 'Error setting the default payment method', error );
-            showAlert( 'Failed to update the default payment method', 'error' )
+        catch (error) {
+            console.error('Error setting the default payment method', error);
+            showAlert('Failed to update the default payment method', 'error')
         }
     }
 
@@ -142,11 +142,11 @@ function Profile() {
     useEffect(() => {
         if (user?.id) {
             fetchPaymentMethods(user.id);
-            fetchDefaultCurrency( user.id );
+            fetchDefaultCurrency(user.id);
             fetchCurrencies();
         }
-    }, [user, fetchCurrencies ]); 
-    
+    }, [user, fetchCurrencies]);
+
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -288,18 +288,19 @@ function Profile() {
                         <Tooltip
                             arrow
                             title='Email'
-                            placement = 'bottom'
+                            placement='bottom'
                             slotProps={{
                                 popper: {
                                     modifiers: [
                                         {
                                             name: 'offset',
                                             options: {
-                                                offset: [0, -10], 
+                                                offset: [0, -10],
                                             },
                                         },
                                     ],
-                                }}
+                                }
+                            }
                             }
                         >
                             <Typography
@@ -324,75 +325,35 @@ function Profile() {
                                 color: '#ab003c',
                             }}
                         >
-                            Balance:
-                        </Typography>
-                        <Tooltip 
-                            arrow 
-                            title = 'Balance'
-                            placement = 'bottom'
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [0, -10], 
-                                            },
-                                        },
-                                    ],
-                                }}
-                            }
-                        >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: '#fafafa',
-                            }}
-                            >
-                            ${user.balance}
-                        </Typography>
-                            </Tooltip>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: '#ab003c',
-                            }}
-                        >
                             Account Created:
                         </Typography>
-                        <Tooltip 
-                            arrow 
-                            title = 'Created At'
-                            placement = 'bottom'
+                        <Tooltip
+                            arrow
+                            title='Created At'
+                            placement='bottom'
                             slotProps={{
                                 popper: {
                                     modifiers: [
                                         {
                                             name: 'offset',
                                             options: {
-                                                offset: [0, -10], 
+                                                offset: [0, -10],
                                             },
                                         },
                                     ],
-                                }}
+                                }
+                            }
                             }
                         >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: '#fafafa',
-                            }}
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#fafafa',
+                                }}
                             >
-                            {new Date(user.created_at).toLocaleDateString()}
-                        </Typography>
-                            </Tooltip>
+                                {new Date(user.created_at).toLocaleDateString()}
+                            </Typography>
+                        </Tooltip>
                     </Box>
                 </Box>
 
@@ -414,6 +375,140 @@ function Profile() {
                     Edit
                 </Button>
             </div>
+            <div
+                style={{
+                    alignItems: 'center',
+                    backgroundColor: '#161616',
+                    border: '.1rem solid #0f0e0e',
+                    borderRadius: '.3rem',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginTop: '2rem',
+                    maxWidth: '45rem',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    marginBottom: '2rem',
+                    overflow: 'hidden',
+                    padding: '2rem',
+                }}
+            >
+                <Box
+                    sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        width: '45rem',
+                    }}
+                >
+                    <Typography
+                        variant="h3"
+                        sx={{
+                            color: '#fafafa',
+                        }}
+                    >
+                        User <span style={{ color: '#ab003c' }}>Balances</span>
+                    </Typography>
+                    <Box
+                        sx={{
+                            backgroundColor: '#161616',
+                            borderRadius: '1rem',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginTop: '2rem',
+                            marginBottom: '2rem',
+                            padding: '1rem',
+                            width: '35rem',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#ab003c',
+                                }}
+                            >
+                                Gold Balance:
+                            </Typography>
+                            <Tooltip
+                                arrow
+                                title="Gold Balance"
+                                placement="bottom"
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -10],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                }}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        color: '#fafafa',
+                                    }}
+                                >
+                                    ${user.gold_balance}
+                                </Typography>
+                            </Tooltip>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#ab003c',
+                                }}
+                            >
+                                Credit Balance:
+                            </Typography>
+                            <Tooltip
+                                arrow
+                                title="Credit Balance"
+                                placement="bottom"
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [0, -10],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                }}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        color: '#fafafa',
+                                    }}
+                                >
+                                    ${user.credit_balance}
+                                </Typography>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                </Box>
+            </div>
+
             <div
                 style={{
                     alignItems: 'center',
@@ -512,8 +607,8 @@ function Profile() {
                                         <FormControlLabel
                                             control={
                                                 <Switch
-                                                    checked = { method.default_method }
-                                                    onChange = { () => setDefaultPaymentMethod( method.id ) }
+                                                    checked={method.default_method}
+                                                    onChange={() => setDefaultPaymentMethod(method.id)}
                                                     sx={{
                                                         '& .MuiSwitch-switchBase.Mui-checked': {
                                                             color: '#ab003c',
@@ -637,7 +732,7 @@ function Profile() {
                             color: '#fafafa'
                         }}
                     >
-                        Settings
+                        General <span style={{ color: '#ab003c' }}> Settings </span>
                     </Typography>
                     <Box
                         sx={{
@@ -667,51 +762,51 @@ function Profile() {
                                 Default Currency:
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h5" sx={{ color: '#fafafa', marginRight: '0.5rem' }}>
-                        { selectedCurrency }
-                    </Typography>
-                    <Tooltip title="Change Currency">
-                        <IconButton
-                            onClick={handleMenuOpen}
-                            sx={{
-                                color: '#fafafa',
-                                '&:hover': {
-                                    color: '#ab003c',
-                                },
-                            }}
-                        >
-                            <ArrowDropDownIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleMenuClose}
-                        sx={{
-                            '& .MuiPaper-root': {
-                                backgroundColor: '#161616',
-                                color: '#fafafa',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                            },
-                        }}
-                    >
-                        {currencies.map((currency) => (
-                            <MenuItem
-                                key={currency.id}
-                                onClick={() => handleCurrencyChange(currency.id)}
-                                sx={{
-                                    backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#fafafa',
-                                    },
-                                }}
-                            >
-                                {currency.name} ({currency.symbol})
-                            </MenuItem>
-                        ))}
-                    </Menu>
-                </Box>
+                                <Typography variant="h5" sx={{ color: '#fafafa', marginRight: '0.5rem' }}>
+                                    {selectedCurrency}
+                                </Typography>
+                                <Tooltip title="Change Currency">
+                                    <IconButton
+                                        onClick={handleMenuOpen}
+                                        sx={{
+                                            color: '#fafafa',
+                                            '&:hover': {
+                                                color: '#ab003c',
+                                            },
+                                        }}
+                                    >
+                                        <ArrowDropDownIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleMenuClose}
+                                    sx={{
+                                        '& .MuiPaper-root': {
+                                            backgroundColor: '#161616',
+                                            color: '#fafafa',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                                        },
+                                    }}
+                                >
+                                    {currencies.map((currency) => (
+                                        <MenuItem
+                                            key={currency.id}
+                                            onClick={() => handleCurrencyChange(currency.id)}
+                                            sx={{
+                                                backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
+                                                '&:hover': {
+                                                    backgroundColor: '#ab003c',
+                                                    color: '#fafafa',
+                                                },
+                                            }}
+                                        >
+                                            {currency.name} ({currency.symbol})
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </Box>
                         </Box>
                     </Box>
                     <Button

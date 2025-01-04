@@ -159,3 +159,5 @@ def get_user_default_currency( user_id ):
     if not currency:
         return jsonify({ 'success': False, 'message': 'Default currency data unavailable' }), 404
     return jsonify({ 'success': True, 'data': currency.to_dict() }), 200 
+
+
