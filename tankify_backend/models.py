@@ -67,7 +67,6 @@ class User( Base ):
             f"created_at='{self.created_at}')>"
         )
 
-
     def get_user_profile( self ):
         """ Retrieve entire User Profile """
 
@@ -297,7 +296,6 @@ class PaymentMethod( Base ):
     expiry = Column( String, nullable = False )
     cvv = Column( String, nullable = False )
     type = Column( String, nullable = False )
-    balance = Column( Integer, default = 1000000 )
     details = Column( JSONB, nullable = False )
     default_method = Column( Boolean, nullable = False, default = False )
     created_at = Column( DateTime, server_default = func.now() )
@@ -305,7 +303,7 @@ class PaymentMethod( Base ):
     # Relationships 
     user = relationship( 'User', back_populates = 'payment_methods', lazy = 'select' )
 
-    def __init__( self, user_id, cardholder_name, card_number, expiry, cvv, type, balance, details, default_method = False ):
+    def __init__( self, user_id, cardholder_name, card_number, expiry, cvv, type, details, default_method = False ):
         """ Initiates PaymentMethod Instance """
 
         self.user_id = user_id 
@@ -313,8 +311,7 @@ class PaymentMethod( Base ):
         self.card_number = card_number
         self.expiry = expiry 
         self.cvv = cvv  
-        self.type = type 
-        self.balance = balance 
+        self.type = type
         self.details = details 
         self.default_method = default_method
 
@@ -329,7 +326,6 @@ class PaymentMethod( Base ):
             f"expiry = '{ self.expiry }',"
             f"cvv = '{ self.cvv }',"
             f"type = '{ self.type }',"
-            f"balance = '{ self.balance }',"
             f"details = '{ self.details }',"
             f"default_method = '{ self.default_method }')>"
         )
@@ -345,7 +341,6 @@ class PaymentMethod( Base ):
             'expiry': self.expiry,
             'cvv': self.cvv,
             'type': self.type,
-            'balance': self.balance,
             'details': self.details,
             'default_method': self.default_method,
             'creaded_at': self.created_at.isoformat(),
@@ -362,7 +357,6 @@ class PaymentMethod( Base ):
             'expiry': self.expiry,
             'cvv': self.cvv,
             'type': self.type,
-            'balance': self.balance,
             'details': self.details,
             'default_method': self.default_method,
             'created_at': self.created_at.isoformat(),
@@ -381,7 +375,7 @@ class PaymentMethod( Base ):
         return [ pm.to_dict() for pm in payment_methods ]
 
     @classmethod
-    def add_payment_method( cls, user_id, cardholder_name, card_number, expiry, cvv, type, balance, details, default_method = False ):
+    def add_payment_method( cls, user_id, cardholder_name, card_number, expiry, cvv, type, details, default_method = False ):
         """ Create New PaymentMethod Instance """
 
         user = User.query.filter_by( id = user_id ).first() 
@@ -404,7 +398,6 @@ class PaymentMethod( Base ):
             expiry = expiry, 
             cvv = cvv, 
             type = type, 
-            balance = balance,
             details = details,
             default_method = default_method,
             )
@@ -471,13 +464,18 @@ class Transaction( Base ):
     __tablename__ = 'transactions'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
-    amount = Column( Integer, nullable = False )  
+    payment_method_id = Column( UUID( as_uuid = True ), ForeignKey( 'payment_methods.id' ), nullable = False )
+    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = True )
+    transaction_type = Column( String, nullable = False )
+    amount = Column( Integer, nullable = False, default = 0 )  
     timestamp = Column( DateTime, server_default = func.now() )
 
     # Relationships with back_populates
-    user = relationship( 'User', back_populates='transactions' )
-    tank = relationship( 'Tank', backref='transactions' )
+    user = relationship( 'User', back_populates='transactions', lazy = 'select' )
+    tank = relationship( 'Tank', backref='transactions', lazy = 'select' )
+    # payment_method = 
+
+
 
 
 class Currency( Base ): 

@@ -61,7 +61,6 @@ def add_payment_method(user_id):
     expiry = data.get('expiry')
     cvv = data.get('cvv')
     type = data.get('type')
-    balance = data.get( 'balance' )
     details = data.get('details')
     default_method = data.get( 'defaultMethod' )
     print( default_method )
@@ -81,7 +80,6 @@ def add_payment_method(user_id):
             expiry=expiry,
             cvv=cvv, 
             type=type,
-            balance = balance,
             details=details,
             default_method=default_method
         )

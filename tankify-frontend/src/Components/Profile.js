@@ -41,7 +41,6 @@ function Profile() {
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
 
-    console.log(user);
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
