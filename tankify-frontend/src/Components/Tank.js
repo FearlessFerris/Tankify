@@ -8,6 +8,8 @@ import { Box, Button, Card, CardContent, CardMedia, Paper, Typography } from '@m
 import { GiBattleTank, GiChemicalTank, GiGreatWarTank } from "react-icons/gi";
 import { MdOutlineExpandCircleDown, MdRemoveRedEye } from "react-icons/md";
 import { SlPeople } from "react-icons/sl";
+import { GrMoney } from "react-icons/gr";
+import { FaCodeCompare } from "react-icons/fa6";
 
 
 // Components & Necessary Files 
@@ -23,7 +25,7 @@ function Tank() {
     const [showAllInfo, setShowAllInfo] = useState(false);
     const [expand, setExpand] = useState({
         crew: false,
-        information: true,
+        information: false,
         description: false,
         firepower: false,
         mobility: false,
@@ -128,14 +130,34 @@ function Tank() {
                                 >
                                     {tank.name}
                                 </Typography>
-
+                                <Typography 
+                                    variant = 'h4'
+                                    sx = {{
+                                        color: '#ab003c',
+                                        marginTop: '3rem'
+                                    }}
+                                >
+                                Cost: 
+                                <GrMoney
+                                    fontSize="2rem"
+                                    style={{
+                                        color: '#4b4848',
+                                        marginLeft: '.5rem',
+                                        marginRight: '-.1rem',
+                                        position: 'relative',
+                                        top: '.5rem',
+                                        transition: 'color 0.3s ease',
+                                    }}
+                                />
+                                <span style = {{ color: '#4b4848' }}> { tank.price } </span> 
+                                </Typography>
                                 <Box
                                     sx={{
                                         position: 'relative',
                                         display: 'inline-block',
                                         width: '60rem',
                                         height: '25rem',
-                                        marginTop: '4rem',
+                                        marginTop: '1rem',
                                         marginBottom: '10rem',
                                     }}
                                 >
@@ -164,6 +186,70 @@ function Tank() {
                                         }}
                                     />
                                 </Box>
+                                <Box 
+                                    sx = {{ 
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        marginBottom: '4rem'
+                                    }}
+                                >
+                                    <Button
+                                        variant = 'filled'
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            marginRight: '1rem',
+                                            width: '8rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <GrMoney
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                    Purchase 
+                                    </Button>
+                                    <Button
+                                        variant = 'filled'
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: '#900C3F',
+                                            backgroundColor: '#161616',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                            fontStyle: 'bold',
+                                            fontSize: '1rem',
+                                            marginRight: '1rem',
+                                            width: '8rem',
+                                            '&:hover': {
+                                                backgroundColor: '#ab003c',
+                                                color: '#2b2a2e',
+                                            },
+                                        }}
+                                    >
+                                        <FaCodeCompare
+                                            fontSize="2rem"
+                                            style={{
+                                                marginRight: '.5rem',
+                                                transition: 'color 0.3s ease',
+                                            }}
+                                        />
+                                    Compare 
+                                    </Button>
+                                </Box>    
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -280,7 +366,7 @@ function Tank() {
                                                 {tank.nation}
                                             </Typography>
                                         </Box>
-                                        <Box
+                                        {/* <Box
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'start',
@@ -304,7 +390,7 @@ function Tank() {
                                             >
                                                 {tank.price}
                                             </Typography>
-                                        </Box>
+                                        </Box> */}
                                         <Box
                                             sx={{
                                                 display: 'flex',

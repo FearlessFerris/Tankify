@@ -62,7 +62,6 @@ def seed_currencies():
     return currencies
 
 
-
 def seed_users(currencies):
     """Seeds the Users table with initial mock data."""
     users = [
@@ -79,7 +78,6 @@ def seed_users(currencies):
     db.session.add_all(users)
     db.session.commit()
     return users
-
 
 
 def crop_image_auto(image_url, upload_path):
@@ -178,8 +176,12 @@ def seed_tanks():
 
                     nation = capitalize_nation(tank.get("nation", "unknown"))
                     nation_flag_hd_url = nation_flag_hd_urls.get(nation.lower(), f"{flag_hd_base_url}default.png")
-                    price = tank.get("price_credit", 0) if tank.get("price_credit") is not None else 0
-
+                    if tank.get( 'price_gold' ) != 0 and tank.get( 'price_gold' ) is not None: 
+                        price = tank.get( 'price_gold', 0 )
+                    else:
+                        price = tank.get( 'price_credit', 0 )
+                    if price is None:
+                        price = 1000000
                     if cropped_image_url:
                         tanks.append(
                             Tank(
