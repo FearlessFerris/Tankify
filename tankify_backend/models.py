@@ -559,7 +559,6 @@ class Transaction( Base ):
             return { 'success': False, 'message': f'Error creating transaction: { str( e ) }' }
 
 
-
 class Currency( Base ): 
     """ Currency Model """
 
