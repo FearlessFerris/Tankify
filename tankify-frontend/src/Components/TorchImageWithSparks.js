@@ -15,25 +15,24 @@ function TorchImageWithSparks({ src }) {
   const createSpark = () => {
     if (!containerRef.current) return;
 
-    // Create a spark element
+
     const spark = document.createElement('div');
     spark.className = 'spark';
 
-    // Randomize position near the border
+
     const containerWidth = containerRef.current.offsetWidth;
     const containerHeight = containerRef.current.offsetHeight;
 
-    // Place spark at a random X/Y within the container
+
     const randomX = Math.random() * containerWidth;
     const randomY = Math.random() * containerHeight;
 
     spark.style.left = `${randomX}px`;
     spark.style.top = `${randomY}px`;
 
-    // Insert spark into container
+
     containerRef.current.appendChild(spark);
 
-    // Remove spark after the animation completes (500ms)
     setTimeout(() => {
       if (spark.parentNode) {
         spark.parentNode.removeChild(spark);
