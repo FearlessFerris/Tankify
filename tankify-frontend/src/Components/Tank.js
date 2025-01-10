@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Card, CardContent, CardMedia, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Paper, Tooltip, Typography } from '@mui/material';
 import { GiBattleTank, GiChemicalTank, GiGreatWarTank } from "react-icons/gi";
 import { MdOutlineExpandCircleDown, MdRemoveRedEye } from "react-icons/md";
 import { SlPeople } from "react-icons/sl";
@@ -130,26 +130,26 @@ function Tank() {
                                 >
                                     {tank.name}
                                 </Typography>
-                                <Typography 
-                                    variant = 'h4'
-                                    sx = {{
+                                <Typography
+                                    variant='h4'
+                                    sx={{
                                         color: '#ab003c',
                                         marginTop: '3rem'
                                     }}
                                 >
-                                Cost: 
-                                <GrMoney
-                                    fontSize="2rem"
-                                    style={{
-                                        color: '#4b4848',
-                                        marginLeft: '.5rem',
-                                        marginRight: '-.1rem',
-                                        position: 'relative',
-                                        top: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                <span style = {{ color: '#4b4848' }}> { tank.price } </span> 
+                                    Cost:
+                                    <GrMoney
+                                        fontSize="2rem"
+                                        style={{
+                                            color: '#4b4848',
+                                            marginLeft: '.5rem',
+                                            marginRight: '-.1rem',
+                                            position: 'relative',
+                                            top: '.5rem',
+                                            transition: 'color 0.3s ease',
+                                        }}
+                                    />
+                                    <span style={{ color: '#4b4848' }}> {tank.price} </span>
                                 </Typography>
                                 <Box
                                     sx={{
@@ -186,8 +186,8 @@ function Tank() {
                                         }}
                                     />
                                 </Box>
-                                <Box 
-                                    sx = {{ 
+                                <Box
+                                    sx={{
                                         alignItems: 'center',
                                         display: 'flex',
                                         flexDirection: 'row',
@@ -196,7 +196,7 @@ function Tank() {
                                     }}
                                 >
                                     <Button
-                                        variant = 'filled'
+                                        variant='filled'
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -220,10 +220,10 @@ function Tank() {
                                                 transition: 'color 0.3s ease',
                                             }}
                                         />
-                                    Purchase 
+                                        Purchase
                                     </Button>
                                     <Button
-                                        variant = 'filled'
+                                        variant='filled'
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -247,9 +247,9 @@ function Tank() {
                                                 transition: 'color 0.3s ease',
                                             }}
                                         />
-                                    Compare 
+                                        Compare
                                     </Button>
-                                </Box>    
+                                </Box>
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -324,14 +324,33 @@ function Tank() {
                                                 marginRight: '4rem'
                                             }}
                                         >
-                                            <Typography
-                                                variant='h5'
-                                                sx={{
-                                                    marginRight: '.5rem'
+                                            <Tooltip
+                                                arrow
+                                                title="Vehicle Tier"
+                                                placement="bottom"
+                                                slotProps={{
+                                                    popper: {
+                                                        modifiers: [
+                                                            {
+                                                                name: 'offset',
+                                                                options: {
+                                                                    offset: [0, -10],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
                                                 }}
                                             >
-                                                Tier:
-                                            </Typography>
+
+                                                <Typography
+                                                    variant='h5'
+                                                    sx={{
+                                                        marginRight: '.5rem'
+                                                    }}
+                                                >
+                                                    Tier:
+                                                </Typography>
+                                            </Tooltip>
                                             <Typography
                                                 variant='h5'
                                                 sx={{
@@ -349,14 +368,33 @@ function Tank() {
                                                 marginRight: '4rem'
                                             }}
                                         >
-                                            <Typography
-                                                variant='h5'
-                                                sx={{
-                                                    marginRight: '.5rem'
+                                            <Tooltip
+                                                arrow
+                                                title="Vehicle Nation"
+                                                placement="bottom"
+                                                slotProps={{
+                                                    popper: {
+                                                        modifiers: [
+                                                            {
+                                                                name: 'offset',
+                                                                options: {
+                                                                    offset: [0, -10],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
                                                 }}
                                             >
-                                                Nation:
-                                            </Typography>
+
+                                                <Typography
+                                                    variant='h5'
+                                                    sx={{
+                                                        marginRight: '.5rem'
+                                                    }}
+                                                >
+                                                    Nation:
+                                                </Typography>
+                                            </Tooltip>
                                             <Typography
                                                 variant='h5'
                                                 sx={{
@@ -366,31 +404,6 @@ function Tank() {
                                                 {tank.nation}
                                             </Typography>
                                         </Box>
-                                        {/* <Box
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'start',
-                                                marginLeft: '6rem',
-                                                marginRight: '4rem'
-                                            }}
-                                        >
-                                            <Typography
-                                                variant='h5'
-                                                sx={{
-                                                    marginRight: '.5rem'
-                                                }}
-                                            >
-                                                Price:
-                                            </Typography>
-                                            <Typography
-                                                variant='h5'
-                                                sx={{
-                                                    color: '#ab003c'
-                                                }}
-                                            >
-                                                {tank.price}
-                                            </Typography>
-                                        </Box> */}
                                         <Box
                                             sx={{
                                                 display: 'flex',
@@ -399,14 +412,33 @@ function Tank() {
                                                 marginRight: '6rem'
                                             }}
                                         >
-                                            <Typography
-                                                variant='h5'
-                                                sx={{
-                                                    marginRight: '.5rem'
+                                            <Tooltip
+                                                arrow
+                                                title="Vehicle Description"
+                                                placement="bottom"
+                                                slotProps={{
+                                                    popper: {
+                                                        modifiers: [
+                                                            {
+                                                                name: 'offset',
+                                                                options: {
+                                                                    offset: [0, -170],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
                                                 }}
                                             >
-                                                Description:
-                                            </Typography>
+
+                                                <Typography
+                                                    variant='h5'
+                                                    sx={{
+                                                        marginRight: '.5rem'
+                                                    }}
+                                                >
+                                                    Description:
+                                                </Typography>
+                                            </Tooltip>
                                             <Typography
                                                 variant='h5'
                                                 noWrap={!expand.description}
