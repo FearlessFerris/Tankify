@@ -627,9 +627,7 @@ import { keyframes } from '@mui/system';
 import apiClient from '../api/apiClient';
 
 function Carousel() {
-  // -----------------------------------------
-  // 1) Keyframes and Basic Setup
-  // -----------------------------------------
+
   const fadeIn = keyframes`
     0% {
       opacity: 0;
