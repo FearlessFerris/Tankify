@@ -122,6 +122,7 @@ function Carousel() {
   }
 
   const fixCurrency = (price) => Number(price).toLocaleString();
+  
   const filteredTanks = tanks.filter((tank) =>
     tank.name.toLowerCase().includes(filters.search.toLowerCase())
   );

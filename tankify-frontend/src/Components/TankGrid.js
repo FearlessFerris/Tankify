@@ -48,6 +48,7 @@ function TankGrid() {
         `/tanks/all?search=${search || ''}&page=${currentPage}&per_page=20&type=${type||''}&tier=${tier||''}&nation=${nation||''}`
       );
       const apiTanks = response.data.data.flat();
+      console.log( apiTanks );
 
       if (currentPage === 1) {
         setTanks(apiTanks);
@@ -117,7 +118,7 @@ const handleFilterChange = (filterType, value) => {
   );
 
   return (
-    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', marginBottom: '6rem' }}>
       <Typography variant="h3" sx={{ marginTop: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
         Tank Inventory
       </Typography>
@@ -130,7 +131,6 @@ const handleFilterChange = (filterType, value) => {
           borderRadius: '1rem',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
           marginBottom: '4rem',
-          padding: '0.5rem',
           maxWidth: '35rem',
           marginLeft: 'auto',
           marginRight: 'auto',

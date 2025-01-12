@@ -82,6 +82,8 @@ function Tank() {
         setShowAllInfo((prev) => !prev);
     };
 
+    const fixCurrency = ( price ) => Number( price ).toLocaleString();
+
     return (
         <div
             className='tank-container'
@@ -143,13 +145,19 @@ function Tank() {
                                         style={{
                                             color: '#4b4848',
                                             marginLeft: '.5rem',
-                                            marginRight: '-.1rem',
+                                            marginRight: '.1rem',
                                             position: 'relative',
-                                            top: '.5rem',
+                                            top: '.4rem',
                                             transition: 'color 0.3s ease',
                                         }}
                                     />
-                                    <span style={{ color: '#4b4848' }}> {tank.price} </span>
+                                    <span 
+                                        style = {{ 
+                                            color: '#4b4848' 
+                                        }}
+                                    > 
+                                    { tank.price ? fixCurrency( tank.price ) : 'NA' } 
+                                    </span>
                                 </Typography>
                                 <Box
                                     sx={{
