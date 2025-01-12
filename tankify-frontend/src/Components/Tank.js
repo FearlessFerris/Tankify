@@ -254,7 +254,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '6rem',
+                                        marginLeft: '5rem',
                                         marginBottom: '1rem'
                                     }}
                                 >
@@ -488,7 +488,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '6rem',
+                                        marginLeft: '5rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -625,7 +625,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '6rem',
+                                        marginLeft: '5rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -826,7 +826,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '6rem',
+                                        marginLeft: '5rem',
                                         marginBottom: '1rem',
                                         marginTop: '1rem'
                                     }}
@@ -913,7 +913,7 @@ function Tank() {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'start',
-                                        marginLeft: '6rem',
+                                        marginLeft: '5rem',
                                         marginBottom: '2rem',
                                         marginTop: '1rem'
                                     }}

@@ -1,13 +1,26 @@
+// TorchImageWithSparks Component Implementation 
+
+
+// Dependencies 
 import React, { useRef, useEffect } from 'react';
 
-function TorchImageWithSparks({ src }) {
-  const containerRef = useRef(null);
 
+// Components & Necessary Files 
+
+
+// TorchImageWithSparks Component 
+function TorchImageWithSparks({ 
+  src, 
+  width = '60rem',     
+  height = '32rem', 
+  containerStyle = {} 
+}) {
+
+  const containerRef = useRef(null);
   useEffect(() => {
-    // Interval to spawn sparks periodically
     const interval = setInterval(() => {
       createSpark();
-    }, 100); // spawn a spark ~ every 300ms (adjust as needed)
+    }, 300); 
 
     return () => clearInterval(interval);
   }, []);
@@ -15,21 +28,17 @@ function TorchImageWithSparks({ src }) {
   const createSpark = () => {
     if (!containerRef.current) return;
 
-
     const spark = document.createElement('div');
     spark.className = 'spark';
 
-
     const containerWidth = containerRef.current.offsetWidth;
     const containerHeight = containerRef.current.offsetHeight;
-
 
     const randomX = Math.random() * containerWidth;
     const randomY = Math.random() * containerHeight;
 
     spark.style.left = `${randomX}px`;
     spark.style.top = `${randomY}px`;
-
 
     containerRef.current.appendChild(spark);
 
@@ -43,46 +52,36 @@ function TorchImageWithSparks({ src }) {
   return (
     <>
       <style>{`
-        /* Glowing border container */
         .torch-border {
           position: relative;
           display: inline-block;
           border: 3px solid #ab003c;
           border-radius: 8px;
           box-shadow: 0 0 8px #ab003c;
-          
-          /* Flickering border animation */
-          animation: torchFlicker 3s infinite alternate;
+          animation: torchFlicker 3s infinite alternate; 
         }
 
         @keyframes torchFlicker {
-          0% {
-            box-shadow: 0 0 8px #ab003c;
-          }
-          50% {
-            box-shadow: 0 0 16px #ab003c;
-          }
-          100% {
-            box-shadow: 0 0 8px #ab003c;
-          }
+          0%   { box-shadow: 0 0 8px #ab003c; }
+          50%  { box-shadow: 0 0 16px #ab003c; }
+          100% { box-shadow: 0 0 8px #ab003c; }
         }
 
-        /* The image itself */
         .torch-image {
           display: block;
-          width: 60rem;
-          height: 32rem;
+          width: 100%;
+          height: 100%;
           border-radius: 4px;
+          object-fit: cover;
         }
 
-        /* Spark styles */
         .spark {
           position: absolute;
           width: 4px;
           height: 4px;
-          background-color: #ffca28; /* bright yellow for spark */
+          background-color: #ffca28;
           border-radius: 50%;
-          pointer-events: none; /* so sparks don’t block mouse interactions */
+          pointer-events: none;
           animation: sparkLife 500ms ease-out forwards;
         }
 
@@ -101,12 +100,18 @@ function TorchImageWithSparks({ src }) {
           }
         }
       `}</style>
-      
-      <div 
-        ref={containerRef} 
-        style={{ position: 'relative', display: 'inline-block' }}
+
+      <div
+        ref={containerRef}
+        style={{
+          position: 'relative',
+          display: 'inline-block',
+          width,
+          height,
+          ...containerStyle
+        }}
       >
-        <div className="torch-border">
+        <div className="torch-border" style={{ width: '100%', height: '100%' }}>
           <img src={src} alt="Torch" className="torch-image" />
         </div>
       </div>
@@ -115,4 +120,3 @@ function TorchImageWithSparks({ src }) {
 }
 
 export default TorchImageWithSparks;
-

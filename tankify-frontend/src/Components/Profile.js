@@ -146,7 +146,6 @@ function Profile() {
         }
     }, [user, fetchCurrencies]);
 
-
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };

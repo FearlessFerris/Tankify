@@ -1,14 +1,15 @@
-// // Carousel Component Implementation 
+// Carousel Component Implementation 
 
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardMedia, CardContent, IconButton, Menu, MenuItem, Tooltip, Typography, TextField, CircularProgress } from '@mui/material';
+import { Box, Button, Card, CardMedia, CardContent, IconButton, Menu, MenuItem, Tooltip, Typography, TextField, CircularProgress } from '@mui/material';
 import ClassIcon from '@mui/icons-material/Class';
 import FlagIcon from '@mui/icons-material/Flag';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { keyframes } from '@mui/system';
+import { motion } from 'framer-motion';
 
 
 // Components & Necessary Files 
@@ -30,6 +31,7 @@ function Carousel() {
 
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [ hoveredCard, setHoveredCard ] = useState( null );
   const [isLoading, setIsLoading] = useState(false);
   const [moreTanks, setMoreTanks] = useState(true);
   const [tanks, setTanks] = useState([]);
@@ -114,6 +116,10 @@ function Carousel() {
   const handleMenuClose = (type) => {
     setAnchorEl((prev) => ({ ...prev, [type]: null }));
   };
+
+  const handleHovering = ( index ) => {
+    setHoveredCard( index );
+  }
 
   const fixCurrency = (price) => Number(price).toLocaleString();
   const filteredTanks = tanks.filter((tank) =>
@@ -291,8 +297,10 @@ function Carousel() {
         {filteredTanks.length > 0 ? (
           filteredTanks.map((tank, index) => (
             <Card
-              key={index}
+              key={ tank.id }
               onClick={() => navigate(`/tank/${tank.id}`)}
+              onMouseEnter = { () => handleHovering( index ) }
+              onMouseLeave = { () => handleHovering( null) }
               sx={{
                 alignItems: 'center',
                 backgroundColor: '#161616',
@@ -300,45 +308,30 @@ function Carousel() {
                 display: 'flex',
                 margin: '2rem',
                 width: '38rem',
-                height: '8rem',
+                height: hoveredCard === index ? '14rem' : '13rem',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                overflow: 'visible',
+                overflow: 'hidden',
                 position: 'relative',
-                animation: `${fadeIn} 1.5s ease-in-out`,
-                animationFillMode: 'both',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                transition: 'height 0.3s ease, box-shadow 0.3s ease',
                 cursor: 'pointer',
                 '&:hover': {
-                  transform: 'scale(1.08)',
                   boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.4)'
                 }
               }}
             >
-              <CardMedia
-                component="img"
-                image={tank.image}
-                alt={tank.name}
-                sx={{
-                  flexShrink: 0,
-                  marginLeft: '2rem',
-                  marginTop: '1rem',
-                  objectFit: 'cover',
-                  height: '8rem',
-                  width: '9rem'
-                }}
-              />
-              <CardMedia
-                component="img"
-                image={tank.nation_flag}
-                alt={`${tank.nation} flag`}
-                sx={{
-                  flexShrink: 0,
-                  marginLeft: '2rem',
-                  marginRight: '1rem',
-                  objectFit: 'cover',
-                  maxWidth: '8rem'
-                }}
-              />
+                <CardMedia
+                  component="img"
+                  image={tank.image}
+                  alt={tank.name}
+                  sx={{
+                    flexShrink: 0,
+                    marginLeft: '2rem',
+                    marginTop: '1rem',
+                    objectFit: 'cover',
+                    height: '8rem',
+                    width: '9rem'
+                  }}
+                  />
               <CardContent>
                 <Box
                   sx={{
@@ -502,6 +495,28 @@ function Carousel() {
                   </Typography>
                 </Box>
               </CardContent>
+              <Box
+    sx={{
+      position: 'absolute',
+      bottom: '10px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      display: hoveredCard === index ? 'flex' : 'none',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <Button 
+    variant="contained" 
+    color="primary"
+    sx = {{
+      backgroundColor: '#ab003d',
+      color: '#fafafa'
+    }}
+    >
+      Show More
+    </Button>
+  </Box>
             </Card>
           ))
         ) : (
