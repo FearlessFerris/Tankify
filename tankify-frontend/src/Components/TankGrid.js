@@ -27,6 +27,7 @@ function TankGrid() {
   const types = ['Heavy Tank','Medium Tank','Light Tank','AT-SPG','SPG'];
   const nations = ['USSR','Germany','USA','China','France','UK','Japan','Czech','Sweden','Poland','Italy'];
 
+  // Filters State
   const [filters, setFilters] = useState({
     search: '',
     type: '',
