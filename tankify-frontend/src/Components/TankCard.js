@@ -5,6 +5,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardMedia, Collapse, Box, Button, Typography } from '@mui/material';
 import { MdOutlineHealthAndSafety } from "react-icons/md";
+import { MdNumbers } from "react-icons/md";
+import { FaRegKeyboard } from "react-icons/fa6";
 import { FaFlag } from "react-icons/fa";
 import { GiAbdominalArmor } from "react-icons/gi";
 import { GrMoney } from "react-icons/gr";
@@ -109,7 +111,7 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                         >
-                            Price:
+                            Price
                         </Typography>
                         <Typography
                             variant="body1"
@@ -122,12 +124,13 @@ function TankCard({ tank, navigate }) {
                                 fontSize="1rem"
                                 style={{
                                     color: '#4b4848',
-                                    marginRight: '-.1rem',
+                                    marginRight: '.2rem',
                                     position: 'relative',
                                     top: '.2rem',
                                     transition: 'color 0.3s ease',
                                 }}
-                            /> {tank.price ? fixCurrency(tank.price) : 'N/A'}
+                            /> 
+                            {tank.price ? fixCurrency(tank.price) : 'N/A'}
                         </Typography>
                     </Box>
                     <Box
@@ -143,7 +146,19 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                         >
-                            Tier:
+                            Tier
+
+                            <MdNumbers 
+                                fontSize="1rem"
+                                style={{
+                                    color: '#4b4848',
+                                    marginLeft: '.2rem',
+                                    marginRight: '-.2rem',
+                                    position: 'relative',
+                                    top: '.2rem',
+                                    transition: 'color 0.3s ease',
+                                }}
+                            />
                         </Typography>
                         <Typography
                             variant="body1"
@@ -168,7 +183,19 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                         >
-                            Nation:
+
+                            Nation
+                            <FaFlag 
+                                fontSize="1rem"
+                                style={{
+                                    color: '#4b4848',
+                                    marginLeft: '.3rem',
+                                    marginRight: '.2rem',
+                                    position: 'relative',
+                                    top: '.2rem',
+                                    transition: 'color 0.3s ease',
+                                }}
+                            />
                         </Typography>
                         <Typography
                             variant="body1"
@@ -177,16 +204,6 @@ function TankCard({ tank, navigate }) {
                                 fontWeight: 'bold'
                             }}
                         >
-                            <FaFlag 
-                                fontSize="1rem"
-                                style={{
-                                    color: '#4b4848',
-                                    marginRight: '.3rem',
-                                    position: 'relative',
-                                    top: '.2rem',
-                                    transition: 'color 0.3s ease',
-                                }}
-                            />
                             {tank.nation}
                         </Typography>
                     </Box>
@@ -204,7 +221,16 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                         >
-                            HP:
+                            HP
+                            <MdOutlineHealthAndSafety 
+                                fontSize = '1rem'
+                                style = {{
+                                    color: '#4b4848',
+                                    marginLeft: '.3rem',
+                                    position: 'relative',
+                                    top: '.2rem'
+                                }}
+                           /> 
                         </Typography>
                         <Typography
                             variant="body1"
@@ -213,15 +239,6 @@ function TankCard({ tank, navigate }) {
                                 fontWeight: 'bold'
                             }}
                         >
-                           <MdOutlineHealthAndSafety 
-                                fontSize = '1rem'
-                                style = {{
-                                    color: '#4b4848',
-                                    marginRight: '.1rem',
-                                    position: 'relative',
-                                    top: '.2rem'
-                                }}
-                           /> 
                            { tank.default_profile[ 'hp' ] }
                         </Typography>
                     </Box>
@@ -239,7 +256,16 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                             >
-                            Hull Armor:
+                            Hull Armor
+                        <GiAbdominalArmor 
+                            fontSize = '1rem'
+                            style = {{
+                                color: '#4b4848',
+                                marginLeft: '.3rem',
+                                position: 'relative',
+                                top: '.2rem'
+                            }}
+                            />   
                         </Typography>
                         <Typography
                             variant="body1"
@@ -248,15 +274,6 @@ function TankCard({ tank, navigate }) {
                                 fontWeight: 'bold'
                             }}
                             >
-                        <GiAbdominalArmor 
-                            fontSize = '1rem'
-                            style = {{
-                                color: '#4b4848',
-                                marginRight: '.1rem',
-                                position: 'relative',
-                                top: '.2rem'
-                            }}
-                            />   
                         { tank.default_profile.armor.hull['front']}/{tank.default_profile.armor.hull['rear']}/{tank.default_profile.armor.hull['sides'] }
                         </Typography>
                     </Box>
@@ -274,7 +291,16 @@ function TankCard({ tank, navigate }) {
                                 marginRight: '0.4rem'
                             }}
                             >
-                            Turret HP:
+                            Turret HP
+                        <GiAbdominalArmor 
+                            fontSize = '1rem'
+                            style = {{
+                                color: '#4b4848',
+                                marginLeft: '.3rem',
+                                position: 'relative',
+                                top: '.2rem'
+                            }}
+                            />   
                         </Typography>
                         <Typography
                             variant="body1"
@@ -283,15 +309,6 @@ function TankCard({ tank, navigate }) {
                                 fontWeight: 'bold'
                             }}
                             >
-                        <GiAbdominalArmor 
-                            fontSize = '1rem'
-                            style = {{
-                                color: '#4b4848',
-                                marginRight: '.1rem',
-                                position: 'relative',
-                                top: '.2rem'
-                            }}
-                            />   
                             { tank.default_profile.armor.turret?.[ 'front' ]}/{tank.default_profile.armor.turret?.[ 'sides' ]}/{ tank.default_profile.armor.turret?.[ 'rear' ] }
                         </Typography>
                     </Box>
@@ -310,7 +327,17 @@ function TankCard({ tank, navigate }) {
                                     width: '6rem'
                                 }}
                             >
-                                Description:
+                                Description
+
+                                <FaRegKeyboard 
+                                    fontSize = '1rem'
+                                    style = {{
+                                        color: '#4b4848',
+                                        marginLeft: '.3rem',
+                                        // position: 'relative',
+                                        top: '.2rem'
+                                    }}
+                                />
                             </Typography>
                             <Typography
                                 variant='body1'
