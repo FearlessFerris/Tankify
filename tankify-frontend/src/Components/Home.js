@@ -14,7 +14,7 @@ import TankGrid from './TankGrid';
 // Home Component 
 function Home(){
 
-    //
+    // Home State 
 
     return( 
         <div
