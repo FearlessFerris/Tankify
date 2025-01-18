@@ -27,7 +27,6 @@ function TankGrid() {
   const types = ['Heavy Tank','Medium Tank','Light Tank','AT-SPG','SPG'];
   const nations = ['USSR','Germany','USA','China','France','UK','Japan','Czech','Sweden','Poland','Italy'];
 
-  // Filters State
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -262,8 +261,6 @@ const handleFilterChange = (filterType, value) => {
           ))}
         </Menu>
       </Box>
-
-      {/* Grid of Tank Cards */}
       <Grid2 container spacing={3} justifyContent="center">
         {filteredTanks.length > 0 ? (
           filteredTanks.map((tank) => (

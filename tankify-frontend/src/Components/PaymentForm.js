@@ -159,7 +159,7 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
                 const response = await apiClient.post(`/payments/${userId}`, paymentInformation);
                 const newCard = response.data;
                 const cardNumber = newCard.data[ 'card_number' ];
-                showAlert( `Payment Method: ${ cardNumber } added successfully!`, 'success' );
+                showAlert( `Payment Method: ${ cardNumber } was added successfully!`, 'success' );
                 refreshPaymentMethods();
             }
             setPaymentInformation({
@@ -289,7 +289,7 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
                         <Typography
                             varaint='caption'
                         >
-                            {isCreditCard ? 'CREDIT' : 'DEBIT'}
+                            { isCreditCard ? 'CREDIT' : 'DEBIT' }
                         </Typography>
                         <Typography
                             variant="h6"
@@ -301,7 +301,7 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
                                 fontWeight: 'bold',
                             }}
                         >
-                            {paymentInformation.cardNumber || '#### #### #### ####'}
+                            { paymentInformation.cardNumber || '#### #### #### ####' }
                         </Typography>
                         <Box
                             sx={{
@@ -313,11 +313,11 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
                             }}
                         >
                             <Box>
-                                <Typography variant="caption">CARDHOLDER</Typography>
+                                <Typography variant="caption"> CARDHOLDER </Typography>
                                 <Typography variant="subtitle1"> { paymentInformation.cardholderName ? paymentInformation.cardholderName : 'Full Name'} </Typography>
                             </Box>
                             <Box>
-                                <Typography variant="caption">EXPIRY</Typography>
+                                <Typography variant="caption"> EXPIRY </Typography>
                                 <Typography variant="subtitle1"> { paymentInformation.expiry ? paymentInformation.expiry : 'MM/YY' }</Typography>
                             </Box>
                         </Box>

@@ -94,32 +94,37 @@ function TankCard({ tank, navigate }) {
                         sx={{
                             color: '#fafafa',
                             marginTop: '-1rem',
+                            marginBottom: '.5rem',
+                            textAlign: 'center'
                         }}
-                    >
+                        >
                         {tank.name}
                     </Typography>
                     <Box
                         sx={{
-                            display: 'flex',
                             alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'space-between',
                         }}
-                    >
+                        >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
-                        >
-                            Price
+                            >
+                            Price:
                         </Typography>
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#ab003c',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                marginRight: '.5rem'
                             }}
-                        >
+                            >
                             <GrMoney
                                 fontSize="1rem"
                                 style={{
@@ -129,62 +134,75 @@ function TankCard({ tank, navigate }) {
                                     top: '.2rem',
                                     transition: 'color 0.3s ease',
                                 }}
-                            /> 
+                                /> 
                             {tank.price ? fixCurrency(tank.price) : 'N/A'}
                         </Typography>
                     </Box>
                     <Box
                         sx={{
-                            display: 'flex',
                             alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'space-between',
                         }}
                     >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
                         >
-                            Tier
-
-                            <MdNumbers 
-                                fontSize="1rem"
-                                style={{
-                                    color: '#4b4848',
-                                    marginLeft: '.2rem',
-                                    marginRight: '-.2rem',
-                                    position: 'relative',
-                                    top: '.2rem',
-                                    transition: 'color 0.3s ease',
-                                }}
-                            />
+                            Tier:
                         </Typography>
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#ab003c',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                marginRight: '.5rem',
                             }}
                         >
+                            <MdNumbers 
+                                fontSize="1rem"
+                                style={{
+                                    color: '#4b4848',
+                                    marginLeft: '.2rem',
+                                    marginRight: '.2rem',
+                                    position: 'relative',
+                                    top: '.2rem',
+                                    transition: 'color 0.3s ease',
+                                }}
+                            />
                             {tank.tier}
                         </Typography>
                     </Box>
                     <Box
                         sx={{
+                            alignItems: 'center',
                             display: 'flex',
-                            alignItems: 'center'
+                            justifyContent: 'space-between',
                         }}
                     >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
                         >
 
-                            Nation
+                            Nation:
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                color: '#ab003c',
+                                fontWeight: 'bold',
+                                marginRight: '.5rem'
+                            }}
+                        >
                             <FaFlag 
                                 fontSize="1rem"
                                 style={{
@@ -196,145 +214,146 @@ function TankCard({ tank, navigate }) {
                                     transition: 'color 0.3s ease',
                                 }}
                             />
-                        </Typography>
-                        <Typography
-                            variant="body1"
-                            sx={{
-                                color: '#ab003c',
-                                fontWeight: 'bold'
-                            }}
-                        >
                             {tank.nation}
                         </Typography>
                     </Box>
-                    <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     <Box
                         sx={{
+                            alignItems: 'center',
                             display: 'flex',
-                            alignItems: 'center'
+                            justifyContent: 'space-between',
                         }}
                     >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
                         >
-                            HP
-                            <MdOutlineHealthAndSafety 
-                                fontSize = '1rem'
-                                style = {{
-                                    color: '#4b4848',
-                                    marginLeft: '.3rem',
-                                    position: 'relative',
-                                    top: '.2rem'
-                                }}
-                           /> 
+                            HP:
                         </Typography>
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#ab003c',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                marginRight: '.5rem'
                             }}
                         >
+                            <MdOutlineHealthAndSafety 
+                                fontSize = '1rem'
+                                style = {{
+                                    color: '#4b4848',
+                                    marginRight: '.2rem',
+                                    position: 'relative',
+                                    top: '.2rem'
+                                }}
+                           /> 
                            { tank.default_profile[ 'hp' ] }
                         </Typography>
                     </Box>
 
                         <Box
                         sx={{
+                            alignItems: 'center',
                             display: 'flex',
-                            alignItems: 'center'
+                            justifyContent: 'space-between',
                         }}
                         >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
                             >
-                            Hull Armor
-                        <GiAbdominalArmor 
-                            fontSize = '1rem'
-                            style = {{
-                                color: '#4b4848',
-                                marginLeft: '.3rem',
-                                position: 'relative',
-                                top: '.2rem'
-                            }}
-                            />   
+                            Hull Armor:
                         </Typography>
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#ab003c',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                marginRight: '.5rem'
                             }}
-                            >
+                        >
+                            <GiAbdominalArmor 
+                                fontSize = '1rem'
+                                style = {{
+                                    color: '#4b4848',
+                                    marginRight: '.2rem',
+                                    position: 'relative',
+                                    top: '.2rem'
+                                }}
+                                />   
                         { tank.default_profile.armor.hull['front']}/{tank.default_profile.armor.hull['rear']}/{tank.default_profile.armor.hull['sides'] }
                         </Typography>
                     </Box>
                             { tank.default_profile.armor.turret && (
                                 <Box
                                 sx={{
+                                    alignItems: 'center',
                                     display: 'flex',
-                                    alignItems: 'center'
+                                    justifyContent: 'space-between',
                                 }}
                                 >
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#fafafa',
-                                marginRight: '0.4rem'
+                                marginLeft: '.5rem',
+                                textAlign: 'center'
                             }}
                             >
-                            Turret HP
-                        <GiAbdominalArmor 
-                            fontSize = '1rem'
-                            style = {{
-                                color: '#4b4848',
-                                marginLeft: '.3rem',
-                                position: 'relative',
-                                top: '.2rem'
-                            }}
-                            />   
+                            Turret HP:
                         </Typography>
                         <Typography
                             variant="body1"
                             sx={{
                                 color: '#ab003c',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                marginRight: '.5rem'
                             }}
                             >
+                            <GiAbdominalArmor 
+                                fontSize = '1rem'
+                                style = {{
+                                    color: '#4b4848',
+                                    marginRight: '.2rem',
+                                    position: 'relative',
+                                    top: '.2rem'
+                                }}
+                                />   
                             { tank.default_profile.armor.turret?.[ 'front' ]}/{tank.default_profile.armor.turret?.[ 'sides' ]}/{ tank.default_profile.armor.turret?.[ 'rear' ] }
                         </Typography>
                     </Box>
                     )}
+                            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                         <Box
                         sx={{
+                            flexDirection: 'column',
                             display: 'flex',
-                            alignItems: 'flex-start'
+                            alignItems: 'center'
                         }}
                         >
                             <Typography
                                 variant='body1'
                                 sx={{
+                                    alignItems: 'center',
                                     color: '#fafafa',
-                                    marginRight: '0.4rem',
-                                    width: '6rem'
+                                    display: 'flex',
                                 }}
                             >
-                                Description
-
+                            Description
                                 <FaRegKeyboard 
                                     fontSize = '1rem'
                                     style = {{
                                         color: '#4b4848',
-                                        marginLeft: '.3rem',
-                                        // position: 'relative',
+                                        marginLeft: '.4rem',
+                                        position: 'relative',
                                         top: '.2rem'
                                     }}
                                 />
@@ -343,7 +362,11 @@ function TankCard({ tank, navigate }) {
                                 variant='body1'
                                 sx={{
                                     color: '#ab003c',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
+                                    marginLeft: '1rem',
+                                    marginRight: '1rem',
+                                    marginBottom: '1rem',
+                                    textAlign: 'center'
                                 }}
                             >
                                 {tank.description}
@@ -383,3 +406,4 @@ function TankCard({ tank, navigate }) {
 }
 
 export default TankCard;
+
