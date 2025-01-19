@@ -24,7 +24,7 @@ function InformationLine({ label, value, tooltip, unit = null }) {
                         {
                             name: 'offset',
                             options: {
-                                offset: [0, 0],
+                                offset: [4, 0],
                             },
                         },
                     ],
