@@ -10,7 +10,7 @@ import { LiaCrosshairsSolid } from "react-icons/lia";
 import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
 import { MdOutlineExpandCircleDown, MdRemoveRedEye } from 'react-icons/md';
 import { SlPeople } from 'react-icons/sl';
-import { FaRegKeyboard } from 'react-icons/fa6';
+import { FaCodeCompare, FaRegKeyboard } from 'react-icons/fa6';
 
 
 // Components & Necessary Files 
@@ -163,7 +163,7 @@ function Tank2() {
                                 width: '50rem',
                                 height: '23rem',
                                 marginTop: '1rem',
-                                marginBottom: '10rem',
+                                marginBottom: '9rem',
                             }}
                         >
                             <Box
@@ -190,6 +190,105 @@ function Tank2() {
                                     width: '23rem',
                                 }}
                             />
+                        </Box>
+                        <Box
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                marginBottom: '2rem'
+                            }}
+                        >
+                            <Button
+                                variant='filled'
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    color: '#900C3F',
+                                    backgroundColor: '#161616',
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                    fontStyle: 'bold',
+                                    fontSize: '1rem',
+                                    marginRight: '1rem',
+                                    transition: 'width 0.3s ease',
+                                    width: '10rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#2b2a2e',
+                                        width: '18rem'
+                                    },
+                                    '& .default-text': {
+                                        opacity: 1,
+                                    },
+                                    '& .hover-text': {
+                                        position: 'absolute',
+                                        opacity: 0,
+                                        whiteSpace: 'nowrap',
+                                    },
+                                    '&:hover .default-text': {
+                                        opacity: 0,
+                                    },
+                                    '&:hover .hover-text': {
+                                        opacity: 1,
+                                    },
+
+                                }}
+                            >
+                                <Box
+                                    className='default-text'
+                                >
+                                    <GrMoney
+                                        fontSize='1.4rem'
+                                        style={{
+                                            marginRight: '0.5rem',
+                                            position: 'relative',
+                                            top: '0.2rem'
+                                        }}
+                                    />
+                                    Purchase
+                                </Box>
+                                <Box
+                                    className='hover-text'
+                                >
+                                    <GrMoney
+                                        fontSize='1.4rem'
+                                        style={{
+                                            marginRight: '0.5rem',
+                                            position: 'relative',
+                                            top: '0.2rem'
+                                        }}
+                                    />
+                                    Purchase for ${fixNumber(tank.price)}
+                                </Box>
+                            </Button>
+                            <Button
+                                variant='filled'
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    color: '#900C3F',
+                                    backgroundColor: '#161616',
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                    fontStyle: 'bold',
+                                    fontSize: '1rem',
+                                    marginRight: '1rem',
+                                    width: '8rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#2b2a2e',
+                                    },
+                                }}
+                            >
+                                <FaCodeCompare
+                                    fontSize="2rem"
+                                    style={{
+                                        marginRight: '.5rem',
+                                        transition: 'color 0.3s ease',
+                                    }}
+                                />
+                                Compare
+                            </Button>
                         </Box>
                         <Box
                             sx={{
@@ -632,7 +731,7 @@ function Tank2() {
                                 >
                                     {tank.crew?.map((crewMember, index) => (
                                         <Box
-                                            key={ `crew-member-${index}` }
+                                            key={`crew-member-${index}`}
                                             sx={{
                                                 textAlign: 'start',
                                             }}
@@ -649,7 +748,7 @@ function Tank2() {
                                                                 options: {
                                                                     offset: [0, 20],
                                                                 },
-                                                            }, 
+                                                            },
                                                         ],
                                                     },
                                                 }}
