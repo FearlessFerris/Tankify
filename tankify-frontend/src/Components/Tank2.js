@@ -163,7 +163,7 @@ function Tank2() {
                                 width: '50rem',
                                 height: '23rem',
                                 marginTop: '1rem',
-                                marginBottom: '9rem',
+                                marginBottom: '11rem',
                             }}
                         >
                             <Box
@@ -259,7 +259,7 @@ function Tank2() {
                                             top: '0.2rem'
                                         }}
                                     />
-                                    Purchase for ${fixNumber(tank.price)}
+                                    Purchase for <span style = {{ color: '#f2c808 '}}> {fixNumber(tank.price)} Credits </span>
                                 </Box>
                             </Button>
                             <Button

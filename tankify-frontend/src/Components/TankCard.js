@@ -218,6 +218,7 @@ function TankCard({ tank, navigate }) {
                             {tank.nation}
                         </Typography>
                     </Box>
+                    <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     <Box
                         sx={{
                             alignItems: 'center',
@@ -332,7 +333,6 @@ function TankCard({ tank, navigate }) {
                         </Typography>
                     </Box>
                     )}
-                            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                         <Box
                         sx={{
                             flexDirection: 'column',
