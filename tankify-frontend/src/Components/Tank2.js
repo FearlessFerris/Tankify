@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Button, CardMedia, Collapse, Grid2, Paper, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, Button, CardMedia, Collapse, Grid2, Paper, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from "react-icons/gr";
 import { LiaCrosshairsSolid } from "react-icons/lia";
 import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
@@ -17,12 +17,19 @@ import { FaCodeCompare, FaRegKeyboard } from 'react-icons/fa6';
 import apiClient from '../api/apiClient';
 import TorchImageWithSparks from './TorchImageWithSparks';
 import InformationLine from './InformationLine';
+import PurchaseForm from './PurchaseForm.js';
+
+
+// Context Providers 
+import { useUser } from '../ContextDirectory/UserContext.js';
 
 
 // Tank Component 
 function Tank2() {
 
+    const { user } = useUser();
     const { tank_id } = useParams();
+    const [ purchaseOpen, setPurchaseOpen ] = useState( false );
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
         firepower: false,
@@ -46,6 +53,10 @@ function Tank2() {
         }
         fetchTankData();
     }, [tank_id]);
+
+    const handleTogglePurchaseOpen = () => {
+        setPurchaseOpen(( previous ) => !previous );
+    }
 
     const handleToggleExpand = (key) => {
         setExpand((previous) => ({
@@ -201,6 +212,7 @@ function Tank2() {
                             }}
                         >
                             <Button
+                                onClick = { handleTogglePurchaseOpen }
                                 variant='filled'
                                 sx={{
                                     display: 'flex',
@@ -211,28 +223,43 @@ function Tank2() {
                                     fontStyle: 'bold',
                                     fontSize: '1rem',
                                     marginRight: '1rem',
-                                    transition: 'width 0.3s ease',
+                                    transition: 'width 0.3s ease, background-color 0.3s ease, color 0.3s ease',
                                     width: '10rem',
+                                    overflow: 'hidden',
+                                    position: 'relative',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
                                         color: '#2b2a2e',
-                                        width: '18rem'
+                                        width: '18rem',
                                     },
                                     '& .default-text': {
                                         opacity: 1,
+                                        transition: 'opacity 0.2s ease',
+                                        transitionDelay: '0.1s',
                                     },
                                     '& .hover-text': {
                                         position: 'absolute',
                                         opacity: 0,
                                         whiteSpace: 'nowrap',
+                                        transition: 'opacity 0.2s ease',
+                                        transitionDelay: '0.2s',
                                     },
                                     '&:hover .default-text': {
                                         opacity: 0,
+                                        transitionDelay: '0s',
                                     },
                                     '&:hover .hover-text': {
                                         opacity: 1,
+                                        transitionDelay: '0.2s',
                                     },
-
+                                    '&:not(:hover) .default-text': {
+                                        opacity: 1,
+                                        transitionDelay: '0.2s',
+                                    },
+                                    '&:not(:hover) .hover-text': {
+                                        opacity: 0,
+                                        transitionDelay: '0s',
+                                    },
                                 }}
                             >
                                 <Box
@@ -259,7 +286,7 @@ function Tank2() {
                                             top: '0.2rem'
                                         }}
                                     />
-                                    Purchase for <span style = {{ color: '#f2c808 '}}> {fixNumber(tank.price)} Credits </span>
+                                    Purchase for <span style={{ color: '#f2c808 ' }}> {fixNumber(tank.price)} Credits </span>
                                 </Box>
                             </Button>
                             <Button
@@ -779,7 +806,31 @@ function Tank2() {
                     </>
                 )}
             </Paper>
-
+            <Box 
+                sx = {{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                <Backdrop 
+                    open = { purchaseOpen }
+                    sx={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 2
+                    }}
+                >
+                    { purchaseOpen && (
+                        <PurchaseForm
+                            information = { tank }
+                        /> 
+                    )}
+                </Backdrop>
+            </Box>
         </Box>
     )
 }

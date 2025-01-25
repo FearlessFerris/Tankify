@@ -6,8 +6,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
+// Components & Necessary Files 
+import apiClient from '../api/apiClient';
+
+
 // Create the User Context 
 const UserContext = createContext();
+
 
 // User Context 
 export const UserProvider = ({ children }) => {
@@ -22,6 +27,7 @@ export const UserProvider = ({ children }) => {
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
+    
     }, []);
 
     // Login function that sets user and stores it in localStorage
@@ -38,8 +44,19 @@ export const UserProvider = ({ children }) => {
 
     };
 
+    // Get Users default payment method
+    const getDefaultPaymentMethod = async ( userId ) => {
+        try{
+            const response = await apiClient( `/payments/${ userId }/all` );
+            console.log( response.data );
+        }
+        catch( error ){
+            console.error( 'Error fetching getDefaultPaymentMethod' );
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider value={{ getDefaultPaymentMethod, login, logout, user }}>
             {children}
         </UserContext.Provider>
     );

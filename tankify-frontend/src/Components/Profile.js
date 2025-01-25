@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Menu, MenuItem, Select, Switch, TextField, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,7 +20,6 @@ import PaymentForm from './PaymentForm';
 // Context Providers 
 import { useUser } from '../ContextDirectory/UserContext';
 import { useAlert } from '../ContextDirectory/AlertContext';
-import { formControlClasses } from '@mui/material';
 
 
 // Profile Component 

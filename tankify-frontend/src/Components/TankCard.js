@@ -30,7 +30,6 @@ function TankCard({ tank, navigate }) {
 
     const fixCurrency = (price) => Number(price).toLocaleString();
 
-    
     return (
         <Card
             onClick={() => navigate(`/tank/${tank.id}`)}
