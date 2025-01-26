@@ -11,7 +11,7 @@ import TankPurchase from './TankPurchase.js';
 
 
 // Purchase Component 
-function PurchaseForm({ information }) { 
+function PurchaseForm({ information, onClose }) { 
 
 
     return(
@@ -25,6 +25,7 @@ function PurchaseForm({ information }) {
         >
             <TankPurchase 
                 tank = { information }
+                onClose = { onClose }
             />
         </Box>
     )

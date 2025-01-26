@@ -55,7 +55,11 @@ function Tank2() {
     }, [tank_id]);
 
     const handleTogglePurchaseOpen = () => {
-        setPurchaseOpen(( previous ) => !previous );
+        setPurchaseOpen( true );
+    }
+
+    const handleTogglePurchaseClose = () => {
+        setPurchaseOpen( false );
     }
 
     const handleToggleExpand = (key) => {
@@ -286,7 +290,7 @@ function Tank2() {
                                             top: '0.2rem'
                                         }}
                                     />
-                                    Purchase for <span style={{ color: '#f2c808 ' }}> {fixNumber(tank.price)} Credits </span>
+                                    Purchase for <span style={{ color: '#fafafa ' }}> {fixNumber(tank.price)} Credits </span>
                                 </Box>
                             </Button>
                             <Button
@@ -827,6 +831,7 @@ function Tank2() {
                     { purchaseOpen && (
                         <PurchaseForm
                             information = { tank }
+                            onClose = { handleTogglePurchaseClose }
                         /> 
                     )}
                 </Backdrop>
