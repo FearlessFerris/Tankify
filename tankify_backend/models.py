@@ -35,7 +35,7 @@ class User( Base ):
     password_hash = Column( String, nullable = False )
     email = Column( String, unique = True, nullable = False )
     image = Column( String, nullable = True )
-    gold_balance = Column( Integer, default = 0 )
+    gold_balance = Column( Integer, default = 1000000 )
     credit_balance = Column( Integer, default = 1000000 )
     created_at = Column( DateTime, server_default = func.now() )
     updated_at = Column( DateTime, server_default = func.now(), onupdate = func.now() )
@@ -46,7 +46,7 @@ class User( Base ):
     payment_methods = relationship( 'PaymentMethod', back_populates = 'user', lazy = 'select' )
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
 
-    def __init__( self, username, password, email, gold_balance = 0, credit_balance = 1000000, image = None ):
+    def __init__( self, username, password, email, gold_balance = 1000000, credit_balance = 1000000, image = None ):
         self.username = username 
         self.set_password( password )
         self.email = email 

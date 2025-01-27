@@ -274,7 +274,7 @@ function Tank2() {
                                         style={{
                                             marginRight: '0.5rem',
                                             position: 'relative',
-                                            top: '0.2rem'
+                                            top: '0.3rem'
                                         }}
                                     />
                                     Purchase
@@ -285,9 +285,10 @@ function Tank2() {
                                     <GrMoney
                                         fontSize='1.4rem'
                                         style={{
+                                            color: '#fafafa',
                                             marginRight: '0.5rem',
                                             position: 'relative',
-                                            top: '0.2rem'
+                                            top: '0.3rem'
                                         }}
                                     />
                                     Purchase for <span style={{ color: '#fafafa ' }}> {fixNumber(tank.price)} Credits </span>
@@ -825,7 +826,7 @@ function Tank2() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        zIndex: 2
+                        zIndex: 1
                     }}
                 >
                     { purchaseOpen && (
