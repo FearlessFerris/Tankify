@@ -286,7 +286,7 @@ class Tank( Base ):
 
 
 class PaymentMethod( Base ): 
-    """ Payment Mehtod Model """
+    """ Payment Method Model """
 
     __tablename__ = 'payment_methods'
     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
@@ -557,6 +557,20 @@ class Transaction( Base ):
         except Exception as e: 
             db.session.rollback()
             return { 'success': False, 'message': f'Error creating transaction: { str( e ) }' }
+
+    @classmethod 
+    def process_purchase( cls, user_id, tank_id ):
+        """ Process New Tank Purchase """
+
+        user = User.query.filter_by( id = user_id ).first()
+        if not user:
+            return { 'success': False, 'message': f'User with id: { user_id } not found' }
+        tank = Tank.query.filter_by( id = tank_id ).first()
+        if not tank: 
+            return { 'success': False, 'message': f'Tank not found' }
+        tank_price = int( tank.price )
+        return { 'success': True, 'message': f'You successfully processed a purchase', 'tank': tank_price }
+
 
 
 class Currency( Base ): 

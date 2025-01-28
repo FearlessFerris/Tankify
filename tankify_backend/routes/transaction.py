@@ -63,4 +63,14 @@ def create_new_transaction( user_id ):
         return jsonify({ 'success': True, 'message': result[ 'message' ], 'data': result[ 'data' ] }), 201 
     else: 
         return jsonify({ 'success': False, 'message': result[ 'message' ] }), 400
+
+
+# Process New Tank Purchase Route 
+@transaction_routes.route( '/api/transaction/<user_id>/<tank_id>/purchase', methods = [ 'POST' ] )
+def process_tank_purchase( user_id, tank_id ): 
+    """ Processes New Tank Purchase """
+
+    data = request.json()   
+    user_id = user_id 
+    tank_id = tank_id 
     

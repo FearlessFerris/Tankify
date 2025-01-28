@@ -7,6 +7,7 @@ import { GrMoney } from 'react-icons/gr';
 
 // Context Providers
 import { useUser } from '../ContextDirectory/UserContext';
+import apiClient from '../api/apiClient';
 
 // TankPurchase Component
 function TankPurchase({ tank, onClose }) {
@@ -17,10 +18,7 @@ function TankPurchase({ tank, onClose }) {
         userId: '',
         tankPrice: '',
     });
-
-
     const fixNumber = (number) => Number(number).toLocaleString();
-
     const creditDifference = user?.credit_balance - tank.price;
 
     useEffect( () => {
@@ -30,6 +28,25 @@ function TankPurchase({ tank, onClose }) {
 
       return () => clearInterval( intervalId );
     }, [] );
+
+    // Send Process Purchase Information 
+    const handleTankPurchase = async () => {
+        const payload = {
+            userId: user.id,
+            userCreditBalance: user.credit_balance,
+            userGoldBalance: user.gold_balance, 
+            tankId: tank.id,
+            tankPrice: tank.price,
+        }
+
+        try{
+            const response = await apiClient.post( `/transaction/${ user.id }/${ tank.id }/purchase`, payload )
+            console.log( response.data );
+        }
+        catch( error ){
+            console.error( 'Error handling tank purchase' );
+        }
+    }
 
     return (
         <Box
