@@ -2,7 +2,7 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CardMedia, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from 'react-icons/gr';
 
 // Context Providers
@@ -11,9 +11,9 @@ import apiClient from '../api/apiClient';
 
 // TankPurchase Component
 function TankPurchase({ tank, onClose }) {
-    
+
     const { user } = useUser();
-    const [ dateTime, setDateTime ] = useState( new Date() );
+    const [dateTime, setDateTime] = useState(new Date());
     const [purchaseInformation] = useState({
         userId: '',
         tankPrice: '',
@@ -21,30 +21,29 @@ function TankPurchase({ tank, onClose }) {
     const fixNumber = (number) => Number(number).toLocaleString();
     const creditDifference = user?.credit_balance - tank.price;
 
-    useEffect( () => {
-      const intervalId = setInterval( () => {
-        setDateTime( new Date() );
-      }, 1000 );
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setDateTime(new Date());
+        }, 1000);
 
-      return () => clearInterval( intervalId );
-    }, [] );
+        return () => clearInterval(intervalId);
+    }, []);
 
     // Send Process Purchase Information 
     const handleTankPurchase = async () => {
         const payload = {
             userId: user.id,
             userCreditBalance: user.credit_balance,
-            userGoldBalance: user.gold_balance, 
+            userGoldBalance: user.gold_balance,
             tankId: tank.id,
             tankPrice: tank.price,
         }
-
-        try{
-            const response = await apiClient.post( `/transaction/${ user.id }/${ tank.id }/purchase`, payload )
-            console.log( response.data );
+        try {
+            const response = await apiClient.post(`/transaction/${user.id}/${tank.id}/purchase`, payload)
+            console.log( response );
         }
-        catch( error ){
-            console.error( 'Error handling tank purchase' );
+        catch (error) {
+            console.error('Error handling tank purchase');
         }
     }
 
@@ -78,22 +77,44 @@ function TankPurchase({ tank, onClose }) {
                 Purchase&nbsp;
                 <span style={{ color: '#ab003c' }}>{tank.name}</span>
             </Typography>
-            
-            <Box 
-              sx = {{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-            >
-              <Typography
-                variant = 'h5'
-                sx = {{
-                  color: '#4b4848'
+
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
                 }}
-              >
-                Reciept
-              </Typography>
+            >
+                <Box
+                    sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '6rem',
+                        marginBottom: '4rem'
+                    }}
+                >
+                    <CardMedia
+                        component='img'
+                        image={tank.image}
+                        alt={`${tank.name}`}
+                        sx={{
+                            position: 'absolute',
+                            zIndex: 1,
+                            width: '23rem',
+                        }}
+                    />
+                </Box>
+                <Typography
+                    variant='h5'
+                    sx={{
+                        color: '#4b4848',
+                        marginTop: '4rem'
+                    }}
+                >
+                    Reciept
+                </Typography>
             </Box>
             <Box>
                 <Tooltip
@@ -142,7 +163,7 @@ function TankPurchase({ tank, onClose }) {
                                     color: '#4b4848',
                                 }}
                             >
-                                { user.username }
+                                {user.username}
                             </Typography>
                         </Box>
                     </Box>
@@ -193,7 +214,7 @@ function TankPurchase({ tank, onClose }) {
                                     color: '#4b4848',
                                 }}
                             >
-                                { dateTime.toLocaleDateString() }
+                                {dateTime.toLocaleDateString()}
                             </Typography>
                         </Box>
                     </Box>
@@ -490,6 +511,7 @@ function TankPurchase({ tank, onClose }) {
                     }}
                 >
                     <Button
+                        onClick = { handleTankPurchase }
                         variant="filled"
                         sx={{
                             display: 'flex',

@@ -53,6 +53,8 @@ def seed_currencies():
         {"iso": "CNY", "name": "Chinese Yuan", "symbol": "¥", "exchange_rate": 6.45, "country": "China", "is_active": True, "description": "The official currency of China"},
         {"iso": "SEK", "name": "Swedish Krona", "symbol": "kr", "exchange_rate": 8.6, "country": "Sweden", "is_active": True, "description": "The official currency of Sweden"},
         {"iso": "NZD", "name": "New Zealand Dollar", "symbol": "NZ$", "exchange_rate": 1.4, "country": "New Zealand", "is_active": True, "description": "The official currency of New Zealand"},
+        { "iso": 'GOLD', 'name': 'Gold', 'symbol': 'G', 'exchange_rate': 0, 'country': 'InGame', 'is_active': True, 'description': 'Premium in-game currency' },
+        { 'iso': 'CRED', 'name': 'Credits', 'symbol': 'Cr', 'exchange_rate': 0, 'country': 'InGame', 'is_active': True, 'description': 'Basic in-game currency' },
     ]
 
     currencies = [Currency(**currency_data) for currency_data in currencies_data]

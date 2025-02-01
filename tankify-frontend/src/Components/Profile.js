@@ -787,7 +787,9 @@ function Profile() {
                                         },
                                     }}
                                 >
-                                    {currencies.map((currency) => (
+                                    {currencies
+                                    .filter(( currency ) => currency.iso !== 'GOLD' && currency.iso !== 'CRED' )
+                                    .map((currency) => (
                                         <MenuItem
                                             key={currency.id}
                                             onClick={() => handleCurrencyChange(currency.id)}

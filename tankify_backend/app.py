@@ -9,6 +9,7 @@ from config import Config  # Import Config class
 from routes.user import user_routes  # Import your routes
 from routes.tank import tank_routes 
 from routes.payment import payment_routes
+from routes.transaction import transaction_routes
 from routes.currency import currency_routes
 
 
@@ -29,6 +30,7 @@ app.register_blueprint( user_routes )
 app.register_blueprint( tank_routes )
 app.register_blueprint( payment_routes )
 app.register_blueprint( currency_routes )
+app.register_blueprint( transaction_routes )
 
 if __name__ == '__main__':
     app.run(debug=True)

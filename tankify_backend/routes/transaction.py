@@ -70,7 +70,7 @@ def create_new_transaction( user_id ):
 def process_tank_purchase( user_id, tank_id ): 
     """ Processes New Tank Purchase """
 
-    data = request.json()   
-    user_id = user_id 
-    tank_id = tank_id 
+    process_purchase = Transaction.process_purchase( user_id, tank_id )
+    print( process_purchase )
     
+    return jsonify({ 'success': True, 'message': 'You successfully made a transaction' }), 201 
