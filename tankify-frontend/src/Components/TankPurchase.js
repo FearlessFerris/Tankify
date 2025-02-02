@@ -1,13 +1,16 @@
 // TankPurchase Component Implementation
 
+
 // Dependencies
 import React, { useState, useEffect } from 'react';
 import { Box, Button, CardMedia, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from 'react-icons/gr';
 
+
 // Context Providers
 import { useUser } from '../ContextDirectory/UserContext';
 import apiClient from '../api/apiClient';
+
 
 // TankPurchase Component
 function TankPurchase({ tank, onClose }) {
@@ -29,6 +32,7 @@ function TankPurchase({ tank, onClose }) {
         return () => clearInterval(intervalId);
     }, []);
 
+    
     // Send Process Purchase Information 
     const handleTankPurchase = async () => {
         const payload = {

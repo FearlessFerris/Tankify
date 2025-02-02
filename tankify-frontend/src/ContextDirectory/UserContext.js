@@ -34,6 +34,9 @@ export const UserProvider = ({ children }) => {
     const login = (userData) => {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
+        const redirectPath = localStorage.getItem( 'redirectAfterLogin' ) || '/';
+        localStorage.removeItem( 'redirectAfterLogin' );
+        navigate( redirectPath, { replace: true });
     };
 
     // Logout function that clears user state and removes it from localStorage

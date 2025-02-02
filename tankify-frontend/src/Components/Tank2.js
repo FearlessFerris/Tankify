@@ -3,7 +3,7 @@
 
 // Dependencies 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Backdrop, Box, Button, CardMedia, Collapse, Grid2, Paper, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from "react-icons/gr";
 import { LiaCrosshairsSolid } from "react-icons/lia";
@@ -29,6 +29,8 @@ function Tank2() {
 
     const { user } = useUser();
     const { tank_id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation(); 
     const [ purchaseOpen, setPurchaseOpen ] = useState( false );
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
@@ -45,7 +47,6 @@ function Tank2() {
             try {
                 const response = await apiClient.get(`/tanks/${tank_id}`)
                 setTank(response.data.data);
-                console.log(response.data.data);
             }
             catch (error) {
                 console.error('Error fetching tank information');
@@ -55,7 +56,14 @@ function Tank2() {
     }, [tank_id]);
 
     const handleTogglePurchaseOpen = () => {
-        setPurchaseOpen( true );
+        if( user ){
+            setPurchaseOpen( true );
+        }
+        else{
+            localStorage.setItem( 'redirectAfterLogin', window.location.pathname );
+            console.log( localStorage.getItem( 'redirectAfterLogin' ) );
+            navigate( '/user/login' );
+        }
     }
 
     const handleTogglePurchaseClose = () => {

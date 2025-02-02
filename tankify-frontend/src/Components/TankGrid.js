@@ -48,8 +48,6 @@ function TankGrid() {
         `/tanks/all?search=${search || ''}&page=${currentPage}&per_page=20&type=${type||''}&tier=${tier||''}&nation=${nation||''}`
       );
       const apiTanks = response.data.data.flat();
-      console.log( apiTanks );
-
       if (currentPage === 1) {
         setTanks(apiTanks);
       } else {

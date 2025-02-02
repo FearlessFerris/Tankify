@@ -3,7 +3,7 @@
 
 // Dependencies 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
 import { CheckCircle, Error } from '@mui/icons-material';
 
@@ -21,6 +21,7 @@ import { useUser } from '../ContextDirectory/UserContext';
 function Login() {
 
     const { login } = useUser();
+    const location = useLocation(); 
     const navigate = useNavigate();
     const showAlert = useAlert();
     const [form, setForm] = useState({
@@ -47,7 +48,6 @@ function Login() {
                 password: ''
             });
             showAlert( response.data.message, 'success' );
-            navigate( '/' );
         }
         catch( error ){
         const errorMessage = error.response && error.response.data && error.response.data.message ? error.response.data.message : 'An error occurred while logging in, please try again.';
