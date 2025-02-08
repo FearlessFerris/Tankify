@@ -33,7 +33,6 @@ function TankPurchase({ tank, onClose }) {
     }, []);
 
     
-    // Send Process Purchase Information 
     const handleTankPurchase = async () => {
         const payload = {
             userId: user.id,

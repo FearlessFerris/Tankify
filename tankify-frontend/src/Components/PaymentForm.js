@@ -110,7 +110,6 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
             }));
         }
         else {
-            console.log( field, value );
             setPaymentInformation((prev) => ({
                 ...prev,
                 [field]: value
@@ -141,7 +140,6 @@ function PaymentForm({ onClose, refreshPaymentMethods, updatePaymentMethod, card
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { cardholderName, cardNumber, expiry, cvv } = paymentInformation;
-        console.log(paymentInformation);
         if (!cardholderName || !cardNumber || !expiry || !cvv) {
             showAlert('Please fill out all required fields!', 'error');
             return;

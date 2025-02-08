@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Backdrop, Box, Button, CardMedia, Collapse, Grid2, Paper, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, Button, CardMedia, Collapse, FormControlLabel, Grid2, Grow, Paper, Switch, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from "react-icons/gr";
 import { LiaCrosshairsSolid } from "react-icons/lia";
 import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
@@ -30,8 +30,9 @@ function Tank2() {
     const { user } = useUser();
     const { tank_id } = useParams();
     const navigate = useNavigate();
-    const location = useLocation(); 
-    const [ purchaseOpen, setPurchaseOpen ] = useState( false );
+    const location = useLocation();
+    const [ isColumn, setIsColumn ] = useState( true );
+    const [purchaseOpen, setPurchaseOpen] = useState(false);
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
         firepower: false,
@@ -56,18 +57,22 @@ function Tank2() {
     }, [tank_id]);
 
     const handleTogglePurchaseOpen = () => {
-        if( user ){
-            setPurchaseOpen( true );
+        if (user) {
+            setPurchaseOpen(true);
         }
-        else{
-            localStorage.setItem( 'redirectAfterLogin', window.location.pathname );
-            console.log( localStorage.getItem( 'redirectAfterLogin' ) );
-            navigate( '/user/login' );
+        else {
+            localStorage.setItem('redirectAfterLogin', window.location.pathname);
+            console.log(localStorage.getItem('redirectAfterLogin'));
+            navigate('/user/login');
         }
     }
 
     const handleTogglePurchaseClose = () => {
-        setPurchaseOpen( false );
+        setPurchaseOpen(false);
+    }
+
+    const handleToggleIsColumn = () => {
+        setIsColumn((previous) => !previous);
     }
 
     const handleToggleExpand = (key) => {
@@ -96,6 +101,7 @@ function Tank2() {
             sx={{
                 alignItems: 'center',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center'
             }}
         >
@@ -103,9 +109,10 @@ function Tank2() {
                 elevation={4}
                 style={{
                     backgroundColor: '#161616',
+                    borderRadius: '2rem',
                     color: '#fafafa',
                     marginTop: '8rem',
-                    marginBottom: '8rem',
+                    marginBottom: '2rem',
                     textAlign: 'center',
                     width: '65rem'
                 }}
@@ -216,191 +223,25 @@ function Tank2() {
                         </Box>
                         <Box
                             sx={{
-                                alignItems: 'center',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                justifyContent: 'center',
-                                marginBottom: '2rem'
-                            }}
-                        >
-                            <Button
-                                onClick = { handleTogglePurchaseOpen }
-                                variant='filled'
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    marginRight: '1rem',
-                                    transition: 'width 0.3s ease, background-color 0.3s ease, color 0.3s ease',
-                                    width: '10rem',
-                                    overflow: 'hidden',
-                                    position: 'relative',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                        width: '18rem',
-                                    },
-                                    '& .default-text': {
-                                        opacity: 1,
-                                        transition: 'opacity 0.2s ease',
-                                        transitionDelay: '0.1s',
-                                    },
-                                    '& .hover-text': {
-                                        position: 'absolute',
-                                        opacity: 0,
-                                        whiteSpace: 'nowrap',
-                                        transition: 'opacity 0.2s ease',
-                                        transitionDelay: '0.2s',
-                                    },
-                                    '&:hover .default-text': {
-                                        opacity: 0,
-                                        transitionDelay: '0s',
-                                    },
-                                    '&:hover .hover-text': {
-                                        opacity: 1,
-                                        transitionDelay: '0.2s',
-                                    },
-                                    '&:not(:hover) .default-text': {
-                                        opacity: 1,
-                                        transitionDelay: '0.2s',
-                                    },
-                                    '&:not(:hover) .hover-text': {
-                                        opacity: 0,
-                                        transitionDelay: '0s',
-                                    },
-                                }}
-                            >
-                                <Box
-                                    className='default-text'
-                                >
-                                    <GrMoney
-                                        fontSize='1.4rem'
-                                        style={{
-                                            marginRight: '0.5rem',
-                                            position: 'relative',
-                                            top: '0.3rem'
-                                        }}
-                                    />
-                                    Purchase
-                                </Box>
-                                <Box
-                                    className='hover-text'
-                                >
-                                    <GrMoney
-                                        fontSize='1.4rem'
-                                        style={{
-                                            color: '#fafafa',
-                                            marginRight: '0.5rem',
-                                            position: 'relative',
-                                            top: '0.3rem'
-                                        }}
-                                    />
-                                    Purchase for <span style={{ color: '#fafafa ' }}> {fixNumber(tank.price)} Credits </span>
-                                </Box>
-                            </Button>
-                            <Button
-                                variant='filled'
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    marginRight: '1rem',
-                                    width: '8rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
-                                }}
-                            >
-                                <FaCodeCompare
-                                    fontSize="2rem"
-                                    style={{
-                                        marginRight: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                Compare
-                            </Button>
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem',
-                                width: '25rem'
-                            }}
-                        >
-                            <Button
-                                onClick={handleToggleAll}
-                                variant='filled'
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
-                                }}
-                            >
-                                <MdOutlineExpandCircleDown
-                                    fontSize="1.5rem"
-                                    style={{
-                                        marginLeft: '.2rem',
-                                        marginRight: '.5rem',
-                                        position: 'relative',
-                                        transition: 'color 0.3s ease',
-                                        transform: areAllExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
-                                    }}
-                                />
-                                {areAllExpanded ? 'Hide All' : 'Show All'}
-                            </Button>
-                        </Box>
-                        <Tooltip
-                            arrow
-                            title='Vehicle Description'
-                            placement="left-start"
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [42, -15],
-                                            },
-                                        },
-                                    ],
-                                },
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '2rem',
+                                width: '57rem',
                             }}
                         >
                             <Box
                                 sx={{
-                                    alignItems: 'flex-start',
                                     display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'start',
-                                    marginLeft: '7rem',
-                                    marginRight: '7rem',
-                                    marginBottom: '1rem',
+                                    justifyContent: 'flex-start',
+                                    flex: 1,
+                                    marginLeft: '7rem'
                                 }}
                             >
                                 <Button
-                                    onClick={() => handleToggleExpand('description')}
-                                    variant='filled'
+                                    onClick={handleToggleAll}
+                                    variant="filled"
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -415,78 +256,323 @@ function Tank2() {
                                         },
                                     }}
                                 >
-                                    <FaRegKeyboard
-                                        fontSize='1.5rem'
+                                    <MdOutlineExpandCircleDown
+                                        fontSize="1.5rem"
                                         style={{
                                             marginLeft: '.2rem',
                                             marginRight: '.5rem',
                                             position: 'relative',
                                             transition: 'color 0.3s ease',
-                                            transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                                            transform: areAllExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                                         }}
                                     />
-                                    {expand.description ? 'Hide Description' : 'Show Description'}
+                                    {areAllExpanded ? 'Hide All' : 'Show All'}
                                 </Button>
-                                <Collapse
-                                    in={expand.description}
-                                    timeout='auto'
-                                    unmountOnExit
-                                >
-                                    <Typography
-                                        variant='body1'
-                                        sx={{
-                                            marginLeft: '1rem',
-                                            marginRight: '1rem',
-                                            textAlign: 'start'
-                                        }}
-                                    >
-                                        {tank.description}
-                                    </Typography>
-                                </Collapse>
                             </Box>
-                        </Tooltip>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem',
-                            }}
-                        >
-                            <Button
-                                onClick={() => handleToggleExpand('firepower')}
-                                variant='filled'
+
+                            <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
+                                    justifyContent: 'center',
+                                    gap: '1rem',
+                                    flex: 1
                                 }}
                             >
-                                <LiaCrosshairsSolid
-                                    fontSize="1.5rem"
-                                    style={{
-                                        marginLeft: '.2rem',
-                                        marginRight: '.5rem',
+                                <Button
+                                    onClick={handleTogglePurchaseOpen}
+                                    variant="filled"
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#900C3F',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        transition: 'width 0.3s ease, background-color 0.3s ease, color 0.3s ease',
+                                        width: '10rem',
                                         position: 'relative',
-                                        transition: 'color 0.3s ease',
+                                        overflow: 'hidden',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#2b2a2e',
+                                            width: '18rem',
+                                        },
+                                        '& .default-text': {
+                                            opacity: 1,
+                                            transition: 'opacity 0.2s ease',
+                                            transitionDelay: '0.1s',
+                                        },
+                                        '& .hover-text': {
+                                            position: 'absolute',
+                                            opacity: 0,
+                                            whiteSpace: 'nowrap',
+                                            transition: 'opacity 0.2s ease',
+                                            transitionDelay: '0.2s',
+                                        },
+                                        '&:hover .default-text': {
+                                            opacity: 0,
+                                            transitionDelay: '0s',
+                                        },
+                                        '&:hover .hover-text': {
+                                            opacity: 1,
+                                            transitionDelay: '0.2s',
+                                        },
+                                        '&:not(:hover) .default-text': {
+                                            opacity: 1,
+                                            transitionDelay: '0.2s',
+                                        },
+                                        '&:not(:hover) .hover-text': {
+                                            opacity: 0,
+                                            transitionDelay: '0s',
+                                        },
                                     }}
-                                />
-                                {expand.firepower ? 'Hide Firepower' : 'Show Firepower'}
-                            </Button>
-                            <Collapse
-                                in={expand.firepower}
-                                timeout='auto'
-                                unmountOnExit
+                                >
+                                    <Box
+                                        className="default-text"
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <GrMoney
+                                            fontSize="1.4rem"
+                                            style={{
+                                                marginRight: '0.5rem',
+                                                position: 'relative',
+                                                top: '0.3rem'
+                                            }}
+                                        />
+                                        Purchase
+                                    </Box>
+
+                                    <Box
+                                        className="hover-text"
+                                        sx={{
+                                            position: 'absolute',
+                                            opacity: 0,
+                                            transition: 'opacity 0.2s ease'
+                                        }}
+                                    >
+                                        <GrMoney
+                                            fontSize="1.4rem"
+                                            style={{
+                                                color: '#fafafa',
+                                                marginRight: '0.5rem',
+                                                position: 'relative',
+                                                top: '0.3rem'
+                                            }}
+                                        />
+                                        Purchase for
+                                        <span style={{ color: '#fafafa' }}> {fixNumber(tank.price)} Credits </span>
+                                    </Box>
+                                </Button>
+
+                                <Button
+                                    variant="filled"
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#900C3F',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#2b2a2e',
+                                        },
+                                    }}
+                                >
+                                    <FaCodeCompare
+                                        fontSize="2rem"
+                                        style={{
+                                            marginRight: '.5rem',
+                                            transition: 'color 0.3s ease'
+                                        }}
+                                    />
+                                    Compare
+                                </Button>
+                            </Box>
+                        </Box>
+
+                    </>
+                )}
+            </Paper>
+            <Paper
+                elevation={4}
+                style={{
+                    backgroundColor: '#161616',
+                    borderRadius: '2rem',
+                    color: '#fafafa',
+                    marginTop: '2rem',
+                    marginBottom: '8rem',
+                    textAlign: 'center',
+                    width: '65rem'
+                }}
+            >
+                <Box
+                >
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isColumn}
+                                onChange={handleToggleIsColumn}
+                                sx={{
+                                    '& .MuiSwitch-switchBase.Mui-checked': {
+                                        color: '#ab003c',
+                                    },
+                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                        backgroundColor: '#ab003c',
+                                    },
+                                }}
+                            />
+                        }
+                        label={isColumn ? 'Stack Information' : 'Inline Information' }
+                        sx={{
+                            color: '#fafafa',
+                            marginBottom: '2rem',
+                            marginRight: '3rem'
+                        }}
+                    />
+                </Box>
+                <Tooltip
+                    arrow
+                    title='Vehicle Description'
+                    placement="left-start"
+                    slotProps={{
+                        popper: {
+                            modifiers: [
+                                {
+                                    name: 'offset',
+                                    options: {
+                                        offset: [42, -15],
+                                    },
+                                },
+                            ],
+                        },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            alignItems: 'flex-start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'start',
+                            marginLeft: '7rem',
+                            marginRight: '7rem',
+                            marginBottom: '1rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <Button
+                            onClick={() => handleToggleExpand('description')}
+                            variant='filled'
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#900C3F',
+                                backgroundColor: '#161616',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                fontStyle: 'bold',
+                                fontSize: '1rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#2b2a2e',
+                                },
+                            }}
+                        >
+                            <FaRegKeyboard
+                                fontSize='1.5rem'
+                                style={{
+                                    marginLeft: '.2rem',
+                                    marginRight: '.5rem',
+                                    position: 'relative',
+                                    transition: 'color 0.3s ease',
+                                    transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                                }}
+                            />
+                            {expand.description ? 'Hide Description' : 'Show Description'}
+                        </Button>
+                        <Collapse
+                            in={expand.description}
+                            timeout='auto'
+                            unmountOnExit
+                        >
+                            <Typography
+                                variant='h6'
+                                sx={{
+                                    marginLeft: '1rem',
+                                    marginRight: '1rem',
+                                    textAlign: 'start'
+                                }}
+                            >
+                                {tank.description}
+                            </Typography>
+                        </Collapse>
+                    </Box>
+                </Tooltip>
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '7rem',
+                        marginBottom: '1rem',
+                    }}
+                >
+                    <Button
+                        onClick={() => handleToggleExpand('firepower')}
+                        variant='filled'
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
+                        }}
+                    >
+                        <LiaCrosshairsSolid
+                            fontSize="1.5rem"
+                            style={{
+                                marginLeft: '.2rem',
+                                marginRight: '.5rem',
+                                position: 'relative',
+                                transition: 'color 0.3s ease',
+                            }}
+                        />
+                        {expand.firepower ? 'Hide Firepower' : 'Show Firepower'}
+                    </Button>
+                    <Collapse
+                        in={expand.firepower}
+                        timeout='auto'
+                        unmountOnExit
+                    >
+                        <Grow
+                            in={true}
+                            key = { isColumn ? 'row-layout' : 'column-layout' }
+                            style={{ transformOrigin: isColumn ? 'left center' : 'top center' }}
+                            timeout={800}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: isColumn ? 'column' : 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
+                                    marginTop: '1rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '2rem',
+                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                }}
                             >
                                 <InformationLine
                                     label='Aim Time:'
@@ -523,45 +609,65 @@ function Tank2() {
                                     tooltip='Gun Model Weight'
                                     unit=' kg'
                                 />
-                            </Collapse>
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem'
+                            </Box>
+                        </Grow>
+                    </Collapse>
+                </Box>
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '7rem',
+                        marginBottom: '1rem'
+                    }}
+                >
+                    <Button
+                        onClick={() => handleToggleExpand('survivability')}
+                        variant='filled'
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
+                        }}
+                    >
+                        <GiChemicalTank
+                            fontSize="2rem"
+                            style={{
+                                marginRight: '.5rem',
+                                transition: 'color 0.3s ease',
                             }}
+                        />
+                        {expand.survivability ? 'Hide Survivability' : 'Show Survivability'}
+                    </Button>
+                    <Collapse in={expand.survivability} timeout='auto' unmountOnExit>
+                        <Grow
+                            in={true}
+                            key={isColumn ? 'row-layout' : 'column-layout'}
+                            style={{ transformOrigin: isColumn ? 'left center' : 'top center' }}
+                            timeout={800}
                         >
-                            <Button
-                                onClick={() => handleToggleExpand('survivability')}
-                                variant='filled'
+                            <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
+                                    flexDirection: isColumn ? 'column' : 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
+                                    marginTop: '1rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '2rem',
+                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
                             >
-                                <GiChemicalTank
-                                    fontSize="2rem"
-                                    style={{
-                                        marginRight: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                {expand.survivability ? 'Hide Survivability' : 'Show Survivability'}
-                            </Button>
-                            <Collapse in={expand.survivability} timeout='auto' unmountOnExit>
                                 <InformationLine
                                     label='Tier:'
                                     value={tank.tier}
@@ -589,48 +695,68 @@ function Tank2() {
                                     value={tank.default_profile?.max_ammo}
                                     tooltip='Vehicle max ammo capacity'
                                 />
-                            </Collapse>
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem'
+                            </Box>
+                        </Grow>
+                    </Collapse>
+                </Box>
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '7rem',
+                        marginBottom: '1rem'
+                    }}
+                >
+                    <Button
+                        onClick={() => handleToggleExpand('mobility')}
+                        variant='filled'
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
+                        }}
+                    >
+                        <GiGreatWarTank
+                            fontSize="2rem"
+                            style={{
+                                marginRight: '.5rem',
+                                transition: 'color 0.3s ease',
                             }}
+                        />
+                        {expand.mobility ? 'Hide Mobility' : 'Show Mobility'}
+                    </Button>
+                    <Collapse
+                        in={expand.mobility}
+                        timeout='auto'
+                        unmountOnExit
+                    >
+                        <Grow
+                            in={true}
+                            key={isColumn ? 'row-layout' : 'column-layout'}
+                            style={{ transformOrigin: isColumn ? 'left center' : 'top center' }}
+                            timeout={800}
                         >
-                            <Button
-                                onClick={() => handleToggleExpand('mobility')}
-                                variant='filled'
+                            <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
+                                    flexDirection: isColumn ? 'column' : 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
+                                    marginTop: '1rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '2rem',
+                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
-                            >
-                                <GiGreatWarTank
-                                    fontSize="2rem"
-                                    style={{
-                                        marginRight: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                {expand.mobility ? 'Hide Mobility' : 'Show Mobility'}
-                            </Button>
-                            <Collapse
-                                in={expand.mobility}
-                                timeout='auto'
-                                unmountOnExit
                             >
                                 <InformationLine
                                     label='Top Speed Forward:'
@@ -656,48 +782,68 @@ function Tank2() {
                                     tooltip='Maximum vehicle weight'
                                     unit=' tons'
                                 />
-                            </Collapse>
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem'
+                            </Box>
+                        </Grow>
+                    </Collapse>
+                </Box>
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '7rem',
+                        marginBottom: '1rem'
+                    }}
+                >
+                    <Button
+                        onClick={() => handleToggleExpand('spotting')}
+                        variant='filled'
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
+                        }}
+                    >
+                        <MdRemoveRedEye
+                            fontSize="2rem"
+                            style={{
+                                marginRight: '.5rem',
+                                transition: 'color 0.3s ease',
                             }}
+                        />
+                        {expand.spotting ? 'Hide Spotting' : 'Show Spotting'}
+                    </Button>
+                    <Collapse
+                        in={expand.spotting}
+                        timeout='auto'
+                        unmountOnExit
+                    >
+                        <Grow
+                            in={true}
+                            key={isColumn ? 'row-layout' : 'column-layout'}
+                            style={{ transformOrigin: isColumn ? 'left center' : 'top center' }}
+                            timeout={800}
                         >
-                            <Button
-                                onClick={() => handleToggleExpand('spotting')}
-                                variant='filled'
+                            <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
+                                    flexDirection: isColumn ? 'column' : 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
+                                    marginTop: '1rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '2rem',
+                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
-                            >
-                                <MdRemoveRedEye
-                                    fontSize="2rem"
-                                    style={{
-                                        marginRight: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                {expand.spotting ? 'Hide Spotting' : 'Show Spotting'}
-                            </Button>
-                            <Collapse
-                                in={expand.spotting}
-                                timeout='auto'
-                                unmountOnExit
                             >
                                 <InformationLine
                                     label='View Range'
@@ -711,124 +857,137 @@ function Tank2() {
                                     tooltip='Maximum signal range in meters'
                                     unit=' m'
                                 />
-                            </Collapse>
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'flex-start',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'start',
-                                marginLeft: '7rem',
-                                marginBottom: '1rem'
+                            </Box>
+                        </Grow>
+                    </Collapse>
+                </Box>
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '7rem',
+                        marginBottom: '1rem'
+                    }}
+                >
+                    <Button
+                        onClick={() => handleToggleExpand('crew')}
+                        variant='filled'
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
+                        }}
+                    >
+                        <SlPeople
+                            fontSize="2rem"
+                            style={{
+                                marginRight: '.5rem',
+                                transition: 'color 0.3s ease',
                             }}
-                        >
-                            <Button
-                                onClick={() => handleToggleExpand('crew')}
-                                variant='filled'
+                        />
+                        {expand.crew ? 'Hide Crew' : 'Show Crew'}
+                    </Button>
+                    <Collapse
+                        in={expand.crew}
+                        timeout='auto'
+                        unmountOnExit
+                    >
+                            <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#900C3F',
-                                    backgroundColor: '#161616',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                    fontStyle: 'bold',
-                                    fontSize: '1rem',
-                                    '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#2b2a2e',
-                                    },
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
+                                    marginTop: '1rem',
+                                    marginLeft: '2rem',
+                                    marginRight: '2rem',
+                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
-                            >
-                                <SlPeople
-                                    fontSize="2rem"
-                                    style={{
-                                        marginRight: '.5rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                {expand.crew ? 'Hide Crew' : 'Show Crew'}
-                            </Button>
-                            <Collapse
-                                in={expand.crew}
-                                timeout='auto'
-                                unmountOnExit
                             >
                                 <InformationLine
                                     label='Crew Members'
                                     value={tank.crew?.length}
                                     tooltip='Total number of crew members'
                                 />
+                            </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'start',
+                                gap: '1rem',
+                                marginTop: '1rem',
+                                marginRight: '6rem',
+                                marginBottom: '2rem'
+                            }}
+                        >
+                            {tank.crew?.map((crewMember, index) => (
                                 <Box
+                                    key={`crew-member-${index}`}
                                     sx={{
-                                        display: 'flex',
-                                        justifyContent: 'start',
-                                        gap: '1rem',
-                                        marginTop: '1rem',
-                                        marginRight: '6rem',
-                                        marginBottom: '2rem'
+                                        textAlign: 'start',
                                     }}
                                 >
-                                    {tank.crew?.map((crewMember, index) => (
-                                        <Box
-                                            key={`crew-member-${index}`}
-                                            sx={{
-                                                textAlign: 'start',
-                                            }}
-                                        >
-                                            <Tooltip
-                                                arrow
-                                                title={`Vehicle ${crewMember.member_id}`}
-                                                placement="bottom"
-                                                slotProps={{
-                                                    popper: {
-                                                        modifiers: [
-                                                            {
-                                                                name: 'offset',
-                                                                options: {
-                                                                    offset: [0, 20],
-                                                                },
-                                                            },
-                                                        ],
+                                    <Tooltip
+                                        arrow
+                                        title={`Vehicle ${crewMember.member_id}`}
+                                        placement="bottom"
+                                        slotProps={{
+                                            popper: {
+                                                modifiers: [
+                                                    {
+                                                        name: 'offset',
+                                                        options: {
+                                                            offset: [0, 20],
+                                                        },
                                                     },
-                                                }}
-                                            >
-                                                <img
-                                                    src={`https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/${tank.nation.toLowerCase()}-face-${index + 1}.png`}
-                                                    alt={crewMember.member_id}
-                                                    style={{
-                                                        width: '6rem',
-                                                        height: '5rem',
-                                                    }}
-                                                />
-                                            </Tooltip>
-                                            <Typography
-                                                variant="caption"
-                                                sx={{
-                                                    marginTop: '0.5rem',
-                                                    color: '#fafafa',
-                                                }}
-                                            >
-                                                {crewMember.member_id.toUpperCase()}
-                                            </Typography>
-                                        </Box>
-                                    ))}
+                                                ],
+                                            },
+                                        }}
+                                    >
+                                        <img
+                                            src={`https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/${tank.nation.toLowerCase()}-face-${index + 1}.png`}
+                                            alt={crewMember.member_id}
+                                            style={{
+                                                width: '6rem',
+                                                height: '5rem',
+                                            }}
+                                        />
+                                    </Tooltip>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            marginTop: '0.5rem',
+                                            color: '#fafafa',
+                                        }}
+                                    >
+                                        {crewMember.member_id.toUpperCase()}
+                                    </Typography>
                                 </Box>
-                            </Collapse>
+                            ))}
                         </Box>
-                    </>
-                )}
+                    </Collapse>
+                </Box>
             </Paper>
-            <Box 
-                sx = {{
+            <Box
+                sx={{
                     alignItems: 'center',
                     display: 'flex',
                     flexDirection: 'center',
                     justifyContent: 'center'
                 }}
             >
-                <Backdrop 
-                    open = { purchaseOpen }
+                <Backdrop
+                    open={purchaseOpen}
                     sx={{
                         backgroundColor: 'rgba(0, 0, 0, 0.85)',
                         display: 'flex',
@@ -837,11 +996,11 @@ function Tank2() {
                         zIndex: 1
                     }}
                 >
-                    { purchaseOpen && (
+                    {purchaseOpen && (
                         <PurchaseForm
-                            information = { tank }
-                            onClose = { handleTogglePurchaseClose }
-                        /> 
+                            information={tank}
+                            onClose={handleTogglePurchaseClose}
+                        />
                     )}
                 </Backdrop>
             </Box>
