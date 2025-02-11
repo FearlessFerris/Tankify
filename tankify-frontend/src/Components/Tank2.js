@@ -31,7 +31,7 @@ function Tank2() {
     const { tank_id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const [ isColumn, setIsColumn ] = useState( true );
+    const [ isColumn, setIsColumn ] = useState( false );
     const [purchaseOpen, setPurchaseOpen] = useState(false);
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
@@ -148,44 +148,6 @@ function Tank2() {
                                 {tank.name}
                             </Typography>
                         </Tooltip>
-                        <Tooltip
-                            arrow
-                            title="Vehicle Price"
-                            placement="left-start"
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [10, -390],
-                                            },
-                                        },
-                                    ],
-                                },
-                            }}
-                        >
-                            <Typography
-                                variant='h4'
-                                sx={{
-                                    marginTop: '2rem'
-                                }}
-                            >
-                                Price:
-                                <GrMoney
-                                    fontSize="2rem"
-                                    style={{
-                                        color: '#4b4848',
-                                        marginLeft: '.5rem',
-                                        marginRight: '.2rem',
-                                        position: 'relative',
-                                        top: '.4rem',
-                                        transition: 'color 0.3s ease',
-                                    }}
-                                />
-                                <span style={{ color: '#4b4848' }}> {tank.price ? fixNumber(tank.price) : 'NA'} </span>
-                            </Typography>
-                        </Tooltip>
                         <Box
                             sx={{
                                 position: 'relative',
@@ -193,14 +155,14 @@ function Tank2() {
                                 width: '50rem',
                                 height: '23rem',
                                 marginTop: '1rem',
-                                marginBottom: '11rem',
+                                marginBottom: '9rem',
                             }}
                         >
                             <Box
                                 sx={{
                                     position: 'absolute',
                                     top: 0,
-                                    left: 0,
+                                    left: -32,
                                     zIndex: 0
                                 }}
                             >

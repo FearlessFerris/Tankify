@@ -11,8 +11,8 @@ import React, { useRef, useEffect } from 'react';
 // TorchImageWithSparks Component 
 function TorchImageWithSparks({ 
   src, 
-  width = '50rem',     
-  height = 'auto', 
+  width = '55rem',     
+  height = '30rem', 
   containerStyle = {} 
 }) {
 
