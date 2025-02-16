@@ -126,7 +126,7 @@ const handleFilterChange = (filterType, value) => {
           backgroundColor: '#161616',
           display: 'flex',
           alignItems: 'center',
-          borderRadius: '1rem',
+          borderRadius: '.75rem',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
           marginBottom: '4rem',
           maxWidth: '35rem',

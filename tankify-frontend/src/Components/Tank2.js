@@ -109,7 +109,7 @@ function Tank2() {
                 elevation={4}
                 style={{
                     backgroundColor: '#161616',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     color: '#fafafa',
                     marginTop: '8rem',
                     marginBottom: '2rem',
@@ -129,22 +129,22 @@ function Tank2() {
                                         {
                                             name: 'offset',
                                             options: {
-                                                offset: [25, -370],
+                                                offset: [ 20, -2 ],
                                             },
                                         },
                                     ],
                                 },
                             }}
                         >
-
                             <Typography
                                 variant='h2'
                                 sx={{
                                     color: '#ab003c',
+                                    display: 'inline-block',
                                     marginTop: '1rem',
                                     marginBottom: '.5rem'
                                 }}
-                            >
+                                >
                                 {tank.name}
                             </Typography>
                         </Tooltip>
@@ -189,7 +189,7 @@ function Tank2() {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom: '2rem',
+                                marginBottom: '1rem',
                                 width: '57rem',
                             }}
                         >
@@ -240,6 +240,32 @@ function Tank2() {
                                     flex: 1
                                 }}
                             >
+                                 <Button
+                                    variant="filled"
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#900C3F',
+                                        backgroundColor: '#161616',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                        fontStyle: 'bold',
+                                        fontSize: '1rem',
+                                        width: '8rem',
+                                        '&:hover': {
+                                            backgroundColor: '#ab003c',
+                                            color: '#2b2a2e',
+                                        },
+                                    }}
+                                >
+                                    <FaCodeCompare
+                                        fontSize="2rem"
+                                        style={{
+                                            marginRight: '.5rem',
+                                            transition: 'color 0.3s ease'
+                                        }}
+                                    />
+                                    Compare
+                                </Button>
                                 <Button
                                     onClick={handleTogglePurchaseOpen}
                                     variant="filled"
@@ -329,33 +355,6 @@ function Tank2() {
                                         <span style={{ color: '#fafafa' }}> {fixNumber(tank.price)} Credits </span>
                                     </Box>
                                 </Button>
-
-                                <Button
-                                    variant="filled"
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        color: '#900C3F',
-                                        backgroundColor: '#161616',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                        fontStyle: 'bold',
-                                        fontSize: '1rem',
-                                        width: '8rem',
-                                        '&:hover': {
-                                            backgroundColor: '#ab003c',
-                                            color: '#2b2a2e',
-                                        },
-                                    }}
-                                >
-                                    <FaCodeCompare
-                                        fontSize="2rem"
-                                        style={{
-                                            marginRight: '.5rem',
-                                            transition: 'color 0.3s ease'
-                                        }}
-                                    />
-                                    Compare
-                                </Button>
                             </Box>
                         </Box>
 
@@ -366,7 +365,7 @@ function Tank2() {
                 elevation={4}
                 style={{
                     backgroundColor: '#161616',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     color: '#fafafa',
                     marginTop: '2rem',
                     marginBottom: '8rem',
@@ -409,18 +408,18 @@ function Tank2() {
                         marginLeft: '2rem',
                         marginRight: '2rem',
                         marginBottom: '1rem',
-                        marginTop: '2rem'
+                        marginTop: '1rem'
                     }}
                 >
                     <Button
                         onClick={() => handleToggleExpand('description')}
                         variant='filled'
                         sx={{
-                            display: 'flex',
                             alignItems: 'center',
-                            color: '#900C3F',
                             backgroundColor: '#161616',
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            color: '#900C3F',
+                            display: 'flex',
                             fontStyle: 'bold',
                             fontSize: '1rem',
                             '&:hover': {
@@ -435,8 +434,6 @@ function Tank2() {
                                 marginLeft: '.2rem',
                                 marginRight: '.5rem',
                                 position: 'relative',
-                                transition: 'color 0.3s ease',
-                                transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
                             }}
                         />
                         {expand.description ? 'Hide Description' : 'Show Description'}
@@ -468,6 +465,7 @@ function Tank2() {
                                 sx={{
                                     marginLeft: '1rem',
                                     marginRight: '1rem',
+                                    marginTop: '.5rem',
                                     textAlign: 'start'
                                 }}
                             >
@@ -532,7 +530,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '3rem',
+                                    marginLeft: '2rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -626,7 +624,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '3rem',
+                                    marginLeft: '2rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -716,7 +714,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '3rem',
+                                    marginLeft: '2rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -803,7 +801,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '3rem',
+                                    marginLeft: '2rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -872,7 +870,7 @@ function Tank2() {
                                 flexWrap: 'wrap',
                                 gap: '1rem',
                                 marginTop: '1rem',
-                                marginLeft: '3rem',
+                                marginLeft: '2rem',
                                 marginRight: '2rem',
                                 transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                             }}
@@ -890,7 +888,7 @@ function Tank2() {
                                 gap: '1rem',
                                 marginTop: '1rem',
                                 marginRight: '6rem',
-                                marginLeft: '3rem',
+                                marginLeft: '2rem',
                                 marginBottom: '2rem'
                             }}
                         >
@@ -946,7 +944,7 @@ function Tank2() {
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    flexDirection: 'center',
+                    flexDirection: 'column',
                     justifyContent: 'center'
                 }}
             >

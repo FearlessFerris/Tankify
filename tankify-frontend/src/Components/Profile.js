@@ -15,6 +15,7 @@ import apiClient from '../api/apiClient';
 import cardImage from '../Static/card.png';
 import EditUser from './Edituser';
 import PaymentForm from './PaymentForm';
+import PurchaseForm from './PurchaseForm';
 
 
 // Context Providers 
@@ -37,6 +38,7 @@ function Profile() {
     const [editUserOpen, setEditUserOpen] = useState(false);
     const [editPaymentOpen, setEditPaymentOpen] = useState(null);
     const [cardAddOpen, setCardAddOpen] = useState(false);
+    const [ addCurrencyOpen, setAddCurrencyOpen ] = useState( false );
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
 
@@ -180,9 +182,19 @@ function Profile() {
         setCardAddOpen(true);
     }
 
+    const onAddCurrencyOpen = () => {
+        setOpen( true );
+        setAddCurrencyOpen( true );
+    }
+
     const onCardClose = () => {
         setOpen(false);
         setCardAddOpen(false);
+    }
+
+    const onAddCurrencyClose = () => {
+        setOpen( false );
+        setAddCurrencyOpen( false );
     }
 
     const handleRemovingMethods = () => {
@@ -203,7 +215,7 @@ function Profile() {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     padding: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     overflow: 'hidden'
@@ -376,7 +388,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -502,6 +514,22 @@ function Profile() {
                             </Tooltip>
                         </Box>
                     </Box>
+                        <Button
+                            onClick = { onAddCurrencyOpen }
+                            variant='filled'
+                            sx={{
+                                color: '#ab003c',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                marginRight: '1rem',
+                                width: '8rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa'
+                                }
+                            }}
+                        >
+                            Add
+                        </Button>
                 </Box>
             </div>
 
@@ -510,7 +538,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -701,7 +729,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -840,6 +868,7 @@ function Profile() {
                         setEditUserOpen(false);
                         setEditPaymentOpen(null);
                         setCardAddOpen(false);
+                        setAddCurrencyOpen( false );
                     }}
                     sx={{
                         backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -869,7 +898,13 @@ function Profile() {
                             refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
                             userId={user.id}
                         />
-                    ) : null}
+                    ) : null }
+                    { addCurrencyOpen && (
+                        <PurchaseForm 
+                            information = { user }
+                            onClose = { onAddCurrencyClose }
+                        />
+                    )}
                 </Backdrop>
             </Box>
         </>

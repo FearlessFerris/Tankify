@@ -34,15 +34,16 @@ function InformationLine({ label, value, tooltip, unit = null }) {
 >
     <Box
         sx={{
-            display: 'flex',
-            flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'start',
             backgroundColor: '#161616',
-            padding: '.5rem',
             borderRadius: '.5rem',
             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-            minWidth: '8rem',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'start',
+            minWidth: '4rem',
+            paddingLeft: '.2rem',
+            paddingRight: '.2rem',
             textAlign: 'start',
             transition: 'transform 0.2s ease, background-color 0.2s ease',
             '&:hover': {

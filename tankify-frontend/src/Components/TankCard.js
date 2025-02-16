@@ -38,7 +38,7 @@ function TankCard({ tank, navigate }) {
             sx={{
                 position: 'relative',
                 width: '20rem',
-                borderRadius: '1rem',
+                borderRadius: '.5rem',
                 backgroundColor: '#161616',
                 transition: 'height 0.3s ease, box-shadow 0.3s ease',
                 cursor: 'pointer',

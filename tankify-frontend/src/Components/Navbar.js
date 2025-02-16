@@ -162,15 +162,18 @@ function Navbar() {
                             <Button
                                 component={Link}
                                 to="/user/create"
-                                variant="filled"
+                                variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#fafafa',
+                                    color: '#ab003c',
                                     backgroundColor: '#161616',
+                                    borderColor: '#ab003c',
                                     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    fontSize: '1rem',
                                     width: '8rem',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
+                                        color: '#fafafa'
                                     },
                                 }}
                             >
@@ -179,15 +182,18 @@ function Navbar() {
                             <Button
                                 component={Link}
                                 to="/user/login"
-                                variant="filled"
+                                variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#fafafa',
+                                    color: '#ab003c',
                                     backgroundColor: '#161616',
+                                    borderColor: '#ab003c',
                                     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    fontSize: '1rem',
                                     width: '8rem',
                                     '&:hover': {
                                         backgroundColor: '#ab003c',
+                                        color: '#fafafa'
                                     },
                                 }}
                             >

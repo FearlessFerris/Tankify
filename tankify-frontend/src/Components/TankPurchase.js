@@ -649,9 +649,6 @@ function TankPurchase({ tank, onClose }) {
                                 }}
                                 />
                             Purchase credits to buy this vehicle
-                            {/* <span style={{ color: '#fafafa' }}>
-                                {fixNumber(tank.price)} Credits
-                            </span> */}
                         </Box>
                     </Button>
                 </>
