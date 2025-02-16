@@ -479,26 +479,6 @@ function TankPurchase({ tank, onClose }) {
                                         {fixNumber(Math.abs(creditDifference))} Credits
                                     </Typography>
                                 </Box>
-                                <Box
-                                    sx={{
-                                        marginTop: '2rem',
-                                    }}
-                                >
-                                    <Button
-                                        sx={{
-                                            color: '#ab003c',
-                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                            marginRight: '1rem',
-                                            width: '9rem',
-                                            '&:hover': {
-                                                backgroundColor: '#ab003c',
-                                                color: '#fafafa',
-                                            },
-                                        }}
-                                    >
-                                        Add Credits
-                                    </Button>
-                                </Box>
                             </>
                         )}
                     </Typography>
@@ -513,7 +493,9 @@ function TankPurchase({ tank, onClose }) {
                         gap: '2rem',
                     }}
                 >
-                    <Button
+                    { creditDifference >= 0 ? (
+                        <>
+                        <Button
                         onClick = { handleTankPurchase }
                         variant="filled"
                         sx={{
@@ -563,7 +545,7 @@ function TankPurchase({ tank, onClose }) {
                                 transitionDelay: '0s',
                             },
                         }}
-                    >
+                        >
                         <Box className="default-text">
                             <GrMoney
                                 fontSize="1.4rem"
@@ -572,7 +554,7 @@ function TankPurchase({ tank, onClose }) {
                                     position: 'relative',
                                     top: '0.2rem',
                                 }}
-                            />
+                                />
                             Purchase
                         </Box>
                         <Box className="hover-text">
@@ -584,20 +566,103 @@ function TankPurchase({ tank, onClose }) {
                                     position: 'relative',
                                     top: '0.3rem',
                                 }}
-                            />
+                                />
                             Purchase for{' '}
                             <span style={{ color: '#fafafa' }}>
                                 {fixNumber(tank.price)} Credits
                             </span>
                         </Box>
                     </Button>
-                    <Button
-                        onClick={onClose}
+                </>
+                    ):(
+                        <>
+                        <Button
+                        onClick = { () => { console.log( 'Purchasing Credits' ) } }
                         variant="filled"
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            marginRight: '1rem',
+                            transition: 'width 0.3s ease, background-color 0.3s ease, color 0.3s ease',
+                            width: '12rem',
+                            overflow: 'hidden',
+                            position: 'relative',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                                width: '20rem',
+                            },
+                            '& .default-text': {
+                                opacity: 1,
+                                transition: 'opacity 0.2s ease',
+                                transitionDelay: '0.1s',
+                            },
+                            '& .hover-text': {
+                                position: 'absolute',
+                                opacity: 0,
+                                whiteSpace: 'nowrap',
+                                transition: 'opacity 0.2s ease',
+                                transitionDelay: '0.2s',
+                            },
+                            '&:hover .default-text': {
+                                opacity: 0,
+                                transitionDelay: '0s',
+                            },
+                            '&:hover .hover-text': {
+                                opacity: 1,
+                                transitionDelay: '0.2s',
+                            },
+                            '&:not(:hover) .default-text': {
+                                opacity: 1,
+                                transitionDelay: '0.2s',
+                            },
+                            '&:not(:hover) .hover-text': {
+                                opacity: 0,
+                                transitionDelay: '0s',
+                            },
+                        }}
+                        >
+                        <Box className="default-text">
+                            <GrMoney
+                                fontSize="1.4rem"
+                                style={{
+                                    marginRight: '0.5rem',
+                                    position: 'relative',
+                                    top: '0.2rem',
+                                }}
+                                />
+                            Purchase Credits 
+                        </Box>
+                        <Box className="hover-text">
+                            <GrMoney
+                                fontSize="1.4rem"
+                                style={{
+                                    color: '#fafafa',
+                                    marginRight: '0.5rem',
+                                    position: 'relative',
+                                    top: '0.3rem',
+                                }}
+                                />
+                            Purchase credits to buy this vehicle
+                            {/* <span style={{ color: '#fafafa' }}>
+                                {fixNumber(tank.price)} Credits
+                            </span> */}
+                        </Box>
+                    </Button>
+                </>
+                )}
+                    <Button
+                    onClick={onClose}
+                    variant="filled"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: '#900C3F',
                             backgroundColor: '#161616',
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                             fontStyle: 'bold',

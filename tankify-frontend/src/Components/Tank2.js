@@ -40,7 +40,7 @@ function Tank2() {
         mobility: false,
         spotting: false,
         crew: false,
-        description: false
+        description: true
     });
 
     useEffect(() => {
@@ -114,7 +114,7 @@ function Tank2() {
                     marginTop: '8rem',
                     marginBottom: '2rem',
                     textAlign: 'center',
-                    width: '65rem'
+                    width: '60rem'
                 }}
             >
                 {tank && (
@@ -142,7 +142,7 @@ function Tank2() {
                                 sx={{
                                     color: '#ab003c',
                                     marginTop: '1rem',
-                                    marginBottom: '1rem'
+                                    marginBottom: '.5rem'
                                 }}
                             >
                                 {tank.name}
@@ -154,7 +154,7 @@ function Tank2() {
                                 display: 'inline-block',
                                 width: '50rem',
                                 height: '23rem',
-                                marginTop: '1rem',
+                                marginTop: '.5rem',
                                 marginBottom: '9rem',
                             }}
                         >
@@ -162,7 +162,7 @@ function Tank2() {
                                 sx={{
                                     position: 'absolute',
                                     top: 0,
-                                    left: -32,
+                                    left: -46,
                                     zIndex: 0
                                 }}
                             >
@@ -198,7 +198,7 @@ function Tank2() {
                                     display: 'flex',
                                     justifyContent: 'flex-start',
                                     flex: 1,
-                                    marginLeft: '7rem'
+                                    marginLeft: '2rem'
                                 }}
                             >
                                 <Button
@@ -371,10 +371,10 @@ function Tank2() {
                     marginTop: '2rem',
                     marginBottom: '8rem',
                     textAlign: 'center',
-                    width: '65rem'
+                    width: '60rem'
                 }}
             >
-                <Box
+                {/* <Box
                 >
                     <FormControlLabel
                         control={
@@ -395,10 +395,11 @@ function Tank2() {
                         sx={{
                             color: '#fafafa',
                             marginBottom: '2rem',
-                            marginRight: '3rem'
+                            marginRight: '3rem',
+                            marginTop: '2rem'
                         }}
-                    />
-                </Box>
+                    /> 
+                </Box> */}
                 <Tooltip
                     arrow
                     title='Vehicle Description'
@@ -422,10 +423,10 @@ function Tank2() {
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'start',
-                            marginLeft: '7rem',
-                            marginRight: '7rem',
+                            marginLeft: '2rem',
+                            marginRight: '2rem',
                             marginBottom: '1rem',
-                            marginTop: '1rem'
+                            marginTop: '2rem'
                         }}
                     >
                         <Button
@@ -444,7 +445,7 @@ function Tank2() {
                                     color: '#2b2a2e',
                                 },
                             }}
-                        >
+                            >
                             <FaRegKeyboard
                                 fontSize='1.5rem'
                                 style={{
@@ -454,7 +455,7 @@ function Tank2() {
                                     transition: 'color 0.3s ease',
                                     transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
                                 }}
-                            />
+                                />
                             {expand.description ? 'Hide Description' : 'Show Description'}
                         </Button>
                         <Collapse
@@ -481,7 +482,7 @@ function Tank2() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'start',
-                        marginLeft: '7rem',
+                        marginLeft: '2rem',
                         marginBottom: '1rem',
                     }}
                 >
@@ -531,7 +532,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '2rem',
+                                    marginLeft: '3rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -581,7 +582,7 @@ function Tank2() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'start',
-                        marginLeft: '7rem',
+                        marginLeft: '2rem',
                         marginBottom: '1rem'
                     }}
                 >
@@ -625,7 +626,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '2rem',
+                                    marginLeft: '3rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -667,7 +668,7 @@ function Tank2() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'start',
-                        marginLeft: '7rem',
+                        marginLeft: '2rem',
                         marginBottom: '1rem'
                     }}
                 >
@@ -715,7 +716,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '2rem',
+                                    marginLeft: '3rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -754,7 +755,7 @@ function Tank2() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'start',
-                        marginLeft: '7rem',
+                        marginLeft: '2rem',
                         marginBottom: '1rem'
                     }}
                 >
@@ -802,7 +803,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '2rem',
+                                    marginLeft: '3rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -829,8 +830,8 @@ function Tank2() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'start',
-                        marginLeft: '7rem',
-                        marginBottom: '1rem'
+                        marginLeft: '2rem',
+                        marginBottom: '2rem'
                     }}
                 >
                     <Button
@@ -871,7 +872,7 @@ function Tank2() {
                                     flexWrap: 'wrap',
                                     gap: '1rem',
                                     marginTop: '1rem',
-                                    marginLeft: '2rem',
+                                    marginLeft: '3rem',
                                     marginRight: '2rem',
                                     transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
                                 }}
@@ -889,6 +890,7 @@ function Tank2() {
                                 gap: '1rem',
                                 marginTop: '1rem',
                                 marginRight: '6rem',
+                                marginLeft: '3rem',
                                 marginBottom: '2rem'
                             }}
                         >
