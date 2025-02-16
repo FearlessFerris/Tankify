@@ -31,7 +31,7 @@ function Tank2() {
     const { tank_id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const [ isColumn, setIsColumn ] = useState( false );
+    const [isColumn, setIsColumn] = useState(false);
     const [purchaseOpen, setPurchaseOpen] = useState(false);
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
@@ -400,68 +400,68 @@ function Tank2() {
                         }}
                     /> 
                 </Box> */}
-                <Tooltip
-                    arrow
-                    title='Vehicle Description'
-                    placement="left-start"
-                    slotProps={{
-                        popper: {
-                            modifiers: [
-                                {
-                                    name: 'offset',
-                                    options: {
-                                        offset: [42, -15],
-                                    },
-                                },
-                            ],
-                        },
+                <Box
+                    sx={{
+                        alignItems: 'flex-start',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        marginLeft: '2rem',
+                        marginRight: '2rem',
+                        marginBottom: '1rem',
+                        marginTop: '2rem'
                     }}
                 >
-                    <Box
+                    <Button
+                        onClick={() => handleToggleExpand('description')}
+                        variant='filled'
                         sx={{
-                            alignItems: 'flex-start',
                             display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'start',
-                            marginLeft: '2rem',
-                            marginRight: '2rem',
-                            marginBottom: '1rem',
-                            marginTop: '2rem'
+                            alignItems: 'center',
+                            color: '#900C3F',
+                            backgroundColor: '#161616',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            fontStyle: 'bold',
+                            fontSize: '1rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#2b2a2e',
+                            },
                         }}
                     >
-                        <Button
-                            onClick={() => handleToggleExpand('description')}
-                            variant='filled'
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                color: '#900C3F',
-                                backgroundColor: '#161616',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                fontStyle: 'bold',
-                                fontSize: '1rem',
-                                '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                    color: '#2b2a2e',
+                        <FaRegKeyboard
+                            fontSize='1.5rem'
+                            style={{
+                                marginLeft: '.2rem',
+                                marginRight: '.5rem',
+                                position: 'relative',
+                                transition: 'color 0.3s ease',
+                                transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
+                            }}
+                        />
+                        {expand.description ? 'Hide Description' : 'Show Description'}
+                    </Button>
+                    <Collapse
+                        in={expand.description}
+                        timeout='auto'
+                        unmountOnExit
+                    >
+                        <Tooltip
+                            arrow
+                            title='Vehicle Description'
+                            placement="left-start"
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [4, -2],
+                                            },
+                                        },
+                                    ],
                                 },
                             }}
-                            >
-                            <FaRegKeyboard
-                                fontSize='1.5rem'
-                                style={{
-                                    marginLeft: '.2rem',
-                                    marginRight: '.5rem',
-                                    position: 'relative',
-                                    transition: 'color 0.3s ease',
-                                    transform: expand.description ? 'rotate(180deg)' : 'rotate(0deg)'
-                                }}
-                                />
-                            {expand.description ? 'Hide Description' : 'Show Description'}
-                        </Button>
-                        <Collapse
-                            in={expand.description}
-                            timeout='auto'
-                            unmountOnExit
                         >
                             <Typography
                                 variant='h6'
@@ -473,9 +473,9 @@ function Tank2() {
                             >
                                 {tank.description}
                             </Typography>
-                        </Collapse>
-                    </Box>
-                </Tooltip>
+                        </Tooltip>
+                    </Collapse>
+                </Box>
                 <Box
                     sx={{
                         alignItems: 'flex-start',
@@ -521,7 +521,7 @@ function Tank2() {
                     >
                         <Grow
                             in={true}
-                            key = { isColumn ? 'row-layout' : 'column-layout' }
+                            key={isColumn ? 'row-layout' : 'column-layout'}
                             style={{ transformOrigin: isColumn ? 'left center' : 'top center' }}
                             timeout={800}
                         >
@@ -865,24 +865,24 @@ function Tank2() {
                         timeout='auto'
                         unmountOnExit
                     >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    gap: '1rem',
-                                    marginTop: '1rem',
-                                    marginLeft: '3rem',
-                                    marginRight: '2rem',
-                                    transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
-                                }}
-                            >
-                                <InformationLine
-                                    label='Crew Members'
-                                    value={tank.crew?.length}
-                                    tooltip='Total number of crew members'
-                                />
-                            </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                gap: '1rem',
+                                marginTop: '1rem',
+                                marginLeft: '3rem',
+                                marginRight: '2rem',
+                                transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                            }}
+                        >
+                            <InformationLine
+                                label='Crew Members'
+                                value={tank.crew?.length}
+                                tooltip='Total number of crew members'
+                            />
+                        </Box>
                         <Box
                             sx={{
                                 display: 'flex',

@@ -92,7 +92,7 @@ function TankCard({ tank, navigate }) {
                     <Typography
                         variant="h5"
                         sx={{
-                            color: '#fafafa',
+                            color: '#ab003c',
                             marginTop: '-1rem',
                             marginBottom: '.5rem',
                             textAlign: 'center'

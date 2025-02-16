@@ -117,7 +117,7 @@ const handleFilterChange = (filterType, value) => {
 
   return (
     <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', marginBottom: '6rem' }}>
-      <Typography variant="h3" sx={{ marginTop: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
+      <Typography variant="h3" sx={{ color: '#ab003c', marginTop: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
         Tank Inventory
       </Typography>
 
@@ -140,9 +140,9 @@ const handleFilterChange = (filterType, value) => {
           value={filters.search}
           onChange={(e) => handleFilterChange('search', e.target.value)}
           sx={{
-            input: { color: '#fafafa' },
+            input: { color: '#ab003c' },
             '& .MuiOutlinedInput-root fieldset': { border: 'none' },
-            '& .MuiInputBase-input': { color: '#fafafa', fontSize: '1.1rem' },
+            '& .MuiInputBase-input': { color: '#ab003c', fontSize: '1.2rem' },
             flexGrow: 1,
             marginLeft: '0.5rem'
           }}

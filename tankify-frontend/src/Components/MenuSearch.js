@@ -32,7 +32,7 @@ function MenuSearch() {
           sx = {{
             input: {
               backgroundColor: '#161616',
-              color: '#fafafa', 
+              color: '#ab003c',
               width: '20rem'
             },
             label: {
@@ -40,23 +40,23 @@ function MenuSearch() {
             },
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                  border: 'none',
-                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                  border: '#ab003c .2rem solid',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
               },
                 '&:hover fieldset': {
-                  border: 'none',
-                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                  border: '#ab003c .2rem solid',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
               },
                 '&.Mui-focused fieldset': {
-                  border: 'none',
-                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                  border: '#ab003c .2rem solid',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
               },
             },
             '& .MuiInputLabel-root': {
-              color: '#fafafa',
+              color: '#ab003c',
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#fafafa',
+              color: '#ab003c',
             },
             width: '100%',
           }}

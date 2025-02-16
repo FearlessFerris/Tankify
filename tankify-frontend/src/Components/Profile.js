@@ -282,24 +282,24 @@ function Profile() {
                         >
                             Email:
                         </Typography>
-                        <Tooltip
-                            arrow
-                            title='Email'
-                            placement='left-start'
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [2, -2],
+                            <Tooltip
+                                arrow
+                                title='User Email'
+                                placement='left-start'
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [2, -2],
+                                                },
                                             },
-                                        },
-                                    ],
+                                        ],
+                                    }
                                 }
-                            }
-                            }
-                        >
+                                }
+                            >
                             <Typography
                                 variant="h5"
                                 sx={{
@@ -326,7 +326,7 @@ function Profile() {
                         </Typography>
                         <Tooltip
                             arrow
-                            title='Created At'
+                            title='Date Account Created'
                             placement='left-start'
                             slotProps={{
                                 popper: {
@@ -338,9 +338,8 @@ function Profile() {
                                             },
                                         },
                                     ],
-                                }
-                            }
-                            }
+                                },
+                            }}
                         >
                             <Typography
                                 variant="h5"

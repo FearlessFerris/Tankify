@@ -20,17 +20,12 @@ import { useUser } from '../ContextDirectory/UserContext';
 function Navbar() {
 
     const { user, logout } = useUser();
-    const [hoveredTooltip, setHoveredTooltip] = useState(null);
-
-    const handleTooltipToggle = (key, isOpen) => {
-        setHoveredTooltip(isOpen ? key : null);
-    };
 
     return (
         <AppBar
             position="fixed"
             sx={{
-                backgroundColor: '#0c1418',
+                backgroundColor: '#161616',
                 padding: '0 2rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -63,7 +58,7 @@ function Navbar() {
                     />
                     <Typography
                         variant="h3"
-                        color="#fafafa"
+                        color="#ab003c"
                         sx={{
                             marginRight: '11rem',
                         }}
@@ -80,192 +75,148 @@ function Navbar() {
                         flexGrow: 1,
                     }}
                 >
-                    <Tooltip
-                        title="Home"
-                        arrow
-                        open={hoveredTooltip === 'home'}
-                        onOpen={() => handleTooltipToggle('home', true)}
-                        onClose={() => handleTooltipToggle('home', false)}
+                    <Button
+                        component={Link}
+                        to="/"
+                        variant="outined"
+                        size="large"
+                        sx={{
+                            color: '#ab003c',
+                            backgroundColor: '#161616',
+                            borderColor: '#ab003c',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                            fontSize: '1rem',
+                            width: '8rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#fafafa'
+                            },
+                        }}
                     >
-                        <Button
-                            component={Link}
-                            to="/"
-                            variant="filled"
-                            size="large"
-                            sx={{
-                                color: '#fafafa',
-                                backgroundColor: '#161616',
-                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                width: '8rem',
-                                '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                },
-                            }}
-                        >
-                            Home
-                        </Button>
-                    </Tooltip>
-                    <Tooltip
-                        title="Shop"
-                        arrow
-                        open={hoveredTooltip === 'shop'}
-                        onOpen={() => handleTooltipToggle('shop', true)}
-                        onClose={() => handleTooltipToggle('shop', false)}
+                        Home
+                    </Button>
+                    <Button
+                        component={Link}
+                        to="/shop"
+                        variant="outined"
+                        size="large"
+                        sx={{
+                            color: '#ab003c',
+                            backgroundColor: '#161616',
+                            borderColor: '#ab003c',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                            fontSize: '1rem',
+                            width: '8rem',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#fafafa'
+                            },
+                        }}
                     >
-                        <Button
-                            component={Link}
-                            to="/shop"
-                            variant="filled"
-                            size="large"
-                            sx={{
-                                color: '#fafafa',
-                                backgroundColor: '#161616',
-                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                width: '8rem',
-                                '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                },
-                            }}
-                        >
-                            Shop
-                        </Button>
-                    </Tooltip>
+                        Shop
+                    </Button>
                     {user ? (
                         <>
-                            <Tooltip
-                                title="Profile"
-                                arrow
-                                open={hoveredTooltip === 'profile'}
-                                onOpen={() => handleTooltipToggle('profile', true)}
-                                onClose={() => handleTooltipToggle('profile', false)}
+                            <Button
+                                component={Link}
+                                to="/user/profile"
+                                variant="outined"
+                                size="large"
+                                sx={{
+                                    color: '#ab003c',
+                                    backgroundColor: '#161616',
+                                    borderColor: '#ab003c',
+                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    fontSize: '1rem',
+                                    width: '8rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa'
+                                    },
+                                }}
                             >
-                                <Button
-                                    component={Link}
-                                    to="/user/profile"
-                                    variant="filled"
-                                    size="large"
-                                    sx={{
-                                        color: '#fafafa',
-                                        backgroundColor: '#161616',
-                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        width: '8rem',
-                                        '&:hover': {
-                                            backgroundColor: '#ab003c',
-                                        },
-                                    }}
-                                >
-                                    Profile
-                                </Button>
-                            </Tooltip>
-                            <Tooltip
-                                title="Logout"
-                                arrow
-                                open={hoveredTooltip === 'logout'}
-                                onOpen={() => handleTooltipToggle('logout', true)}
-                                onClose={() => handleTooltipToggle('logout', false)}
+                                Profile
+                            </Button>
+                            <Button
+                                onClick={() => logout()}
+                                variant="outined"
+                                size="large"
+                                sx={{
+                                    color: '#ab003c',
+                                    backgroundColor: '#161616',
+                                    borderColor: '#ab003c',
+                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    fontSize: '1rem',
+                                    width: '8rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                        color: '#fafafa'
+                                    },
+                                }}
                             >
-                                <Button
-                                    variant="filled"
-                                    size="large"
-                                    onClick={() => logout()}
-                                    sx={{
-                                        color: '#fafafa',
-                                        backgroundColor: '#161616',
-                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        width: '8rem',
-                                        '&:hover': {
-                                            backgroundColor: '#ab003c',
-                                        },
-                                    }}
-                                >
-                                    Logout
-                                </Button>
-                            </Tooltip>
+                                Logout
+                            </Button>
                         </>
                     ) : (
                         <>
-                            <Tooltip
-                                title="Create"
-                                arrow
-                                open={hoveredTooltip === 'create'}
-                                onOpen={() => handleTooltipToggle('create', true)}
-                                onClose={() => handleTooltipToggle('create', false)}
+                            <Button
+                                component={Link}
+                                to="/user/create"
+                                variant="filled"
+                                size="large"
+                                sx={{
+                                    color: '#fafafa',
+                                    backgroundColor: '#161616',
+                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    width: '8rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                    },
+                                }}
                             >
-                                <Button
-                                    component={Link}
-                                    to="/user/create"
-                                    variant="filled"
-                                    size="large"
-                                    sx={{
-                                        color: '#fafafa',
-                                        backgroundColor: '#161616',
-                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        width: '8rem',
-                                        '&:hover': {
-                                            backgroundColor: '#ab003c',
-                                        },
-                                    }}
-                                >
-                                    Create
-                                </Button>
-                            </Tooltip>
-                            <Tooltip
-                                title="Login"
-                                arrow
-                                open={hoveredTooltip === 'login'}
-                                onOpen={() => handleTooltipToggle('login', true)}
-                                onClose={() => handleTooltipToggle('login', false)}
+                                Create
+                            </Button>
+                            <Button
+                                component={Link}
+                                to="/user/login"
+                                variant="filled"
+                                size="large"
+                                sx={{
+                                    color: '#fafafa',
+                                    backgroundColor: '#161616',
+                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+                                    width: '8rem',
+                                    '&:hover': {
+                                        backgroundColor: '#ab003c',
+                                    },
+                                }}
                             >
-                                <Button
-                                    component={Link}
-                                    to="/user/login"
-                                    variant="filled"
-                                    size="large"
-                                    sx={{
-                                        color: '#fafafa',
-                                        backgroundColor: '#161616',
-                                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                        width: '8rem',
-                                        '&:hover': {
-                                            backgroundColor: '#ab003c',
-                                        },
-                                    }}
-                                >
-                                    Login
-                                </Button>
-                            </Tooltip>
+                                Login
+                            </Button>
                         </>
                     )}
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <MenuSearch />
                     {user && (
-                        <Tooltip
-                            title="User Profile"
-                            arrow
-                            open={hoveredTooltip === 'avatar'}
-                            onOpen={() => handleTooltipToggle('avatar', true)}
-                            onClose={() => handleTooltipToggle('avatar', false)}
+                        <Link
+                            to='/user/profile'
+                            style={{
+                                textDecoration: 'none'
+                            }}
                         >
-                            <Link
-                                to='/user/profile'
-                                style={{
-                                    textDecoration: 'none'
-                                }}
-                            >
 
-                                <Avatar
-                                    src={user.image}
-                                    alt="User profile"
-                                    sx={{
-                                        border: '.1rem solid #ab003c',
-                                        marginLeft: '1rem',
-                                        width: '3rem',
-                                        height: '3rem',
-                                    }}
-                                />
-                            </Link>
-                        </Tooltip>
+                            <Avatar
+                                src={user.image}
+                                alt="User profile"
+                                sx={{
+                                    border: '.1rem solid #ab003c',
+                                    marginLeft: '1rem',
+                                    width: '3rem',
+                                    height: '3rem',
+                                }}
+                            />
+                        </Link>
                     )}
                 </Box>
             </Box>
