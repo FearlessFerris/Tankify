@@ -203,7 +203,7 @@ function Profile() {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '.3rem',
+                    borderRadius: '2rem',
                     padding: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     overflow: 'hidden'
@@ -265,7 +265,7 @@ function Profile() {
                         marginTop: '2rem',
                         marginBottom: '2rem',
                         padding: '1rem',
-                        width: '35rem'
+                        width: '40rem'
                     }}
                 >
                     <Box
@@ -285,14 +285,14 @@ function Profile() {
                         <Tooltip
                             arrow
                             title='Email'
-                            placement='bottom'
+                            placement='left-start'
                             slotProps={{
                                 popper: {
                                     modifiers: [
                                         {
                                             name: 'offset',
                                             options: {
-                                                offset: [0, -10],
+                                                offset: [2, -2],
                                             },
                                         },
                                     ],
@@ -327,14 +327,14 @@ function Profile() {
                         <Tooltip
                             arrow
                             title='Created At'
-                            placement='bottom'
+                            placement='left-start'
                             slotProps={{
                                 popper: {
                                     modifiers: [
                                         {
                                             name: 'offset',
                                             options: {
-                                                offset: [0, -10],
+                                                offset: [2, -2],
                                             },
                                         },
                                     ],
@@ -377,7 +377,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '.3rem',
+                    borderRadius: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -417,7 +417,7 @@ function Profile() {
                             marginTop: '2rem',
                             marginBottom: '2rem',
                             padding: '1rem',
-                            width: '35rem',
+                            width: '40rem',
                         }}
                     >
                         <Box
@@ -437,14 +437,14 @@ function Profile() {
                             <Tooltip
                                 arrow
                                 title="Gold Balance"
-                                placement="bottom"
+                                placement="left-start"
                                 slotProps={{
                                     popper: {
                                         modifiers: [
                                             {
                                                 name: 'offset',
                                                 options: {
-                                                    offset: [0, -10],
+                                                    offset: [2, -2],
                                                 },
                                             },
                                         ],
@@ -478,14 +478,14 @@ function Profile() {
                             <Tooltip
                                 arrow
                                 title="Credit Balance"
-                                placement="bottom"
+                                placement="left-start"
                                 slotProps={{
                                     popper: {
                                         modifiers: [
                                             {
                                                 name: 'offset',
                                                 options: {
-                                                    offset: [0, -10],
+                                                    offset: [2, -2],
                                                 },
                                             },
                                         ],
@@ -511,7 +511,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '.3rem',
+                    borderRadius: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -544,7 +544,7 @@ function Profile() {
                     <Box
                         sx={{
                             marginTop: '2rem',
-                            width: '35rem',
+                            width: '40rem',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '1.5rem',
@@ -702,7 +702,7 @@ function Profile() {
                     alignItems: 'center',
                     backgroundColor: '#161616',
                     border: '.1rem solid #0f0e0e',
-                    borderRadius: '.3rem',
+                    borderRadius: '2rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -741,7 +741,7 @@ function Profile() {
                             marginTop: '2rem',
                             marginBottom: '2rem',
                             padding: '1rem',
-                            width: '35rem'
+                            width: '40rem'
                         }}
                     >
                         <Box
