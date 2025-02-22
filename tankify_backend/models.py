@@ -569,7 +569,8 @@ class Transaction( Base ):
         if not tank: 
             return { 'success': False, 'message': f'Tank not found' }
         tank_price = int( tank.price )
-        return { 'success': True, 'message': f'You successfully processed a purchase', 'tank': tank_price }
+        print( tank.name )
+        return { 'success': True, 'message': f'You successfully purchased { tank.name } for ' }
 
 
 

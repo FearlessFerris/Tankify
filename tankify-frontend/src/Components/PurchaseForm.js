@@ -41,8 +41,8 @@ function PurchaseForm({ information, onClose }) {
         >
             { formType === 'tank' && (
                 <TankPurchase 
-                tank = { information }
-                onClose = { onClose }
+                    tank = { information }
+                    onClose = { onClose }
                 />
             )}
             { formType === 'currency' && (

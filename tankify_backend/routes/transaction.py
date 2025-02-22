@@ -73,4 +73,4 @@ def process_tank_purchase( user_id, tank_id ):
     process_purchase = Transaction.process_purchase( user_id, tank_id )
     print( process_purchase )
     
-    return jsonify({ 'success': True, 'message': 'You successfully made a transaction' }), 201 
+    return jsonify({ 'success': True, 'message': process_purchase[ 'message' ] }), 201 

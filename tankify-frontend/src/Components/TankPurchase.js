@@ -7,7 +7,12 @@ import { Box, Button, CardMedia, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from 'react-icons/gr';
 
 
+// Components & Necessary Files 
+import Confirmation from './Confirmation';
+
+
 // Context Providers
+import { useAlert } from '../ContextDirectory/AlertContext';
 import { useUser } from '../ContextDirectory/UserContext';
 import apiClient from '../api/apiClient';
 
@@ -16,7 +21,9 @@ import apiClient from '../api/apiClient';
 function TankPurchase({ tank, onClose }) {
 
     const { user } = useUser();
+    const showAlert = useAlert();
     const [dateTime, setDateTime] = useState(new Date());
+    const [ open, setOpen ] = useState( false );
     const [purchaseInformation] = useState({
         userId: '',
         tankPrice: '',
@@ -43,11 +50,21 @@ function TankPurchase({ tank, onClose }) {
         }
         try {
             const response = await apiClient.post(`/transaction/${user.id}/${tank.id}/purchase`, payload)
-            console.log( response );
+            console.log( response.data.message );
+            showAlert( `${ response.data.message } ${ fixNumber( tank.price )} credits`, 'success' );
+            onClose();
         }
         catch (error) {
             console.error('Error handling tank purchase');
         }
+    }
+
+    const handleOpen = () => setOpen( true );
+    const handleClose = () => setOpen( false );
+    const handleConfirm = () => {
+        console.log( 'Purchase Confirmed' );
+        handleTankPurchase();
+        handleClose();
     }
 
     return (
@@ -62,7 +79,7 @@ function TankPurchase({ tank, onClose }) {
                 justifyContent: 'center',
                 marginTop: '10rem',
                 padding: '2rem',
-                width: '45rem',
+                width: '42rem',
             }}
         >
             <Typography
@@ -113,12 +130,14 @@ function TankPurchase({ tank, onClose }) {
                     variant='h5'
                     sx={{
                         color: '#4b4848',
-                        marginTop: '4rem'
+                        marginTop: '4rem',
+                        marginBottom: '2rem'
                     }}
                 >
                     Reciept
                 </Typography>
             </Box>
+          
             <Box>
                 <Tooltip
                     arrow
@@ -499,7 +518,7 @@ function TankPurchase({ tank, onClose }) {
                     { creditDifference >= 0 ? (
                         <>
                         <Button
-                        onClick = { handleTankPurchase }
+                        onClick = { handleOpen }
                         variant="filled"
                         sx={{
                             display: 'flex',
@@ -555,7 +574,7 @@ function TankPurchase({ tank, onClose }) {
                                 style={{
                                     marginRight: '0.5rem',
                                     position: 'relative',
-                                    top: '0.2rem',
+                                    top: '0.3rem',
                                 }}
                                 />
                             Purchase
@@ -673,7 +692,7 @@ function TankPurchase({ tank, onClose }) {
                             width: '8rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
@@ -681,6 +700,13 @@ function TankPurchase({ tank, onClose }) {
                     </Button>
                 </Box>
             </Box>
+            { open && (
+                <Confirmation 
+                    open = { open }
+                    onClose = { onClose }
+                    onConfirm = { handleConfirm }
+                />
+            )}
         </Box>
     );
 }
