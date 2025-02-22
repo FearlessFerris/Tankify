@@ -62,7 +62,7 @@ function TankPurchase({ tank, onClose }) {
                 justifyContent: 'center',
                 marginTop: '10rem',
                 padding: '2rem',
-                width: '50rem',
+                width: '45rem',
             }}
         >
             <Typography
@@ -410,6 +410,7 @@ function TankPurchase({ tank, onClose }) {
                         display: 'flex',
                         justifyContent: 'space-between',
                         marginBottom: '2rem',
+                        marginTop: '3rem',
                         width: '100%',
                     }}
                 >
@@ -433,6 +434,7 @@ function TankPurchase({ tank, onClose }) {
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         gap: '0.5rem',
+                                        marginLeft: '1rem'
                                     }}
                                 >
                                     <GrMoney
@@ -445,7 +447,7 @@ function TankPurchase({ tank, onClose }) {
                                         component="span"
                                         sx={{
                                             color: '#fafafa',
-                                            fontSize: '1.4rem',
+                                            fontSize: '1.4rem'
                                         }}
                                     >
                                         {fixNumber(creditDifference)} Credits
@@ -461,6 +463,7 @@ function TankPurchase({ tank, onClose }) {
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         gap: '0.5rem',
+                                        marginLeft: '1rem'
                                     }}
                                 >
                                     <GrMoney
@@ -513,7 +516,7 @@ function TankPurchase({ tank, onClose }) {
                             position: 'relative',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                                 width: '18rem',
                             },
                             '& .default-text': {
@@ -557,7 +560,9 @@ function TankPurchase({ tank, onClose }) {
                                 />
                             Purchase
                         </Box>
-                        <Box className="hover-text">
+                        <Box 
+                            className = "hover-text"
+                        >
                             <GrMoney
                                 fontSize="1.4rem"
                                 style={{
@@ -594,7 +599,7 @@ function TankPurchase({ tank, onClose }) {
                             position: 'relative',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                                 width: '20rem',
                             },
                             '& .default-text': {

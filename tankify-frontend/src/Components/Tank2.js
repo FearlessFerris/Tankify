@@ -4,13 +4,15 @@
 // Dependencies 
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Backdrop, Box, Button, CardMedia, Collapse, FormControlLabel, Grid2, Grow, Paper, Switch, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, Button, CardMedia, Collapse, FormControlLabel, Grid2, Grow, Icon, Paper, Switch, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from "react-icons/gr";
 import { LiaCrosshairsSolid } from "react-icons/lia";
 import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
 import { MdOutlineExpandCircleDown, MdRemoveRedEye } from 'react-icons/md';
 import { SlPeople } from 'react-icons/sl';
 import { FaCodeCompare, FaRegKeyboard } from 'react-icons/fa6';
+import { PiStackFill } from 'react-icons/pi';
+import { FaNewspaper } from 'react-icons/fa';
 
 
 // Components & Necessary Files 
@@ -33,6 +35,8 @@ function Tank2() {
     const location = useLocation();
     const [isColumn, setIsColumn] = useState(false);
     const [purchaseOpen, setPurchaseOpen] = useState(false);
+    const IconComponent = isColumn ? FaNewspaper : PiStackFill;
+    const buttonText = isColumn ? 'Inline Information' : 'Stack Information';
     const [tank, setTank] = useState([]);
     const [expand, setExpand] = useState({
         firepower: false,
@@ -119,35 +123,46 @@ function Tank2() {
             >
                 {tank && (
                     <>
-                        <Tooltip
-                            arrow
-                            title="Vehicle"
-                            placement="left-start"
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [ 20, -2 ],
-                                            },
-                                        },
-                                    ],
-                                },
+                        <Box
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
                             }}
                         >
-                            <Typography
-                                variant='h2'
-                                sx={{
-                                    color: '#ab003c',
-                                    display: 'inline-block',
-                                    marginTop: '1rem',
-                                    marginBottom: '.5rem'
+                            <Tooltip
+                                arrow
+                                title="Vehicle"
+                                placement="left-start"
+                                slotProps={{
+                                    popper: {
+                                        modifiers: [
+                                            {
+                                                name: 'offset',
+                                                options: {
+                                                    offset: [20, -2],
+                                                },
+                                            },
+                                        ],
+                                    },
                                 }}
+                            >
+
+                                <Typography
+                                    variant='h2'
+                                    sx={{
+                                        color: '#ab003c',
+                                        display: 'inline-block',
+                                        marginTop: '1rem',
+                                        marginBottom: '.5rem',
+                                        position: 'relative'
+                                    }}
                                 >
-                                {tank.name}
-                            </Typography>
-                        </Tooltip>
+                                    {tank.name}
+                                </Typography>
+                            </Tooltip>
+                        </Box>
                         <Box
                             sx={{
                                 position: 'relative',
@@ -214,7 +229,7 @@ function Tank2() {
                                         fontSize: '1rem',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#2b2a2e',
+                                            color: '#fafafa',
                                         },
                                     }}
                                 >
@@ -240,7 +255,7 @@ function Tank2() {
                                     flex: 1
                                 }}
                             >
-                                 <Button
+                                <Button
                                     variant="filled"
                                     sx={{
                                         display: 'flex',
@@ -251,17 +266,23 @@ function Tank2() {
                                         fontStyle: 'bold',
                                         fontSize: '1rem',
                                         width: '8rem',
+                                        transition: 'background-color 0.3s ease, color 0.3s ease',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#2b2a2e',
+                                            color: '#fafafa',
                                         },
+                                        '&:hover .compare-icon': {
+                                            transform: 'rotate( 180deg )',
+                                            color: '#fafafa'
+                                        }
                                     }}
                                 >
                                     <FaCodeCompare
                                         fontSize="2rem"
+                                        className='compare-icon'
                                         style={{
                                             marginRight: '.5rem',
-                                            transition: 'color 0.3s ease'
+                                            transition: 'transform 0.3s ease, color 0.3s ease'
                                         }}
                                     />
                                     Compare
@@ -283,7 +304,7 @@ function Tank2() {
                                         overflow: 'hidden',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
-                                            color: '#2b2a2e',
+                                            color: '#fafafa',
                                             width: '18rem',
                                         },
                                         '& .default-text': {
@@ -373,71 +394,71 @@ function Tank2() {
                     width: '60rem'
                 }}
             >
-                {/* <Box
-                >
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={isColumn}
-                                onChange={handleToggleIsColumn}
-                                sx={{
-                                    '& .MuiSwitch-switchBase.Mui-checked': {
-                                        color: '#ab003c',
-                                    },
-                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                        backgroundColor: '#ab003c',
-                                    },
-                                }}
-                            />
-                        }
-                        label={isColumn ? 'Stack Information' : 'Inline Information' }
-                        sx={{
-                            color: '#fafafa',
-                            marginBottom: '2rem',
-                            marginRight: '3rem',
-                            marginTop: '2rem'
-                        }}
-                    /> 
-                </Box> */}
                 <Box
                     sx={{
-                        alignItems: 'flex-start',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'start',
+                        alignItems: 'flex-start',
                         marginLeft: '2rem',
-                        marginRight: '2rem',
                         marginBottom: '1rem',
                         marginTop: '1rem'
                     }}
                 >
-                    <Button
-                        onClick={() => handleToggleExpand('description')}
-                        variant='filled'
+                    <Box
                         sx={{
-                            alignItems: 'center',
-                            backgroundColor: '#161616',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                            color: '#900C3F',
                             display: 'flex',
-                            fontStyle: 'bold',
-                            fontSize: '1rem',
-                            '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
-                            },
+                            flexDirection: 'row',
+                            alignItems: 'stretch',
+                            justifyContent: 'flex-start',
+                            gap: '0.5rem',
                         }}
                     >
-                        <FaRegKeyboard
-                            fontSize='1.5rem'
-                            style={{
-                                marginLeft: '.2rem',
-                                marginRight: '.5rem',
-                                position: 'relative',
+                        <Button
+                            onClick={() => handleToggleExpand('description')}
+                            variant='filled'
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#900C3F',
+                                backgroundColor: '#161616',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                fontStyle: 'bold',
+                                fontSize: '1rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                },
                             }}
-                        />
-                        {expand.description ? 'Hide Description' : 'Show Description'}
-                    </Button>
+                        >
+                            <FaRegKeyboard fontSize='1.5rem' style={{ marginRight: '.5rem' }} />
+                            {expand.description ? 'Hide Description' : 'Show Description'}
+                        </Button>
+                        <Button
+                            onClick={handleToggleIsColumn}
+                            variant='filled'
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: '#900C3F',
+                                backgroundColor: '#161616',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                fontStyle: 'bold',
+                                fontSize: '1rem',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                },
+                            }}
+                        >
+                            <IconComponent
+                                fontSize='1.5rem'
+                                style={{
+                                    marginRight: '.5rem'
+                                }}
+                            />
+                            {buttonText}
+                        </Button>
+                    </Box>
                     <Collapse
                         in={expand.description}
                         timeout='auto'
@@ -497,7 +518,7 @@ function Tank2() {
                             fontSize: '1rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
@@ -597,7 +618,7 @@ function Tank2() {
                             fontSize: '1rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
@@ -683,7 +704,7 @@ function Tank2() {
                             fontSize: '1rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
@@ -770,7 +791,7 @@ function Tank2() {
                             fontSize: '1rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
@@ -845,7 +866,7 @@ function Tank2() {
                             fontSize: '1rem',
                             '&:hover': {
                                 backgroundColor: '#ab003c',
-                                color: '#2b2a2e',
+                                color: '#fafafa',
                             },
                         }}
                     >
