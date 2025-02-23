@@ -28,7 +28,7 @@ export const UserProvider = ({ children }) => {
             setUser(JSON.parse(storedUser));
         }
     
-    }, []);
+    }, [] );
 
     // Login function that sets user and stores it in localStorage
     const login = (userData) => {
@@ -58,8 +58,20 @@ export const UserProvider = ({ children }) => {
         }
     }
 
+    const refreshUserData = async () => {
+        if (!user) return;
+        try {
+            const response = await apiClient.get(`/user/${user.id}`);
+            const updatedUser = response.data;
+            setUser(updatedUser); 
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (error) {
+            console.error('Error refreshing user data:', error);
+        }
+    };
+
     return (
-        <UserContext.Provider value={{ getDefaultPaymentMethod, login, logout, user }}>
+        <UserContext.Provider value={{ getDefaultPaymentMethod, login, logout, refreshUserData, user }}>
             {children}
         </UserContext.Provider>
     );

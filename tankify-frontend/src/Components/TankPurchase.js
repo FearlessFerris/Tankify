@@ -20,11 +20,11 @@ import apiClient from '../api/apiClient';
 // TankPurchase Component
 function TankPurchase({ tank, onClose }) {
 
-    const { user } = useUser();
+    const { user, refreshUserData } = useUser();
     const showAlert = useAlert();
-    const [dateTime, setDateTime] = useState(new Date());
+    const [ dateTime, setDateTime ] = useState(new Date());
     const [ open, setOpen ] = useState( false );
-    const [purchaseInformation] = useState({
+    const [ purchaseInformation ] = useState({
         userId: '',
         tankPrice: '',
     });
@@ -38,20 +38,18 @@ function TankPurchase({ tank, onClose }) {
 
         return () => clearInterval(intervalId);
     }, []);
-
     
-    const handleTankPurchase = async () => {
+    const handlePurchase = async () => {
         const payload = {
             userId: user.id,
-            userCreditBalance: user.credit_balance,
-            userGoldBalance: user.gold_balance,
-            tankId: tank.id,
-            tankPrice: tank.price,
+            paymentType: 'In App Credits',
+            amount: parseInt( tank.price, 10 )
         }
         try {
-            const response = await apiClient.post(`/transaction/${user.id}/${tank.id}/purchase`, payload)
+            const response = await apiClient.post(`/transaction/purchase`, payload )
             console.log( response.data.message );
             showAlert( `${ response.data.message } ${ fixNumber( tank.price )} credits`, 'success' );
+            await refreshUserData();
             onClose();
         }
         catch (error) {
@@ -63,7 +61,7 @@ function TankPurchase({ tank, onClose }) {
     const handleClose = () => setOpen( false );
     const handleConfirm = () => {
         console.log( 'Purchase Confirmed' );
-        handleTankPurchase();
+        handlePurchase();
         handleClose();
     }
 

@@ -27,7 +27,7 @@ import { useAlert } from '../ContextDirectory/AlertContext';
 function Profile() {
 
     const showAlert = useAlert();
-    const { user } = useUser();
+    const { user, refreshUserData } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
     const [openCount, setOpenCount] = useState(0);
@@ -144,8 +144,9 @@ function Profile() {
             fetchPaymentMethods(user.id);
             fetchDefaultCurrency(user.id);
             fetchCurrencies();
+            refreshUserData();
         }
-    }, [user, fetchCurrencies]);
+    }, [user, fetchCurrencies, refreshUserData ]);
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);

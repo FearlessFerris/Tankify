@@ -214,9 +214,12 @@ def seed_tanks():
             db.session.commit()
             print(f"{len(tanks)} tanks successfully added to the database.")
 
+        return tanks
+
     except requests.RequestException as e:
         print(f"Error fetching tank data: {e}")
 
+        return []
 
 def seed_transactions(users, tanks):
     """Seeds the Transactions table with mock data."""
@@ -225,36 +228,32 @@ def seed_transactions(users, tanks):
         print("Skipping transaction seeding due to missing users or tanks.")
         return
 
-    # Fetch Payment Methods (assuming at least one user has a card added)
     payment_methods = PaymentMethod.query.filter(PaymentMethod.user_id == users[0].id).all()
     payment_method_id = payment_methods[0].id if payment_methods else None
 
     transactions = [
-        # User 1 - Buys a tank using a payment method (if available)
         Transaction(
             user_id=users[0].id, 
-            type="Credit", 
-            amount=tanks[0].price, 
-            payment_method_id=payment_method_id, 
-            created_at=datetime.now(tz=timezone.utc)
+            payment_type="Credit Card",
+            transaction_type = 'In Game Currency',
+            amount=59.99, 
+            payment_method_id=payment_method_id,
         ),
 
-        # User 2 - Buys a tank using in-game currency
         Transaction(
             user_id=users[1].id, 
-            type="Gold Purchase", 
+            payment_type = 'In Game Credits',
+            transaction_type = 'Tank', 
             amount=tanks[1].price, 
-            payment_method_id=None,  # No payment method = in-game currency
-            created_at=datetime.now(tz=timezone.utc)
+            payment_method_id=None,
         ),
 
-        # User 3 - Makes another in-game purchase
         Transaction(
             user_id=users[2].id, 
-            type="Credit", 
-            amount=5000, 
-            payment_method_id=None, 
-            created_at=datetime.now(tz=timezone.utc)
+            payment_type = "Debit Card",
+            transaction_type = 'In Game Currency', 
+            amount=102.99, 
+            payment_method_id=None,
         ),
     ]
 
@@ -273,11 +272,17 @@ def seed_database():
             currencies = seed_currencies()
             users = seed_users(currencies)
             tanks = seed_tanks()
-            transactions = seed_transactions( users, tanks )
+            if users and tanks:
+                seed_transactions(users, tanks)
+            else:
+                print("Skipping transaction seeding due to missing users or tanks.")
+
             print('Seed data successfully added!')
+
         except Exception as e:
             print(f"Error occurred while seeding data: {e}")
             db.session.rollback()
+
 
 
 
