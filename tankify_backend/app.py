@@ -5,8 +5,8 @@
 from flask import Flask
 from flask_cors import CORS
 from models import db
-from config import Config  # Import Config class
-from routes.user import user_routes  # Import your routes
+from config import Config
+from routes.user import user_routes
 from routes.tank import tank_routes 
 from routes.payment import payment_routes
 from routes.transaction import transaction_routes

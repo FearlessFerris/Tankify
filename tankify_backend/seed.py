@@ -12,7 +12,7 @@ from PIL import Image, ImageOps
 
 # Necessary Files 
 from app import app, db
-from models import User, Tank, Transaction, Currency 
+from models import User, Tank, Transaction, Currency, PaymentMethod
 
 
 # Load Environmental Variables 
@@ -219,18 +219,48 @@ def seed_tanks():
 
 
 def seed_transactions(users, tanks):
-    """Seeds the Transactions table."""
+    """Seeds the Transactions table with mock data."""
 
     if not users or not tanks:
         print("Skipping transaction seeding due to missing users or tanks.")
         return
 
+    # Fetch Payment Methods (assuming at least one user has a card added)
+    payment_methods = PaymentMethod.query.filter(PaymentMethod.user_id == users[0].id).all()
+    payment_method_id = payment_methods[0].id if payment_methods else None
+
     transactions = [
-        Transaction(user_id=users[0].id, tank_id=tanks[0].id, amount=tanks[0].price, timestamp=datetime.now(tz=timezone.utc)),
-        Transaction(user_id=users[1].id, tank_id=tanks[1].id, amount=tanks[1].price, timestamp=datetime.now(tz=timezone.utc)),
+        # User 1 - Buys a tank using a payment method (if available)
+        Transaction(
+            user_id=users[0].id, 
+            type="Credit", 
+            amount=tanks[0].price, 
+            payment_method_id=payment_method_id, 
+            created_at=datetime.now(tz=timezone.utc)
+        ),
+
+        # User 2 - Buys a tank using in-game currency
+        Transaction(
+            user_id=users[1].id, 
+            type="Gold Purchase", 
+            amount=tanks[1].price, 
+            payment_method_id=None,  # No payment method = in-game currency
+            created_at=datetime.now(tz=timezone.utc)
+        ),
+
+        # User 3 - Makes another in-game purchase
+        Transaction(
+            user_id=users[2].id, 
+            type="Credit", 
+            amount=5000, 
+            payment_method_id=None, 
+            created_at=datetime.now(tz=timezone.utc)
+        ),
     ]
+
     db.session.add_all(transactions)
     db.session.commit()
+    print(f"Seeded {len(transactions)} transactions to the database!")
 
 
 def seed_database():
@@ -243,6 +273,7 @@ def seed_database():
             currencies = seed_currencies()
             users = seed_users(currencies)
             tanks = seed_tanks()
+            transactions = seed_transactions( users, tanks )
             print('Seed data successfully added!')
         except Exception as e:
             print(f"Error occurred while seeding data: {e}")
