@@ -23,6 +23,18 @@ def homepage():
     return "<h1>Welcome to Tankify!</h1><p>Your one-stop shop for tanks and tank-related products.</p>"
 
 
+# Get User Route 
+@user_routes.route( '/api/get/<user_id>', methods = [ 'GET' ] )
+def get_user( user_id ):
+    """ Retrieves User Profile Information """
+
+    user = User.query.filter_by( id = user_id ).first()
+    if not user: 
+        return jsonify({ 'success': False, 'message': 'User not found' }), 404
+
+    return jsonify({ 'success': True, 'user': user.get_user_profile() }), 200 
+
+
 # Create User Route 
 @user_routes.route('/api/create', methods=['POST'])
 @error_handler(400, 'Bad Request - Unable to create user due to invalid input')

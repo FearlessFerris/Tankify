@@ -2,7 +2,7 @@
 
 
 // Dependencies 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -58,17 +58,17 @@ export const UserProvider = ({ children }) => {
         }
     }
 
-    const refreshUserData = async () => {
+    const refreshUserData = useCallback( async () => {
         if (!user) return;
         try {
-            const response = await apiClient.get(`/user/${user.id}`);
-            const updatedUser = response.data;
+            const response = await apiClient.get(`/get/${user.id}`);
+            const updatedUser = response.data.user;
             setUser(updatedUser); 
             localStorage.setItem('user', JSON.stringify(updatedUser));
         } catch (error) {
             console.error('Error refreshing user data:', error);
         }
-    };
+    }, [] );
 
     return (
         <UserContext.Provider value={{ getDefaultPaymentMethod, login, logout, refreshUserData, user }}>

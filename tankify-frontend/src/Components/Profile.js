@@ -25,7 +25,7 @@ import { useAlert } from '../ContextDirectory/AlertContext';
 
 // Profile Component 
 function Profile() {
-
+    
     const showAlert = useAlert();
     const { user, refreshUserData } = useUser();
     const [hover, setHover] = useState(false);
@@ -41,7 +41,8 @@ function Profile() {
     const [ addCurrencyOpen, setAddCurrencyOpen ] = useState( false );
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
-
+    
+    
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -51,7 +52,7 @@ function Profile() {
             console.error('Error fetching user payment methods', error);
         }
     }
-
+    
     const fetchCurrencies = useCallback(async () => {
         try {
             const response = await apiClient.get('/currencies/all');
@@ -60,7 +61,7 @@ function Profile() {
             console.error('Error fetching currencies:', error);
         }
     }, [])
-
+    
     const fetchDefaultCurrency = async (userId) => {
         try {
             const response = await apiClient.get(`/users/${userId}/default-currency`);
@@ -74,7 +75,7 @@ function Profile() {
             showAlert(`Failed to retrieve default currency`, 'error');
         }
     }
-
+    
     const handleCurrencyChange = async (currencyId) => {
         if (!user?.id) {
             showAlert('User not logged in', 'error');
@@ -97,7 +98,7 @@ function Profile() {
             setAnchorEl(null);
         }
     };
-
+    
     const removePaymentMethod = async (cardId) => {
         try {
             const response = await apiClient.delete(`/payments/${cardId}`);
@@ -113,7 +114,7 @@ function Profile() {
             console.error('Error removing payment method', error)
         }
     }
-
+    
     const setDefaultPaymentMethod = async (paymentId) => {
         try {
             const response = await apiClient.patch(`/payments/${user.id}/card/${paymentId}`);
@@ -130,34 +131,34 @@ function Profile() {
             showAlert('Failed to update the default payment method', 'error')
         }
     }
-
+    
     const updatePaymentMethod = (updatedCard) => {
         setPaymentMethods((prevMethods) =>
             prevMethods.map((method) =>
                 method.id === updatedCard.id ? updatedCard : method
-            )
-        );
-    };
+    )
+);
+};
 
-    useEffect(() => {
-        if (user?.id) {
-            fetchPaymentMethods(user.id);
-            fetchDefaultCurrency(user.id);
-            fetchCurrencies();
-            refreshUserData();
-        }
-    }, [user, fetchCurrencies, refreshUserData ]);
+useEffect(() => {
+    if (user?.id) {
+        fetchPaymentMethods(user.id);
+        fetchDefaultCurrency(user.id);
+        fetchCurrencies();
+        refreshUserData();
+    }
+}, [user, fetchCurrencies ]);
 
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+};
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+const handleMenuClose = () => {
+    setAnchorEl(null);
+};
 
-    const oneditUserOpen = () => {
-        setOpen(true);
+const oneditUserOpen = () => {
+    setOpen(true);
         setEditUserOpen(true);
     }
 
