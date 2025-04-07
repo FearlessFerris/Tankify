@@ -77,6 +77,7 @@ def create_new_transaction( user_id ):
         return jsonify({ 'success': False, 'message': 'Internal server error' }), 500 
     
 
+# Processes Transaction Route 
 @transaction_routes.route('/api/transaction/purchase', methods=['POST'])
 def process_purchase_route():
     """ Handles processing of purchases using either in-game currency or credit/debit card. """

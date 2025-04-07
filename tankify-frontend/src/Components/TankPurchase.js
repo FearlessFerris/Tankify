@@ -3,18 +3,18 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { Box, Button, CardMedia, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CardMedia, Divider, Tooltip, Typography } from '@mui/material';
 import { GrMoney } from 'react-icons/gr';
 
 
 // Components & Necessary Files 
+import apiClient from '../api/apiClient';
 import Confirmation from './Confirmation';
 
 
 // Context Providers
 import { useAlert } from '../ContextDirectory/AlertContext';
 import { useUser } from '../ContextDirectory/UserContext';
-import apiClient from '../api/apiClient';
 
 
 // TankPurchase Component
@@ -46,7 +46,7 @@ function TankPurchase({ tank, onClose }) {
             amount: parseInt( tank.price, 10 )
         }
         try {
-            const response = await apiClient.post(`/transaction/purchase`, payload )
+            const response = await apiClient.post(`/transaction/purchase`, payload );
             console.log( response.data.message );
             showAlert( `${ response.data.message } ${ fixNumber( tank.price )} credits`, 'success' );
             await refreshUserData();
@@ -99,7 +99,6 @@ function TankPurchase({ tank, onClose }) {
             <Box
                 sx={{
                     alignItems: 'center',
-                    display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center'
                 }}
@@ -128,11 +127,11 @@ function TankPurchase({ tank, onClose }) {
                     variant='h5'
                     sx={{
                         color: '#4b4848',
-                        marginTop: '4rem',
+                        marginTop: '8rem',
                         marginBottom: '2rem'
                     }}
                 >
-                    Reciept
+                    Receipt
                 </Typography>
             </Box>
           
@@ -262,7 +261,7 @@ function TankPurchase({ tank, onClose }) {
                             display: 'flex',
                             alignItems: 'end',
                             justifyContent: 'space-between',
-                            width: '35rem',
+                            width: '36rem',
                         }}
                     >
                         <Typography
@@ -319,7 +318,7 @@ function TankPurchase({ tank, onClose }) {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            width: '35rem',
+                            width: '36rem',
                         }}
                     >
                         <Typography
@@ -355,13 +354,14 @@ function TankPurchase({ tank, onClose }) {
                     </Box>
                 </Tooltip>
 
-                <Box
-                    sx={{
-                        height: '1px',
-                        backgroundColor: '#4b4848',
-                        marginY: '1rem',
+                <Divider 
+                    aria-hidden = 'true'
+                    sx = {{ 
+                        backgroundColor: '#fafafa',
+                        marginTop: '1rem',
+                        marginBottom: '1rem'
                     }}
-                ></Box>
+                /> 
 
                 <Tooltip
                     arrow

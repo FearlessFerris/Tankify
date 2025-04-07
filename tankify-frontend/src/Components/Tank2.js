@@ -34,6 +34,7 @@ function Tank2() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isColumn, setIsColumn] = useState(false);
+    const [ compareButtonHover, setCompareButtonHover ] = useState( false );
     const [purchaseOpen, setPurchaseOpen] = useState(false);
     const IconComponent = isColumn ? FaNewspaper : PiStackFill;
     const buttonText = isColumn ? 'Inline Information' : 'Stack Information';
@@ -47,6 +48,7 @@ function Tank2() {
         description: true
     });
 
+    
     useEffect(() => {
         const fetchTankData = async () => {
             try {
@@ -59,7 +61,7 @@ function Tank2() {
         }
         fetchTankData();
     }, [tank_id]);
-
+    
     const handleTogglePurchaseOpen = () => {
         if (user) {
             setPurchaseOpen(true);
@@ -70,7 +72,11 @@ function Tank2() {
             navigate('/user/login');
         }
     }
-
+    
+    const handleCompareButtonHover = () => { 
+        setCompareButtonHover(( previous ) => !previous );
+    }
+    
     const handleTogglePurchaseClose = () => {
         setPurchaseOpen(false);
     }
@@ -256,6 +262,8 @@ function Tank2() {
                                 }}
                             >
                                 <Button
+                                    onMouseEnter = { handleCompareButtonHover }
+                                    onMouseLeave = { handleCompareButtonHover }
                                     variant="filled"
                                     sx={{
                                         display: 'flex',
@@ -265,7 +273,7 @@ function Tank2() {
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
                                         fontStyle: 'bold',
                                         fontSize: '1rem',
-                                        width: '8rem',
+                                        width: compareButtonHover ? '16rem' : '10rem',
                                         transition: 'background-color 0.3s ease, color 0.3s ease',
                                         '&:hover': {
                                             backgroundColor: '#ab003c',
@@ -278,14 +286,14 @@ function Tank2() {
                                     }}
                                 >
                                     <FaCodeCompare
-                                        fontSize="2rem"
+                                        fontSize="1.5rem"
                                         className='compare-icon'
                                         style={{
                                             marginRight: '.5rem',
-                                            transition: 'transform 0.3s ease, color 0.3s ease'
+                                            transition: 'transform 0.3s ease, color 0.1s ease'
                                         }}
                                     />
-                                    Compare
+                                    { compareButtonHover ? 'Add to Comparison List' : 'Compare' }
                                 </Button>
                                 <Button
                                     onClick={handleTogglePurchaseOpen}

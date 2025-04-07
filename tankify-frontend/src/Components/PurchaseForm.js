@@ -8,6 +8,7 @@ import { Box, TextField, Typography } from '@mui/material';
 
 // Components & Necessary Files 
 import CurrencyPurchase from './CurrencyPurchase.js';
+import CurrencyPurchase2 from './CurrencyPurchase2.js';
 import TankPurchase from './TankPurchase.js';
 
 
@@ -46,10 +47,14 @@ function PurchaseForm({ information, onClose }) {
                 />
             )}
             { formType === 'currency' && (
-                <CurrencyPurchase 
+                // <CurrencyPurchase 
+                //     user = { user }
+                //     onClose = { onClose }
+                // />
+                <CurrencyPurchase2 
                     user = { user }
                     onClose = { onClose }
-                />
+                /> 
             )}
         </Box>
     )

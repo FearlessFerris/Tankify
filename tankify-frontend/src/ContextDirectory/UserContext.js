@@ -44,7 +44,6 @@ export const UserProvider = ({ children }) => {
         setUser(null);
         localStorage.removeItem('user');
         navigate( '/' );
-
     };
 
     // Get Users default payment method
@@ -61,9 +60,10 @@ export const UserProvider = ({ children }) => {
     const refreshUserData = useCallback( async () => {
         if (!user) return;
         try {
+            console.log( 'refreshUserData is running...'); 
             const response = await apiClient.get(`/get/${user.id}`);
             const updatedUser = response.data.user;
-            setUser(updatedUser); 
+            setUser(( previousUser ) => ({ ...previousUser, ...updatedUser })); 
             localStorage.setItem('user', JSON.stringify(updatedUser));
         } catch (error) {
             console.error('Error refreshing user data:', error);
