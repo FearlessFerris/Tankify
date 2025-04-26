@@ -2,7 +2,7 @@
 
 
 // Dependencies 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { Backdrop, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -27,7 +27,7 @@ import { useAlert } from '../ContextDirectory/AlertContext';
 function Profile() {
     
     const showAlert = useAlert();
-    const { user, refreshUserData } = useUser();
+    const { user, refreshUserData, fetchDefaultCurrency } = useUser();
     const [hover, setHover] = useState(false);
     const [open, setOpen] = useState(false);
     const [openCount, setOpenCount] = useState(0);
@@ -41,7 +41,6 @@ function Profile() {
     const [ addCurrencyOpen, setAddCurrencyOpen ] = useState( false );
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
-    
     
     const fetchPaymentMethods = async (userId) => {
         try {
@@ -62,19 +61,20 @@ function Profile() {
         }
     }, [])
     
-    const fetchDefaultCurrency = async (userId) => {
-        try {
-            const response = await apiClient.get(`/users/${userId}/default-currency`);
-            if (response.status === 200) {
-                const defaultCurrency = response.data.data;
-                setSelectedCurrency(defaultCurrency.iso);
-            }
-        }
-        catch (error) {
-            console.error('Error fetching default currency');
-            showAlert(`Failed to retrieve default currency`, 'error');
-        }
-    }
+    
+    // const fetchDefaultCurrency = async (userId) => {
+    //     try {
+    //         const response = await apiClient.get(`/users/${userId}/default-currency`);
+    //         if (response.status === 200) {
+    //             const defaultCurrency = response.data.data;
+    //             setSelectedCurrency(defaultCurrency.iso);
+    //         }
+    //     }
+    //     catch (error) {
+    //         console.error('Error fetching default currency');
+    //         showAlert(`Failed to retrieve default currency`, 'error');
+    //     }
+    // }
     
     const handleCurrencyChange = async (currencyId) => {
         if (!user?.id) {
@@ -98,10 +98,10 @@ function Profile() {
             setAnchorEl(null);
         }
     };
-    
+
     const removePaymentMethod = async (cardId) => {
         try {
-            const response = await apiClient.delete(`/payments/${cardId}`);
+            const response = await apiClient.delete( `/payments/${cardId}` );
             if (response.status === 200) {
                 showAlert(response.data.message, 'success')
                 await fetchPaymentMethods(user.id);
@@ -143,11 +143,13 @@ function Profile() {
 useEffect(() => {
     if (user?.id) {
         fetchPaymentMethods(user.id);
-        fetchDefaultCurrency(user.id);
+        if (!user.default_currency) {
+            fetchDefaultCurrency(user.id);
+        }
         fetchCurrencies();
         refreshUserData();
     }
-}, [user, fetchCurrencies ]);
+}, [user?.id, fetchCurrencies]);
 
 const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

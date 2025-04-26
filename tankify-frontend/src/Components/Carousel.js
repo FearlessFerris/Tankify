@@ -142,7 +142,7 @@ function Carousel() {
       </Typography>
       <Box
         sx={{
-          backgroundColor: '#161616',
+          backgroundColor: '#0d0d0d',
           display: 'flex',
           alignItems: 'center',
           borderRadius: '1rem',
@@ -281,7 +281,7 @@ function Carousel() {
                 onClick={() => handleFilterChange('nation', nation)}
                 sx={{
                   color: '#fafafa',
-                  backgroundColor: filters.nation === nation ? '#ab003c' : '#161616',
+                  backgroundColor: filters.nation === nation ? '#ab003c' : '#0d0d0d',
                   '&:hover': {
                     backgroundColor: '#ab003c',
                     color: '#fafafa'
@@ -304,7 +304,7 @@ function Carousel() {
               onMouseLeave = { () => handleHovering( null) }
               sx={{
                 alignItems: 'center',
-                backgroundColor: '#161616',
+                backgroundColor: '#0d0d0d',
                 borderRadius: '1rem',
                 display: 'flex',
                 margin: '2rem',

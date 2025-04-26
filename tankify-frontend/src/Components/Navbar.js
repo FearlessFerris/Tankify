@@ -25,7 +25,7 @@ function Navbar() {
         <AppBar
             position="fixed"
             sx={{
-                backgroundColor: '#161616',
+                backgroundColor: '#0d0d0d',
                 padding: '0 2rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -81,16 +81,18 @@ function Navbar() {
                         variant="outined"
                         size="large"
                         sx={{
-                            color: '#ab003c',
-                            backgroundColor: '#161616',
-                            borderColor: '#ab003c',
-                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                            fontSize: '1rem',
+                            backgroundColor: '#ab003c',
+                            color: '#fafafa',
+                            border: '2px solid transparent',
+                            marginRight: '1rem',
                             width: '8rem',
+                            transition: 'all 0.3s ease',
                             '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa'
-                            },
+                                backgroundColor: 'transparent',
+                                color: '#fafafa',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            }
                         }}
                     >
                         Home
@@ -101,16 +103,18 @@ function Navbar() {
                         variant="outined"
                         size="large"
                         sx={{
-                            color: '#ab003c',
-                            backgroundColor: '#161616',
-                            borderColor: '#ab003c',
-                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                            fontSize: '1rem',
+                            backgroundColor: '#ab003c',
+                            color: '#fafafa',
+                            border: '2px solid transparent',
+                            marginRight: '1rem',
                             width: '8rem',
+                            transition: 'all 0.3s ease',
                             '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa'
-                            },
+                                backgroundColor: 'transparent',
+                                color: '#fafafa',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            }
                         }}
                     >
                         Shop
@@ -123,16 +127,18 @@ function Navbar() {
                                 variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#ab003c',
-                                    backgroundColor: '#161616',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                    fontSize: '1rem',
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                    border: '2px solid transparent',
+                                    marginRight: '1rem',
                                     width: '8rem',
+                                    transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#fafafa'
-                                    },
+                                        backgroundColor: 'transparent',
+                                        color: '#fafafa',
+                                        borderColor: '#ab003c',
+                                        boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                    }
                                 }}
                             >
                                 Profile
@@ -142,16 +148,18 @@ function Navbar() {
                                 variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#ab003c',
-                                    backgroundColor: '#161616',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                    fontSize: '1rem',
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                    border: '2px solid transparent',
+                                    marginRight: '1rem',
                                     width: '8rem',
+                                    transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#fafafa'
-                                    },
+                                        backgroundColor: 'transparent',
+                                        color: '#fafafa',
+                                        borderColor: '#ab003c',
+                                        boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                    }
                                 }}
                             >
                                 Logout
@@ -165,16 +173,18 @@ function Navbar() {
                                 variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#ab003c',
-                                    backgroundColor: '#161616',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                    fontSize: '1rem',
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                    border: '2px solid transparent',
+                                    marginRight: '1rem',
                                     width: '8rem',
+                                    transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#fafafa'
-                                    },
+                                        backgroundColor: 'transparent',
+                                        color: '#fafafa',
+                                        borderColor: '#ab003c',
+                                        boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                    }
                                 }}
                             >
                                 Create
@@ -185,16 +195,18 @@ function Navbar() {
                                 variant="outined"
                                 size="large"
                                 sx={{
-                                    color: '#ab003c',
-                                    backgroundColor: '#161616',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
-                                    fontSize: '1rem',
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa',
+                                    border: '2px solid transparent',
+                                    marginRight: '1rem',
                                     width: '8rem',
+                                    transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        backgroundColor: '#ab003c',
-                                        color: '#fafafa'
-                                    },
+                                        backgroundColor: 'transparent',
+                                        color: '#fafafa',
+                                        borderColor: '#ab003c',
+                                        boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                    }
                                 }}
                             >
                                 Login

@@ -714,6 +714,25 @@ class Currency( Base ):
         currency_list = [ currency.to_dict() for currency in currencies ]
         return currency_list
     
+    @classmethod 
+    def set_default_global_currency( cls, currency_id, user_id ): 
+        """ Sets Default Global Currency """
+
+        currency = cls.query.filter_by( id = currency_id ).first() 
+        if not currency: 
+            return { 'success': False, 'message': f'Currency not found' }
+        user = User.query.filter_by( id = user_id ).first()
+        if not user: 
+            return { 'success': False, 'message': f'User not found' }
+        try:
+            user.default_currency_id = currency.id
+            db.session.commit()
+            return { 'success': True, 'message': f'Successfully updated currency', 'currency': currency.to_dict() }
+        except Exception as e: 
+            db.session.rollback()
+            print( f'Error updating global currency', { e } )
+            return { 'success': False, 'message': 'Error updating currency', 'error': { e } }
+    
 
 # class Review( Base ):
 #     """ Review Model """

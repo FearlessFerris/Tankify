@@ -28,25 +28,25 @@ function CreateUser() {
         email: '',
         image: null,
     });
-    
+
     const handleChange = (e) => {
         const { id, value } = e.target;
         setForm({
             ...form,
             [id]: value
         });
-        
+
         if (id === 'password' || id === 'confirmPassword') {
             setPasswordsMatch(value === (id === 'password' ? form.confirmPassword : form.password));
         }
-        
+
         if (id === 'image') {
             setForm({ ...form, image: value });
             setLinkImage(true);
             setFileName('');
         }
     };
-    
+
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setForm({ ...form, image: e.target.files[0] });
@@ -54,7 +54,7 @@ function CreateUser() {
             setLinkImage(false);
         }
     };
-    
+
     const handleFileRemove = () => {
         setForm({
             ...form,
@@ -62,13 +62,13 @@ function CreateUser() {
         });
         setFileName('');
     }
-    
+
     const handleLinkImage = () => {
         setLinkImage(true);
         setForm({ ...form, image: '' });
         setFileName('');
     }
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!passwordsMatch) {
@@ -79,15 +79,15 @@ function CreateUser() {
         formData.append('username', form.username);
         formData.append('password', form.password);
         formData.append('email', form.email);
-        
+
         if (form.image && typeof form.image !== 'string') {
             formData.append('image', form.image);
         }
-        
+
         if (form.image && typeof form.image === 'string') {
             formData.append('link', form.image);
         }
-        
+
         if (form.username === '') {
             showAlert('Username field is required!', 'error')
             return
@@ -96,7 +96,7 @@ function CreateUser() {
             showAlert('Password field is required!', 'error');
             return
         }
-        
+
         try {
             const response = await apiClient.post('/create', formData);
             setForm({
@@ -115,11 +115,11 @@ function CreateUser() {
             console.error('Error creating a new user!', error.response ? error.response.data : error.message);
             showAlert('Unable to create a new user. Please try again.', 'error');
         }
-        
+
     }
-    
+
     const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#ab003c');
-    
+
     return (
         <div
             className='create-user-container'
@@ -377,6 +377,8 @@ function CreateUser() {
                                     </InputAdornment>
                                 ),
                             }}
+
+
                             sx={{
                                 input: {
                                     color: '#fafafa',
@@ -385,7 +387,7 @@ function CreateUser() {
                                 label: {
                                     color: '#fafafa'
                                 },
-                                '& .MuiOutlinedInput-root': {
+                                '&  .MuiOutlinedInput-root': {
                                     '& fieldset': {
                                         border: '.2rem solid #ab003c',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -521,26 +523,26 @@ function CreateUser() {
                                         color: '#fafafa'
                                     },
                                     '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        border: '.2rem solid #ab003c',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        '& fieldset': {
+                                            border: '.2rem solid #ab003c',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        },
+                                        '&:hover fieldset': {
+                                            border: '.2rem solid #ab003c',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            border: '.2rem solid #ab003c',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
+                                        },
                                     },
-                                    '&:hover fieldset': {
-                                        border: '.2rem solid #ab003c',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
+                                    '& .MuiInputLabel-root': {
+                                        color: '#fafafa',
                                     },
-                                    '&.Mui-focused fieldset': {
-                                        border: '.2rem solid #ab003c',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
+                                    '& .MuiInputLabel-root.Mui-focused': {
+                                        color: '#fafafa',
                                     },
-                                },
-                                '& .MuiInputLabel-root': {
-                                    color: '#fafafa',
-                                },
-                                '& .MuiInputLabel-root.Mui-focused': {
-                                    color: '#fafafa',
-                                },
-                                width: '100%',
+                                    width: '100%',
                                     marginBottom: '1rem'
                                 }}
                             ></TextField>

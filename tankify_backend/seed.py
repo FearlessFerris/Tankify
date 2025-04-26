@@ -78,6 +78,11 @@ def seed_users(currencies):
     users[1].default_currency_id = currencies[1].id 
     users[2].default_currency_id = currencies[0].id
 
+    # Set Global Default Currency for a User
+    print( f'Setting Terminators default currency to USD' )
+    result = Currency.set_default_global_currency( currencies[ 0 ].id, users[ 2 ].id ) 
+    print( result )
+
     db.session.add_all(users)
     db.session.commit()
     return users

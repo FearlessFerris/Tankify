@@ -39,7 +39,7 @@ function TankCard({ tank, navigate }) {
                 position: 'relative',
                 width: '20rem',
                 borderRadius: '.5rem',
-                backgroundColor: '#161616',
+                backgroundColor: '#0d0d0d',
                 transition: 'height 0.3s ease, box-shadow 0.3s ease',
                 cursor: 'pointer',
                 '&:hover': {
@@ -389,12 +389,17 @@ function TankCard({ tank, navigate }) {
                     onClick={handleShowMore}
                     variant="filled"
                     sx={{
-                        color: '#ab003c',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                        backgroundColor: '#ab003c',
+                        color: '#fafafa',
+                        border: '2px solid transparent',
+                        marginRight: '1rem',
                         width: '8rem',
+                        transition: 'all 0.3s ease',
                         '&:hover': {
-                            backgroundColor: '#ab003c',
-                            color: '#fafafa'
+                            backgroundColor: 'transparent',
+                            color: '#fafafa',
+                            borderColor: '#ab003c',
+                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
                         }
                     }}
                 >

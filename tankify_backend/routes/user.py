@@ -163,13 +163,25 @@ def get_user_default_currency( user_id ):
 
     user = User.query.filter_by( id = user_id ).first()
     if not user: 
-        return jsonify({ 'success': False, 'message': 'User not found' }), 404
+        return jsonify({ 
+            'success': False, 
+            'message': 'User not found' 
+        }), 404
     if not user.default_currency_id:
-        return jsonify({ 'success': False, 'message': 'Default currency not set for this user' }), 404
+        return jsonify({ 
+            'success': False, 
+            'message': 'Default currency not set for this user' 
+        }), 404
     
     currency = Currency.query.filter_by( id = user.default_currency_id ).first() 
     if not currency:
-        return jsonify({ 'success': False, 'message': 'Default currency data unavailable' }), 404
-    return jsonify({ 'success': True, 'data': currency.to_dict() }), 200 
+        return jsonify({ 
+            'success': False, 
+            'message': 'Default currency data unavailable' 
+        }), 404
+    return jsonify({ 
+        'success': True, 
+        'data': currency.to_dict() 
+    }), 200 
 
 

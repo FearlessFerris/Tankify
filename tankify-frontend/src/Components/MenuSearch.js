@@ -31,7 +31,7 @@ function MenuSearch() {
           size = 'small'
           sx = {{
             input: {
-              backgroundColor: '#161616',
+              backgroundColor: '#0d0d0d',
               color: '#ab003c',
               width: '20rem'
             },

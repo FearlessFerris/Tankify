@@ -21,6 +21,8 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
+    console.log( user ); 
+
     // Restore user from localStorage if available
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -31,9 +33,10 @@ export const UserProvider = ({ children }) => {
     }, [] );
 
     // Login function that sets user and stores it in localStorage
-    const login = (userData) => {
+    const login = async (userData) => {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
+        await fetchDefaultCurrency( userData?.id );
         const redirectPath = localStorage.getItem( 'redirectAfterLogin' ) || '/';
         localStorage.removeItem( 'redirectAfterLogin' );
         navigate( redirectPath, { replace: true });
@@ -57,6 +60,32 @@ export const UserProvider = ({ children }) => {
         }
     }
 
+    // Get Users default currency 
+    const fetchDefaultCurrency = async ( userId, alertMessage ) => {
+        try {
+            const response = await apiClient.get( `/users/${userId}/default-currency` );
+            if (response.status === 200) {
+                const userCurrency = response.data.data;
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    default_currency: userCurrency
+                }));
+    
+                const updatedLocalUser = {
+                    ...user,
+                    default_currency: userCurrency
+                };
+                localStorage.setItem('user', JSON.stringify(updatedLocalUser));
+            }
+           
+        }
+        catch (error) {
+            if( error.response && error.response === 404 ){ 
+
+            }
+        }
+    }
+
     const refreshUserData = useCallback( async () => {
         if (!user) return;
         try {
@@ -71,7 +100,7 @@ export const UserProvider = ({ children }) => {
     }, [] );
 
     return (
-        <UserContext.Provider value={{ getDefaultPaymentMethod, login, logout, refreshUserData, user }}>
+        <UserContext.Provider value={{ fetchDefaultCurrency, getDefaultPaymentMethod, login, logout, refreshUserData, user }}>
             {children}
         </UserContext.Provider>
     );

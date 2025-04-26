@@ -123,7 +123,7 @@ const handleFilterChange = (filterType, value) => {
 
       <Box
         sx={{
-          backgroundColor: '#161616',
+          backgroundColor: '#0d0d0d',
           display: 'flex',
           alignItems: 'center',
           borderRadius: '.75rem',
@@ -173,7 +173,7 @@ const handleFilterChange = (filterType, value) => {
               onClick={() => handleFilterChange('tier', tier)}
               sx={{
                 color: '#fafafa',
-                backgroundColor: filters.tier === tier ? '#ab003c' : '#161616',
+                backgroundColor: filters.tier === tier ? '#ab003c' : '#0d0d0d',
                 '&:hover': {
                   backgroundColor: '#ab003c',
                   color: '#fafafa'
