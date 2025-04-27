@@ -25,7 +25,7 @@ import { useAlert } from '../ContextDirectory/AlertContext';
 
 // Profile Component 
 function Profile() {
-    
+
     const showAlert = useAlert();
     const { user, refreshUserData, fetchDefaultCurrency } = useUser();
     const [hover, setHover] = useState(false);
@@ -38,10 +38,12 @@ function Profile() {
     const [editUserOpen, setEditUserOpen] = useState(false);
     const [editPaymentOpen, setEditPaymentOpen] = useState(null);
     const [cardAddOpen, setCardAddOpen] = useState(false);
-    const [ addCurrencyOpen, setAddCurrencyOpen ] = useState( false );
+    const [addCurrencyOpen, setAddCurrencyOpen] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [removingMethods, setRemovingMethods] = useState(false);
-    
+
+
+
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
@@ -51,7 +53,7 @@ function Profile() {
             console.error('Error fetching user payment methods', error);
         }
     }
-    
+
     const fetchCurrencies = useCallback(async () => {
         try {
             const response = await apiClient.get('/currencies/all');
@@ -60,8 +62,7 @@ function Profile() {
             console.error('Error fetching currencies:', error);
         }
     }, [])
-    
-    
+
     // const fetchDefaultCurrency = async (userId) => {
     //     try {
     //         const response = await apiClient.get(`/users/${userId}/default-currency`);
@@ -75,7 +76,7 @@ function Profile() {
     //         showAlert(`Failed to retrieve default currency`, 'error');
     //     }
     // }
-    
+
     const handleCurrencyChange = async (currencyId) => {
         if (!user?.id) {
             showAlert('User not logged in', 'error');
@@ -101,7 +102,7 @@ function Profile() {
 
     const removePaymentMethod = async (cardId) => {
         try {
-            const response = await apiClient.delete( `/payments/${cardId}` );
+            const response = await apiClient.delete(`/payments/${cardId}`);
             if (response.status === 200) {
                 showAlert(response.data.message, 'success')
                 await fetchPaymentMethods(user.id);
@@ -114,7 +115,7 @@ function Profile() {
             console.error('Error removing payment method', error)
         }
     }
-    
+
     const setDefaultPaymentMethod = async (paymentId) => {
         try {
             const response = await apiClient.patch(`/payments/${user.id}/card/${paymentId}`);
@@ -131,36 +132,36 @@ function Profile() {
             showAlert('Failed to update the default payment method', 'error')
         }
     }
-    
+
     const updatePaymentMethod = (updatedCard) => {
         setPaymentMethods((prevMethods) =>
             prevMethods.map((method) =>
                 method.id === updatedCard.id ? updatedCard : method
-    )
-);
-};
+            )
+        );
+    };
 
-useEffect(() => {
-    if (user?.id) {
-        fetchPaymentMethods(user.id);
-        if (!user.default_currency) {
-            fetchDefaultCurrency(user.id);
+    useEffect(() => {
+        if (user?.id) {
+            fetchPaymentMethods(user.id);
+            if (!user.default_currency) {
+                fetchDefaultCurrency(user.id);
+            }
+            fetchCurrencies();
+            refreshUserData();
         }
-        fetchCurrencies();
-        refreshUserData();
-    }
-}, [user?.id, fetchCurrencies]);
+    }, [user?.id, fetchCurrencies]);
 
-const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-};
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-const handleMenuClose = () => {
-    setAnchorEl(null);
-};
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
-const oneditUserOpen = () => {
-    setOpen(true);
+    const oneditUserOpen = () => {
+        setOpen(true);
         setEditUserOpen(true);
     }
 
@@ -187,8 +188,8 @@ const oneditUserOpen = () => {
     }
 
     const onAddCurrencyOpen = () => {
-        setOpen( true );
-        setAddCurrencyOpen( true );
+        setOpen(true);
+        setAddCurrencyOpen(true);
     }
 
     const onCardClose = () => {
@@ -197,8 +198,8 @@ const oneditUserOpen = () => {
     }
 
     const onAddCurrencyClose = () => {
-        setOpen( false );
-        setAddCurrencyOpen( false );
+        setOpen(false);
+        setAddCurrencyOpen(false);
     }
 
     const handleRemovingMethods = () => {
@@ -210,7 +211,7 @@ const oneditUserOpen = () => {
             <div
                 className='profile-container'
                 style={{
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -273,15 +274,20 @@ const oneditUserOpen = () => {
 
                 <Box
                     sx={{
-                        backgroundColor: '#161616',
+                        backgroundColor: '#0d0d0d',
+                        border: '2px solid transparent',
                         borderRadius: '1rem',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        marginTop: '2rem',
-                        marginBottom: '2rem',
                         padding: '1rem',
-                        width: '40rem'
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '2rem',
+                        marginTop: '2rem',
+                        width: '40rem',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            borderColor: '#ab003c',
+                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                        },
                     }}
                 >
                     <Box
@@ -298,24 +304,24 @@ const oneditUserOpen = () => {
                         >
                             Email:
                         </Typography>
-                            <Tooltip
-                                arrow
-                                title='User Email'
-                                placement='left-start'
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [2, -2],
-                                                },
+                        <Tooltip
+                            arrow
+                            title='User Email'
+                            placement='left-start'
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [2, -2],
                                             },
-                                        ],
-                                    }
+                                        },
+                                    ],
                                 }
-                                }
-                            >
+                            }
+                            }
+                        >
                             <Typography
                                 variant="h5"
                                 sx={{
@@ -375,13 +381,20 @@ const oneditUserOpen = () => {
                     variant='filled'
                     startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
                     sx={{
-                        color: '#ab003c',
+                        color: '#fafafa',
+                        backgroundColor: '#ab003c',
+                        border: '2px solid transparent',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                        transition: 'all 0.3s ease',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
                         width: '8rem',
                         '&:hover': {
-                            backgroundColor: '#ab003c',
-                            color: '#fafafa'
-                        }
+                            backgroundColor: 'transparent',
+                            color: '#fafafa',
+                            borderColor: '#ab003c',
+                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                        },
                     }}
                 >
                     Edit
@@ -390,7 +403,7 @@ const oneditUserOpen = () => {
             <div
                 style={{
                     alignItems: 'center',
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     border: '.1rem solid #0f0e0e',
                     borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -424,15 +437,20 @@ const oneditUserOpen = () => {
                     </Typography>
                     <Box
                         sx={{
-                            backgroundColor: '#161616',
+                            backgroundColor: '#0d0d0d',
+                            border: '2px solid transparent',
                             borderRadius: '1rem',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            marginTop: '2rem',
-                            marginBottom: '2rem',
                             padding: '1rem',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                            transition: 'all 0.3s ease',
+                            marginBottom: '2rem',
+                            marginTop: '2rem',
                             width: '40rem',
+                            '&:hover': {
+                                backgroundColor: 'transparent',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            },
                         }}
                     >
                         <Box
@@ -518,29 +536,35 @@ const oneditUserOpen = () => {
                             </Tooltip>
                         </Box>
                     </Box>
-                        <Button
-                            onClick = { onAddCurrencyOpen }
-                            variant='filled'
-                            sx={{
-                                color: '#ab003c',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                marginRight: '1rem',
-                                width: '8rem',
-                                '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                    color: '#fafafa'
-                                }
-                            }}
-                        >
-                            Add
-                        </Button>
+                    <Button
+                        onClick={onAddCurrencyOpen}
+                        variant='filled'
+                        sx={{
+                            color: '#fafafa',
+                            backgroundColor: '#ab003c',
+                            border: '2px solid transparent',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            transition: 'all 0.3s ease',
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            width: '8rem',
+                            '&:hover': {
+                                backgroundColor: 'transparent',
+                                color: '#fafafa',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            },
+                        }}
+                    >
+                        Add
+                    </Button>
                 </Box>
             </div>
 
             <div
                 style={{
                     alignItems: 'center',
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     border: '.1rem solid #0f0e0e',
                     borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -589,7 +613,7 @@ const oneditUserOpen = () => {
                                         position: 'relative',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        backgroundColor: '#161616',
+                                        backgroundColor: '#0d0d0d',
                                         borderRadius: '1rem',
                                         padding: '1rem',
                                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
@@ -659,15 +683,19 @@ const oneditUserOpen = () => {
                                             onClick={() => removingMethods ? removePaymentMethod(method.id) : onEditPaymentOpen(method.id)}
                                             variant="filled"
                                             sx={{
-                                                position: 'absolute',
-                                                bottom: '0.5rem',
-                                                right: '0.5rem',
-                                                color: '#ab003c',
+                                                color: '#fafafa',
+                                                backgroundColor: '#0d0d0d',
+                                                border: '2px solid transparent',
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                                padding: '0.5rem 1rem',
+                                                transition: 'all 0.3s ease',
+                                                fontWeight: 'bold',
+                                                fontSize: '1rem',
+                                                width: '8rem',
                                                 '&:hover': {
-                                                    backgroundColor: '#ab003c',
+                                                    backgroundColor: 'transparent',
                                                     color: '#fafafa',
+                                                    borderColor: '#ab003c',
+                                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
                                                 },
                                             }}
                                         >
@@ -698,14 +726,21 @@ const oneditUserOpen = () => {
                             onClick={onCardOpen}
                             variant='filled'
                             sx={{
-                                color: '#ab003c',
+                                color: '#fafafa',
+                                backgroundColor: '#ab003c',
+                                border: '2px solid transparent',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                                transition: 'all 0.3s ease',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
                                 marginRight: '1rem',
                                 width: '8rem',
                                 '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                    color: '#fafafa'
-                                }
+                                    backgroundColor: 'transparent',
+                                    color: '#fafafa',
+                                    borderColor: '#ab003c',
+                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                },
                             }}
                         >
                             Add
@@ -714,13 +749,20 @@ const oneditUserOpen = () => {
                             onClick={handleRemovingMethods}
                             variant='filled'
                             sx={{
-                                color: '#ab003c',
+                                color: '#fafafa',
+                                backgroundColor: '#ab003c',
+                                border: '2px solid transparent',
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                width: '9rem',
+                                transition: 'all 0.3s ease',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                                width: '8rem',
                                 '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                    color: '#fafafa'
-                                }
+                                    backgroundColor: 'transparent',
+                                    color: '#fafafa',
+                                    borderColor: '#ab003c',
+                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                                },
                             }}
                         >
                             {removingMethods ? 'Done' : 'Remove'}
@@ -731,7 +773,7 @@ const oneditUserOpen = () => {
             <div
                 style={{
                     alignItems: 'center',
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     border: '.1rem solid #0f0e0e',
                     borderRadius: '1rem',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
@@ -764,15 +806,20 @@ const oneditUserOpen = () => {
                     </Typography>
                     <Box
                         sx={{
-                            backgroundColor: '#161616',
+                            backgroundColor: '#0d0d0d',
+                            border: '2px solid transparent',
                             borderRadius: '1rem',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            marginTop: '2rem',
-                            marginBottom: '2rem',
                             padding: '1rem',
-                            width: '40rem'
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                            transition: 'all 0.3s ease',
+                            marginBottom: '2rem',
+                            marginTop: '2rem',
+                            width: '40rem',
+                            '&:hover': {
+                                backgroundColor: 'transparent',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            },
                         }}
                     >
                         <Box
@@ -812,29 +859,29 @@ const oneditUserOpen = () => {
                                     onClose={handleMenuClose}
                                     sx={{
                                         '& .MuiPaper-root': {
-                                            backgroundColor: '#161616',
+                                            backgroundColor: '#0d0d0d',
                                             color: '#fafafa',
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
                                         },
                                     }}
                                 >
                                     {currencies
-                                    .filter(( currency ) => currency.iso !== 'GOLD' && currency.iso !== 'CRED' )
-                                    .map((currency) => (
-                                        <MenuItem
-                                            key={currency.id}
-                                            onClick={() => handleCurrencyChange(currency.id)}
-                                            sx={{
-                                                backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: '#ab003c',
-                                                    color: '#fafafa',
-                                                },
-                                            }}
-                                        >
-                                            {currency.name} ({currency.symbol})
-                                        </MenuItem>
-                                    ))}
+                                        .filter((currency) => currency.iso !== 'GOLD' && currency.iso !== 'CRED')
+                                        .map((currency) => (
+                                            <MenuItem
+                                                key={currency.id}
+                                                onClick={() => handleCurrencyChange(currency.id)}
+                                                sx={{
+                                                    backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
+                                                    '&:hover': {
+                                                        backgroundColor: '#ab003c',
+                                                        color: '#fafafa',
+                                                    },
+                                                }}
+                                            >
+                                                {currency.name} ({currency.symbol})
+                                            </MenuItem>
+                                        ))}
                                 </Menu>
                             </Box>
                         </Box>
@@ -844,13 +891,21 @@ const oneditUserOpen = () => {
                         variant='filled'
                         startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
                         sx={{
-                            color: '#ab003c',
+                            color: '#fafafa',
+                            backgroundColor: '#ab003c',
+                            border: '2px solid transparent',
                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+                            transition: 'all 0.3s ease',
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            marginRight: '1rem',
                             width: '8rem',
                             '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa'
-                            }
+                                backgroundColor: 'transparent',
+                                color: '#fafafa',
+                                borderColor: '#ab003c',
+                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            },
                         }}
                     >
                         Edit
@@ -872,7 +927,7 @@ const oneditUserOpen = () => {
                         setEditUserOpen(false);
                         setEditPaymentOpen(null);
                         setCardAddOpen(false);
-                        setAddCurrencyOpen( false );
+                        setAddCurrencyOpen(false);
                     }}
                     sx={{
                         backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -902,11 +957,11 @@ const oneditUserOpen = () => {
                             refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
                             userId={user.id}
                         />
-                    ) : null }
-                    { addCurrencyOpen && (
-                        <PurchaseForm 
-                            information = { user }
-                            onClose = { onAddCurrencyClose }
+                    ) : null}
+                    {addCurrencyOpen && (
+                        <PurchaseForm
+                            information={user}
+                            onClose={onAddCurrencyClose}
                         />
                     )}
                 </Backdrop>

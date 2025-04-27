@@ -57,7 +57,7 @@ function Login() {
 
     const getAdornmentColor = (isValid) => (isValid ? '#fafafa' : '#ab003c');
 
-// Modular Input Renders -------------------------------------------------------------------------------------------------------
+// Modular Input Renders -------------------------------------------------------------------------------
 
 // Login Input Render 
 const renderLoginInput = () => {
