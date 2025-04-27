@@ -2,12 +2,12 @@
 
 
 // Dependencies 
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Backdrop, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
+import { MdOutlineAdd, MdOutlineRemove } from "react-icons/md";
 
 
 // Components & Necessary Files 
@@ -15,222 +15,223 @@ import apiClient from '../api/apiClient';
 import cardImage from '../Static/card.png';
 import EditUser from './Edituser';
 import PaymentForm from './PaymentForm';
+import ProfileInformationContainer from './ProfileInformationContainer';
 import PurchaseForm from './PurchaseForm';
 
 
 // Context Providers 
 import { useUser } from '../ContextDirectory/UserContext';
 import { useAlert } from '../ContextDirectory/AlertContext';
+import { PaymentOutlined } from '@mui/icons-material';
 
 
 // Profile Component 
 function Profile() {
 
+    // Call Custom Hooks 
     const showAlert = useAlert();
     const { user, refreshUserData, fetchDefaultCurrency } = useUser();
+
+    // State Variables 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [addCurrencyOpen, setAddCurrencyOpen] = useState(false);
+    const [cardAddOpen, setCardAddOpen] = useState(false);
+    const [currencies, setCurrencies] = useState([]);
+    const [editPaymentOpen, setEditPaymentOpen] = useState(null);
+    const [editUserOpen, setEditUserOpen] = useState(false);
     const [hover, setHover] = useState(false);
+    const [isDefault, setIsDefault] = useState(false);
     const [open, setOpen] = useState(false);
     const [openCount, setOpenCount] = useState(0);
-    const [isDefault, setIsDefault] = useState(false);
-    const [currencies, setCurrencies] = useState([]);
-    const [selectedCurrency, setSelectedCurrency] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [editUserOpen, setEditUserOpen] = useState(false);
-    const [editPaymentOpen, setEditPaymentOpen] = useState(null);
-    const [cardAddOpen, setCardAddOpen] = useState(false);
-    const [addCurrencyOpen, setAddCurrencyOpen] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState([]);
-    const [removingMethods, setRemovingMethods] = useState(false);
+    const [removingPaymentMethods, setRemovingPaymentMethods] = useState(false);
+    const [selectedCurrency, setSelectedCurrency] = useState('');
 
+    // Helper Functions -------------------------------------------------------------
 
-
+    // API Helper Functions 
     const fetchPaymentMethods = async (userId) => {
         try {
             const response = await apiClient.get(`/payments/${userId}/all`);
             setPaymentMethods(response.data.data);
         }
         catch (error) {
-            console.error('Error fetching user payment methods', error);
+            console.error('Error fetching payment methods', error);
         }
-    }
+    };
 
     const fetchCurrencies = useCallback(async () => {
         try {
-            const response = await apiClient.get('/currencies/all');
+            const response = await apiClient.get(`/currencies/all`);
             setCurrencies(response.data.data || []);
-        } catch (error) {
-            console.error('Error fetching currencies:', error);
         }
-    }, [])
-
-    // const fetchDefaultCurrency = async (userId) => {
-    //     try {
-    //         const response = await apiClient.get(`/users/${userId}/default-currency`);
-    //         if (response.status === 200) {
-    //             const defaultCurrency = response.data.data;
-    //             setSelectedCurrency(defaultCurrency.iso);
-    //         }
-    //     }
-    //     catch (error) {
-    //         console.error('Error fetching default currency');
-    //         showAlert(`Failed to retrieve default currency`, 'error');
-    //     }
-    // }
-
-    const handleCurrencyChange = async (currencyId) => {
-        if (!user?.id) {
-            showAlert('User not logged in', 'error');
-            return;
+        catch (error) {
+            console.error(`Error fetching currencies`, error);
         }
+    }, []);
+
+    const handleCurrencyChange = async (currencyId, userId) => {
         try {
-            const response = await apiClient.patch(`/users/${user.id}/default-currency`, {
+            const response = await apiClient.patch(`/users/${userId}/default-currency`, {
                 currency_id: currencyId,
             });
             if (response.status === 200) {
                 setSelectedCurrency(response.data.data.iso);
                 showAlert(response.data.message, 'success');
-            } else {
-                showAlert('Failed to update default currency.', 'error');
             }
-        } catch (error) {
-            console.error('Error updating default currency:', error);
-            showAlert('Failed to update default currency.', 'error');
-        } finally {
+            else {
+                showAlert('Failed to update default currency', 'error');
+            }
+        }
+        catch (error) {
+            console.error('Error updating default currency', error);
+            showAlert('Failed to update default currency', 'error');
+        }
+        finally {
             setAnchorEl(null);
         }
     };
 
-    const removePaymentMethod = async (cardId) => {
+    const removePaymentMethod = async (cardId, userId) => {
         try {
             const response = await apiClient.delete(`/payments/${cardId}`);
             if (response.status === 200) {
-                showAlert(response.data.message, 'success')
-                await fetchPaymentMethods(user.id);
-            }
-            else {
-                showAlert(response.data.message, 'error');
+                await fetchPaymentMethods(userId);
+                showAlert(response.data.message, 'success');
             }
         }
         catch (error) {
-            console.error('Error removing payment method', error)
+            console.error('Error removing payment method', error);
+            showAlert('Failed to remove payment method', 'error');
         }
-    }
+    };
 
-    const setDefaultPaymentMethod = async (paymentId) => {
+    const setDefaultPaymentMethod = async (paymentId, userId) => {
         try {
-            const response = await apiClient.patch(`/payments/${user.id}/card/${paymentId}`);
+            const response = await apiClient.patch(`/payments/${userId}/card/${paymentId}`);
             if (response.status === 200) {
-                await fetchPaymentMethods(user.id);
+                await fetchPaymentMethods(userId);
                 showAlert(response.data.message, 'success');
-            }
-            else {
-                showAlert(response.data.message, 'error');
             }
         }
         catch (error) {
             console.error('Error setting the default payment method', error);
-            showAlert('Failed to update the default payment method', 'error')
+            showAlert('Failed to update the defailt payment method', 'error');
         }
-    }
-
-    const updatePaymentMethod = (updatedCard) => {
-        setPaymentMethods((prevMethods) =>
-            prevMethods.map((method) =>
-                method.id === updatedCard.id ? updatedCard : method
-            )
-        );
     };
 
-    useEffect(() => {
-        if (user?.id) {
-            fetchPaymentMethods(user.id);
-            if (!user.default_currency) {
-                fetchDefaultCurrency(user.id);
-            }
-            fetchCurrencies();
-            refreshUserData();
-        }
-    }, [user?.id, fetchCurrencies]);
+    // Initial Data Fetching ------------------------------------------------------------
 
+    // Fetch Payment Methods
+    useEffect(() => {
+        const userId = user?.id;
+        if (!userId) return;
+        fetchPaymentMethods(userId);
+    }, [user?.id]);
+
+    // Fetch Currencies 
+    useEffect(() => {
+        fetchCurrencies();
+    }, [fetchCurrencies]);
+
+    // Fetch Default Currency 
+    useEffect(() => {
+        const userId = user?.id;
+        if (userId && !user.default_currency) {
+            fetchDefaultCurrency(userId)
+        }
+    }, [user?.id]);
+
+    // Refresh User Data 
+    useEffect(() => {
+        const userId = user?.id;
+        if (!userId) return;
+        refreshUserData()
+    }, [refreshUserData]);
+
+    // State Handler Functions --------------------------------------------------------------- 
+
+    // Handle Default Currency Menu
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
-    };
+    }
 
     const handleMenuClose = () => {
         setAnchorEl(null);
-    };
+    }
 
-    const oneditUserOpen = () => {
+    // Handle Edit User 
+    const handleEditUserOpen = () => {
         setOpen(true);
         setEditUserOpen(true);
     }
 
-    const onEditUserClose = () => {
+    const handleEditUserClose = () => {
         setOpen(false);
         setEditUserOpen(false);
     }
 
-    const onEditPaymentOpen = (cardId) => {
+    // Handle Edit Payment 
+    const handleEditPaymentOpen = (cardId) => {
         setOpen(true);
         setOpenCount((previous) => previous + 1);
         setEditPaymentOpen(cardId);
     }
 
-    const onEditPaymentClose = () => {
+    const handleEditPaymentClose = () => {
         setOpen(false);
         setEditPaymentOpen(null);
     }
 
-    const onCardOpen = () => {
+    // Handle Card Add 
+    const handleCardAddOpen = () => {
         setOpen(true);
         setOpenCount((previous) => previous + 1);
         setCardAddOpen(true);
     }
 
-    const onAddCurrencyOpen = () => {
-        setOpen(true);
-        setAddCurrencyOpen(true);
-    }
-
-    const onCardClose = () => {
+    const handleCardAddClose = () => {
         setOpen(false);
         setCardAddOpen(false);
     }
 
-    const onAddCurrencyClose = () => {
+    // Handle Add Currency 
+    const handleAddCurrencyOpen = () => {
+        setOpen(true);
+        setAddCurrencyOpen(true);
+    }
+
+    const handleAddCurrencyClose = () => {
         setOpen(false);
         setAddCurrencyOpen(false);
     }
 
-    const handleRemovingMethods = () => {
-        setRemovingMethods((previous) => !previous);
+    // Handle Update Payment Method 
+    const handleUpdatePaymentMethod = ( updatedCard ) => { 
+        setPaymentMethods(( previousMethods ) => 
+            previousMethods.map(( method ) => 
+                method.id === updatedCard.id ? updatedCard : method
+            )
+        )
     }
 
-    return (
-        <>
-            <div
-                className='profile-container'
-                style={{
-                    backgroundColor: '#0d0d0d',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginTop: '10rem',
-                    maxWidth: '45rem',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    border: '.1rem solid #0f0e0e',
-                    borderRadius: '1rem',
-                    padding: '2rem',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                    overflow: 'hidden'
-                }}
-            >
+    // Handle Remove Payment Method 
+    const handleRemovePaymentMethod = () => {
+        setRemovingPaymentMethods((previous) => !previous);
+    }
+
+    // Modular Input Renders -------------------------------------------------------------------
+
+    // Username Container Render 
+    const renderUsernameContainer = () => {
+
+        return (
+            <>
                 <Box
                     sx={{
                         position: 'relative',
-                        width: '12rem',
                         height: '12rem',
+                        width: '12rem',
                     }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -271,153 +272,37 @@ function Profile() {
                 >
                     Welcome, <span style={{ color: '#ab003c' }}>{user.username}</span>
                 </Typography>
-
                 <Box
-                    sx={{
-                        backgroundColor: '#0d0d0d',
-                        border: '2px solid transparent',
-                        borderRadius: '1rem',
-                        padding: '1rem',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                        transition: 'all 0.3s ease',
-                        marginBottom: '2rem',
-                        marginTop: '2rem',
-                        width: '40rem',
-                        '&:hover': {
-                            backgroundColor: 'transparent',
-                            borderColor: '#ab003c',
-                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                        },
-                    }}
+                    sx={sxStyles}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: '#ab003c',
-                            }}
-                        >
-                            Email:
-                        </Typography>
-                        <Tooltip
-                            arrow
-                            title='User Email'
-                            placement='left-start'
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [2, -2],
-                                            },
-                                        },
-                                    ],
-                                }
-                            }
-                            }
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    color: '#fafafa',
-                                }}
-                            >
-                                {user.email}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                color: '#ab003c',
-                            }}
-                        >
-                            Account Created:
-                        </Typography>
-                        <Tooltip
-                            arrow
-                            title='Date Account Created'
-                            placement='left-start'
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [2, -2],
-                                            },
-                                        },
-                                    ],
-                                },
-                            }}
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    color: '#fafafa',
-                                }}
-                            >
-                                {new Date(user.created_at).toLocaleDateString()}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
+                    <ProfileInformationContainer
+                        label='Email'
+                        value={user.email}
+                        tooltip='User Email'
+                    />
+                    <ProfileInformationContainer
+                        label='Account Created'
+                        value={new Date(user.created_at).toLocaleDateString()}
+                        tooltip='Date Account Created'
+                    />
                 </Box>
-
                 <Button
-                    onClick={oneditUserOpen}
+                    onClick={handleEditUserOpen}
                     size='large'
                     variant='filled'
                     startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
-                    sx={{
-                        color: '#fafafa',
-                        backgroundColor: '#ab003c',
-                        border: '2px solid transparent',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                        transition: 'all 0.3s ease',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        width: '8rem',
-                        '&:hover': {
-                            backgroundColor: 'transparent',
-                            color: '#fafafa',
-                            borderColor: '#ab003c',
-                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                        },
-                    }}
+                    sx={buttonSxStyle}
                 >
                     Edit
                 </Button>
-            </div>
-            <div
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: '#0d0d0d',
-                    border: '.1rem solid #0f0e0e',
-                    borderRadius: '1rem',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginTop: '2rem',
-                    maxWidth: '45rem',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    marginBottom: '2rem',
-                    overflow: 'hidden',
-                    padding: '2rem',
-                }}
-            >
+            </>
+        )
+    }
+
+    // User Balances Render 
+    const renderUserBalancesContainer = () => {
+        return (
+            <>
                 <Box
                     sx={{
                         alignItems: 'center',
@@ -435,150 +320,39 @@ function Profile() {
                     >
                         User <span style={{ color: '#ab003c' }}>Balances</span>
                     </Typography>
-                    <Box
-                        sx={{
-                            backgroundColor: '#0d0d0d',
-                            border: '2px solid transparent',
-                            borderRadius: '1rem',
-                            padding: '1rem',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                            transition: 'all 0.3s ease',
-                            marginBottom: '2rem',
-                            marginTop: '2rem',
-                            width: '40rem',
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                                borderColor: '#ab003c',
-                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                            },
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    color: '#ab003c',
-                                }}
-                            >
-                                Gold Balance:
-                            </Typography>
-                            <Tooltip
-                                arrow
-                                title="Gold Balance"
-                                placement="left-start"
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [2, -2],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
-                            >
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: '#fafafa',
-                                    }}
-                                >
-                                    ${user.gold_balance}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    color: '#ab003c',
-                                }}
-                            >
-                                Credit Balance:
-                            </Typography>
-                            <Tooltip
-                                arrow
-                                title="Credit Balance"
-                                placement="left-start"
-                                slotProps={{
-                                    popper: {
-                                        modifiers: [
-                                            {
-                                                name: 'offset',
-                                                options: {
-                                                    offset: [2, -2],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                }}
-                            >
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: '#fafafa',
-                                    }}
-                                >
-                                    ${user.credit_balance}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                    </Box>
-                    <Button
-                        onClick={onAddCurrencyOpen}
-                        variant='filled'
-                        sx={{
-                            color: '#fafafa',
-                            backgroundColor: '#ab003c',
-                            border: '2px solid transparent',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                            transition: 'all 0.3s ease',
-                            fontWeight: 'bold',
-                            fontSize: '1rem',
-                            width: '8rem',
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                                color: '#fafafa',
-                                borderColor: '#ab003c',
-                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                            },
-                        }}
-                    >
-                        Add
-                    </Button>
-                </Box>
-            </div>
 
-            <div
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: '#0d0d0d',
-                    border: '.1rem solid #0f0e0e',
-                    borderRadius: '1rem',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginTop: '2rem',
-                    maxWidth: '45rem',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    marginBottom: '2rem',
-                    overflow: 'hidden',
-                    padding: '2rem'
-                }}
-            >
+                    <Box
+                        sx={sxStyles}
+                    >
+                        <ProfileInformationContainer
+                            label='Gold Balance'
+                            value={`$${user.gold_balance}`}
+                            tooltip='Gold Balance'
+                        />
+                        <ProfileInformationContainer
+                            label='Credit Balance'
+                            value={`$${user.credit_balance}`}
+                            tooltip='Credit Balance'
+                        />
+                    </Box>
+                </Box>
+                <Button
+                    onClick={handleEditUserOpen}
+                    size='large'
+                    variant='filled'
+                    startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
+                    sx={buttonSxStyle}
+                >
+                    Add
+                </Button>
+            </>
+        )
+    }
+
+    // Payment Methods Render 
+    const renderPaymentMethods = () => {
+        return (
+            <>
                 <Box
                     sx={{
                         alignItems: 'center',
@@ -598,7 +372,7 @@ function Profile() {
                     </Typography>
                     <Box
                         sx={{
-                            marginTop: '2rem',
+                            marginTop: '1rem',
                             width: '40rem',
                             display: 'flex',
                             flexDirection: 'column',
@@ -609,14 +383,13 @@ function Profile() {
                             paymentMethods.map((method, index) => (
                                 <Box
                                     key={method.id}
-                                    sx={{
-                                        position: 'relative',
+                                    sx = {{ 
+                                        ...sxStyles,
                                         display: 'flex',
-                                        alignItems: 'center',
-                                        backgroundColor: '#0d0d0d',
-                                        borderRadius: '1rem',
-                                        padding: '1rem',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                                        justifyContent: 'space-between',
+                                        position: 'relative',
+                                        marginTop: '1rem',
+                                        marginBottom: '1rem'
                                     }}
                                 >
                                     <Box
@@ -660,7 +433,7 @@ function Profile() {
                                             control={
                                                 <Switch
                                                     checked={method.default_method}
-                                                    onChange={() => setDefaultPaymentMethod(method.id)}
+                                                    onChange={() => setDefaultPaymentMethod(method.id, user.id ) }
                                                     sx={{
                                                         '& .MuiSwitch-switchBase.Mui-checked': {
                                                             color: '#ab003c',
@@ -680,26 +453,16 @@ function Profile() {
                                             }}
                                         />
                                         <Button
-                                            onClick={() => removingMethods ? removePaymentMethod(method.id) : onEditPaymentOpen(method.id)}
+                                            onClick={() => removingPaymentMethods ? removePaymentMethod(method.id) : handleEditPaymentOpen(method.id)}
                                             variant="filled"
-                                            sx={{
-                                                color: '#fafafa',
-                                                backgroundColor: '#0d0d0d',
-                                                border: '2px solid transparent',
-                                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                                transition: 'all 0.3s ease',
-                                                fontWeight: 'bold',
-                                                fontSize: '1rem',
-                                                width: '8rem',
-                                                '&:hover': {
-                                                    backgroundColor: 'transparent',
-                                                    color: '#fafafa',
-                                                    borderColor: '#ab003c',
-                                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                                                },
+                                            sx = {{
+                                                ...buttonSxStyle,
+                                                height: '1.8rem',
+                                                marginTop: '.5rem',
+                                                width: '6rem'
                                             }}
                                         >
-                                            {removingMethods ? 'Remove' : 'Edit'}
+                                            {removingPaymentMethods ? 'Remove' : 'Edit'}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -723,71 +486,34 @@ function Profile() {
                         }}
                     >
                         <Button
-                            onClick={onCardOpen}
+                            onClick={handleCardAddOpen}
+                            startIcon = { <MdOutlineAdd sx = {{ color: '#fafafa', transition: 'color 0.3s ease' }} /> }
                             variant='filled'
-                            sx={{
-                                color: '#fafafa',
-                                backgroundColor: '#ab003c',
-                                border: '2px solid transparent',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                transition: 'all 0.3s ease',
-                                fontWeight: 'bold',
-                                fontSize: '1rem',
-                                marginRight: '1rem',
-                                width: '8rem',
-                                '&:hover': {
-                                    backgroundColor: 'transparent',
-                                    color: '#fafafa',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                                },
+                            sx = {{ 
+                                ...buttonSxStyle, 
+                                marginRight: '1rem'
                             }}
                         >
                             Add
                         </Button>
                         <Button
-                            onClick={handleRemovingMethods}
+                            onClick={handleRemovePaymentMethod}
+                            startIcon = { <MdOutlineRemove sx = {{ color: '#fafafa', transition: 'color 0.3s ease' }} /> }
                             variant='filled'
-                            sx={{
-                                color: '#fafafa',
-                                backgroundColor: '#ab003c',
-                                border: '2px solid transparent',
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                                transition: 'all 0.3s ease',
-                                fontWeight: 'bold',
-                                fontSize: '1rem',
-                                width: '8rem',
-                                '&:hover': {
-                                    backgroundColor: 'transparent',
-                                    color: '#fafafa',
-                                    borderColor: '#ab003c',
-                                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                                },
-                            }}
+                            sx = { buttonSxStyle }
                         >
-                            {removingMethods ? 'Done' : 'Remove'}
+                            {removingPaymentMethods ? 'Done' : 'Remove'}
                         </Button>
                     </Box>
                 </Box>
-            </div>
-            <div
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: '#0d0d0d',
-                    border: '.1rem solid #0f0e0e',
-                    borderRadius: '1rem',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    maxWidth: '45rem',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    marginBottom: '6rem',
-                    overflow: 'hidden',
-                    padding: '2rem'
-                }}
-            >
-                <Box
+            </>
+        )
+    }
+
+    // General Settings Render 
+    const renderGeneralSettings = () => { 
+        return( 
+            <Box
                     sx={{
                         alignItems: 'center',
                         display: 'flex',
@@ -805,22 +531,7 @@ function Profile() {
                         General <span style={{ color: '#ab003c' }}> Settings </span>
                     </Typography>
                     <Box
-                        sx={{
-                            backgroundColor: '#0d0d0d',
-                            border: '2px solid transparent',
-                            borderRadius: '1rem',
-                            padding: '1rem',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-                            transition: 'all 0.3s ease',
-                            marginBottom: '2rem',
-                            marginTop: '2rem',
-                            width: '40rem',
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                                borderColor: '#ab003c',
-                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                            },
-                        }}
+                        sx = { sxStyles }
                     >
                         <Box
                             sx={{
@@ -870,7 +581,7 @@ function Profile() {
                                         .map((currency) => (
                                             <MenuItem
                                                 key={currency.id}
-                                                onClick={() => handleCurrencyChange(currency.id)}
+                                                onClick={ () => handleCurrencyChange(currency.id, user.id ) }
                                                 sx={{
                                                     backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
                                                     '&:hover': {
@@ -890,84 +601,161 @@ function Profile() {
                         size='large'
                         variant='filled'
                         startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
-                        sx={{
-                            color: '#fafafa',
-                            backgroundColor: '#ab003c',
-                            border: '2px solid transparent',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                            transition: 'all 0.3s ease',
-                            fontWeight: 'bold',
-                            fontSize: '1rem',
-                            marginRight: '1rem',
-                            width: '8rem',
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                                color: '#fafafa',
-                                borderColor: '#ab003c',
-                                boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
-                            },
-                        }}
+                        sx = { buttonSxStyle }
                     >
                         Edit
                     </Button>
 
                 </Box>
-            </div>
+        )
+    }
+
+    // Backdrop / Form Render 
+    const renderBackdrop = () => { 
+        return( 
             <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'row'
+            }}
+        >
+            <Backdrop
+                open={open}
+                onClose={() => {
+                    setOpen(false);
+                    setEditUserOpen(false);
+                    setEditPaymentOpen(null);
+                    setCardAddOpen(false);
+                    setAddCurrencyOpen(false);
+                }}
                 sx={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
                     display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'center',
-                    flexDirection: 'row'
                 }}
             >
-                <Backdrop
-                    open={open}
-                    onClose={() => {
-                        setOpen(false);
-                        setEditUserOpen(false);
-                        setEditPaymentOpen(null);
-                        setCardAddOpen(false);
-                        setAddCurrencyOpen(false);
-                    }}
-                    sx={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
+                {editUserOpen && (
+                    <EditUser
+                        user = {user}
+                        onClose={ handleEditUserClose }
+                    />
+                )}
+                {editPaymentOpen ? (
+                    <PaymentForm
+                        onClose={ handleEditPaymentClose }
+                        refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                        cardId={editPaymentOpen}
+                        updatePaymentMethod={ handleUpdatePaymentMethod }
+                        userId={user.id}
+                        openCount={openCount}
+                    />
+                ) : cardAddOpen ? (
+                    <PaymentForm
+                        onClose={ handleCardAddClose }
+                        refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                        userId={user.id}
+                    />
+                ) : null}
+                {addCurrencyOpen && (
+                    <PurchaseForm
+                        information={user}
+                        onClose={ handleAddCurrencyClose }
+                    />
+                )}
+            </Backdrop>
+        </Box>
+        )
+    }
+
+    // SX Styles 
+    const sxStyles = {
+        backgroundColor: '#0d0d0d',
+        border: '2px solid transparent',
+        borderRadius: '1rem',
+        padding: '1rem',
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+        transition: 'all 0.3s ease',
+        marginBottom: '2rem',
+        marginTop: '2rem',
+        width: '40rem',
+        '&:hover': {
+            backgroundColor: 'transparent',
+            borderColor: '#ab003c',
+            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+        },
+    }
+
+    // Button SX Style 
+    const buttonSxStyle = {
+        color: '#fafafa',
+        backgroundColor: '#ab003c',
+        border: '2px solid transparent',
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
+        transition: 'all 0.3s ease',
+        fontWeight: 'bold',
+        fontSize: '1rem',
+        marginRight: '1rem',
+        width: '8rem',
+        '&:hover': {
+            backgroundColor: 'transparent',
+            color: '#fafafa',
+            borderColor: '#ab003c',
+            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+        },
+    }
+
+    // Profile Component SX Styles 
+    const profileComponentSxStyles = {
+        backgroundColor: '#0d0d0d',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: '5rem',
+        maxWidth: '45rem',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        border: '.1rem solid #0f0e0e',
+        borderRadius: '1rem',
+        padding: '2rem',
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+        overflow: 'hidden'
+    }
+
+    // Profile Component Render 
+    return (
+        <>
+            <Box
+                sx={{
+                    marginBottom: '5rem',
+                    marginTop: '10rem'
+                }}
+            >
+                <Box
+                    sx={profileComponentSxStyles}
                 >
-                    {editUserOpen && (
-                        <EditUser
-                            user={user}
-                            onClose={onEditUserClose}
-                        />
-                    )}
-                    {editPaymentOpen ? (
-                        <PaymentForm
-                            onClose={onEditPaymentClose}
-                            refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
-                            cardId={editPaymentOpen}
-                            updatePaymentMethod={updatePaymentMethod}
-                            userId={user.id}
-                            openCount={openCount}
-                        />
-                    ) : cardAddOpen ? (
-                        <PaymentForm
-                            onClose={onCardClose}
-                            refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
-                            userId={user.id}
-                        />
-                    ) : null}
-                    {addCurrencyOpen && (
-                        <PurchaseForm
-                            information={user}
-                            onClose={onAddCurrencyClose}
-                        />
-                    )}
-                </Backdrop>
+                    {renderUsernameContainer()}
+                </Box>
+                <Box
+                    sx={profileComponentSxStyles}
+                >
+                    {renderUserBalancesContainer()}
+                </Box>
+                <Box
+                    sx={profileComponentSxStyles}
+                >
+                    {renderPaymentMethods()}
+                </Box>
+                <Box 
+                    sx = { profileComponentSxStyles }
+                > 
+                    { renderGeneralSettings() }
+                </Box>
+                { renderBackdrop() }
             </Box>
         </>
-    );
+    )
 }
 
-export default Profile;
+export default Profile; 

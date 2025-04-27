@@ -15,7 +15,6 @@ import Home from './Components/Home';
 import Login from './Components/Login';
 import Navbar from './Components/Navbar';
 import Profile from './Components/Profile';
-import Profile2 from './Components/Profile2';
 import Shop from './Components/Shop';
 import Tank2 from './Components/Tank2';
 import './Static/App.css'
@@ -55,7 +54,7 @@ function App() {
                                 <Route exact path="/shop" element={<Shop />} />
                                 <Route exact path="/tank/:tank_id" element={<Tank2 />} />
                                 <Route exact path="/user/create" element={<CreateUser />} />
-                                <Route exact path="/user/profile" element={<Profile2 />} />
+                                <Route exact path="/user/profile" element={<Profile />} />
                                 <Route exact path="/user/login" element={<Login />} />
                             </Routes>
                     </ThemeProvider>
