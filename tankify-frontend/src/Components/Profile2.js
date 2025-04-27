@@ -7,6 +7,7 @@ import { Backdrop, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Sw
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
+import { MdOutlineAdd, MdOutlineRemove } from "react-icons/md";
 
 
 // Components & Necessary Files 
@@ -205,6 +206,15 @@ function Profile2() {
         setAddCurrencyOpen(false);
     }
 
+    // Handle Update Payment Method 
+    const handleUpdatePaymentMethod = ( updatedCard ) => { 
+        setPaymentMethods(( previousMethods ) => 
+            previousMethods.map(( method ) => 
+                method.id === updatedCard.id ? updatedCard : method
+            )
+        )
+    }
+
     // Handle Remove Payment Method 
     const handleRemovePaymentMethod = () => {
         setRemovingPaymentMethods((previous) => !previous);
@@ -362,7 +372,7 @@ function Profile2() {
                     </Typography>
                     <Box
                         sx={{
-                            marginTop: '2rem',
+                            marginTop: '1rem',
                             width: '40rem',
                             display: 'flex',
                             flexDirection: 'column',
@@ -373,15 +383,13 @@ function Profile2() {
                             paymentMethods.map((method, index) => (
                                 <Box
                                     key={method.id}
-                                    sx={{
-                                        position: 'relative',
+                                    sx = {{ 
+                                        ...sxStyles,
                                         display: 'flex',
-                                        alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        backgroundColor: '#0d0d0d',
-                                        borderRadius: '1rem',
-                                        padding: '1rem',
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                                        position: 'relative',
+                                        marginTop: '1rem',
+                                        marginBottom: '1rem'
                                     }}
                                 >
                                     <Box
@@ -425,7 +433,7 @@ function Profile2() {
                                             control={
                                                 <Switch
                                                     checked={method.default_method}
-                                                    onChange={() => setDefaultPaymentMethod(method.id)}
+                                                    onChange={() => setDefaultPaymentMethod(method.id, user.id ) }
                                                     sx={{
                                                         '& .MuiSwitch-switchBase.Mui-checked': {
                                                             color: '#ab003c',
@@ -450,6 +458,7 @@ function Profile2() {
                                             sx = {{
                                                 ...buttonSxStyle,
                                                 height: '1.8rem',
+                                                marginTop: '.5rem',
                                                 width: '6rem'
                                             }}
                                         >
@@ -478,6 +487,7 @@ function Profile2() {
                     >
                         <Button
                             onClick={handleCardAddOpen}
+                            startIcon = { <MdOutlineAdd sx = {{ color: '#fafafa', transition: 'color 0.3s ease' }} /> }
                             variant='filled'
                             sx = {{ 
                                 ...buttonSxStyle, 
@@ -488,6 +498,7 @@ function Profile2() {
                         </Button>
                         <Button
                             onClick={handleRemovePaymentMethod}
+                            startIcon = { <MdOutlineRemove sx = {{ color: '#fafafa', transition: 'color 0.3s ease' }} /> }
                             variant='filled'
                             sx = { buttonSxStyle }
                         >
@@ -496,6 +507,165 @@ function Profile2() {
                     </Box>
                 </Box>
             </>
+        )
+    }
+
+    // General Settings Render 
+    const renderGeneralSettings = () => { 
+        return( 
+            <Box
+                    sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'start',
+                        width: '45rem'
+                    }}
+                >
+                    <Typography
+                        variant='h3'
+                        sx={{
+                            color: '#fafafa'
+                        }}
+                    >
+                        General <span style={{ color: '#ab003c' }}> Settings </span>
+                    </Typography>
+                    <Box
+                        sx = { sxStyles }
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: '#ab003c',
+                                }}
+                            >
+                                Default Currency:
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="h5" sx={{ color: '#fafafa', marginRight: '0.5rem' }}>
+                                    {selectedCurrency}
+                                </Typography>
+                                <Tooltip title="Change Currency">
+                                    <IconButton
+                                        onClick={handleMenuOpen}
+                                        sx={{
+                                            color: '#fafafa',
+                                            '&:hover': {
+                                                color: '#ab003c',
+                                            },
+                                        }}
+                                    >
+                                        <ArrowDropDownIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleMenuClose}
+                                    sx={{
+                                        '& .MuiPaper-root': {
+                                            backgroundColor: '#0d0d0d',
+                                            color: '#fafafa',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+                                        },
+                                    }}
+                                >
+                                    {currencies
+                                        .filter((currency) => currency.iso !== 'GOLD' && currency.iso !== 'CRED')
+                                        .map((currency) => (
+                                            <MenuItem
+                                                key={currency.id}
+                                                onClick={ () => handleCurrencyChange(currency.id, user.id ) }
+                                                sx={{
+                                                    backgroundColor: selectedCurrency === currency.id ? '#ab003c' : 'inherit',
+                                                    '&:hover': {
+                                                        backgroundColor: '#ab003c',
+                                                        color: '#fafafa',
+                                                    },
+                                                }}
+                                            >
+                                                {currency.name} ({currency.symbol})
+                                            </MenuItem>
+                                        ))}
+                                </Menu>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Button
+                        size='large'
+                        variant='filled'
+                        startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}
+                        sx = { buttonSxStyle }
+                    >
+                        Edit
+                    </Button>
+
+                </Box>
+        )
+    }
+
+    // Backdrop / Form Render 
+    const renderBackdrop = () => { 
+        return( 
+            <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'row'
+            }}
+        >
+            <Backdrop
+                open={open}
+                onClose={() => {
+                    setOpen(false);
+                    setEditUserOpen(false);
+                    setEditPaymentOpen(null);
+                    setCardAddOpen(false);
+                    setAddCurrencyOpen(false);
+                }}
+                sx={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                {editUserOpen && (
+                    <EditUser
+                        user = {user}
+                        onClose={ handleEditUserClose }
+                    />
+                )}
+                {editPaymentOpen ? (
+                    <PaymentForm
+                        onClose={ handleEditPaymentClose }
+                        refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                        cardId={editPaymentOpen}
+                        updatePaymentMethod={ handleUpdatePaymentMethod }
+                        userId={user.id}
+                        openCount={openCount}
+                    />
+                ) : cardAddOpen ? (
+                    <PaymentForm
+                        onClose={ handleCardAddClose }
+                        refreshPaymentMethods={() => fetchPaymentMethods(user.id)}
+                        userId={user.id}
+                    />
+                ) : null}
+                {addCurrencyOpen && (
+                    <PurchaseForm
+                        information={user}
+                        onClose={ handleAddCurrencyClose }
+                    />
+                )}
+            </Backdrop>
+        </Box>
         )
     }
 
@@ -577,6 +747,12 @@ function Profile2() {
                 >
                     {renderPaymentMethods()}
                 </Box>
+                <Box 
+                    sx = { profileComponentSxStyles }
+                > 
+                    { renderGeneralSettings() }
+                </Box>
+                { renderBackdrop() }
             </Box>
         </>
     )

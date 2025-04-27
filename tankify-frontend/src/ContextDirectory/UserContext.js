@@ -21,8 +21,6 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    console.log( user ); 
-
     // Restore user from localStorage if available
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -89,7 +87,6 @@ export const UserProvider = ({ children }) => {
     const refreshUserData = useCallback( async () => {
         if (!user) return;
         try {
-            console.log( 'refreshUserData is running...'); 
             const response = await apiClient.get(`/get/${user.id}`);
             const updatedUser = response.data.user;
             setUser(( previousUser ) => ({ ...previousUser, ...updatedUser })); 
