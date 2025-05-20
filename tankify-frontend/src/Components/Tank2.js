@@ -47,7 +47,7 @@ function Tank2() {
         crew: false,
         description: true
     });
-
+ 
     useEffect(() => {
         const fetchTankData = async () => {
             try {
@@ -94,6 +94,7 @@ function Tank2() {
     const handleToggleAll = () => {
         setExpand((previous) => {
             const isAllTrue = Object.values(previous).every(Boolean);
+            console.log( Object.values( previous ).every( Boolean ) );
             const newValue = !isAllTrue;
             return Object.keys(previous).reduce((acc, key) => {
                 acc[key] = newValue;
