@@ -69,7 +69,7 @@ function TankPurchase({ tank, onClose }) {
         <Box
             sx={{
                 alignItems: 'center',
-                backgroundColor: '#161616',
+                backgroundColor: '#0d0d0d',
                 borderRadius: '1rem',
                 boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
                 display: 'flex',

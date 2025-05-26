@@ -337,7 +337,7 @@ function Profile() {
                     </Box>
                 </Box>
                 <Button
-                    onClick={handleEditUserOpen}
+                    onClick={handleAddCurrencyOpen}
                     size='large'
                     variant='filled'
                     startIcon={<EditIcon sx={{ transition: 'color 0.3s ease' }} />}

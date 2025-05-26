@@ -4,19 +4,22 @@
 // Dependencies 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, CardMedia, Collapse, Grow, Paper, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, Button, CardMedia, Collapse, Grow, Paper, Tooltip, Typography } from '@mui/material';
 import { FaNewspaper } from 'react-icons/fa';
-import { FaCodeCompare } from 'react-icons/fa6';
+import { FaCodeCompare, FaRegKeyboard } from 'react-icons/fa6';
+import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
 import { GrMoney } from 'react-icons/gr';
 import { LiaCrosshairsSolid } from 'react-icons/lia';
-import { MdOutlineExpandCircleDown } from 'react-icons/md';
+import { MdOutlineExpandCircleDown, MdRemoveRedEye } from 'react-icons/md';
 import { PiStackFill } from 'react-icons/pi';
+import { SlPeople } from 'react-icons/sl';
 
 
 // Components & Necessary Files 
 import apiClient from '../api/apiClient';
 import InformationLine from './InformationLine';
 import TorchImageWithSparks from './TorchImageWithSparks';
+import PurchaseForm from './PurchaseForm';
 
 
 // Context Providers 
@@ -42,6 +45,7 @@ function Tank() {
 
     // State Variables 
     const [compareButtonHover, setCompareButtonHover] = useState(false);
+    const [purchaseButtonHover, setPurchaseButtonHover] = useState(false);
     const [isColumn, setIsColumn] = useState(false);
     const [expand, setExpand] = useState({
         firepower: false,
@@ -127,7 +131,10 @@ function Tank() {
         setCompareButtonHover((previous) => !previous);
     }
 
-
+    // Handle Purchase Button Hover 
+    const handlePurchaseButtonHover = () => {
+        setPurchaseButtonHover((previous) => !previous);
+    }
 
     // Modular Input Renders ------------------------------------------------------------------
 
@@ -248,26 +255,27 @@ function Tank() {
     // Render Purchase Button
     const renderPurchaseButton = () => (
         <Button
-            // onClick={handleTogglePurchaseOpen}
+            onClick={handleTogglePurchase}
+            onMouseEnter={handlePurchaseButtonHover}
+            onMouseLeave={handlePurchaseButtonHover}
             sx={{
-                width: '12rem',
-                height: '2.8rem',
+                display: 'flex',
+                alignItems: 'center',
                 backgroundColor: '#ab003c',
                 color: '#fafafa',
-                fontWeight: 'bold',
-                fontSize: '0.95rem',
                 border: '2px solid transparent',
                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                overflow: 'hidden',
-                padding: 0,
-                position: 'relative',
-                transition: 'all 0.2s ease',
+                fontStyle: 'bold',
+                fontSize: '1rem',
                 whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                width: purchaseButtonHover ? '20rem' : '12rem',
+                transition: 'all 0.3s ease, width 0.3s ease',
                 '&:hover': {
-                    width: '20rem',
                     backgroundColor: 'transparent',
+                    color: '#fafafa',
                     borderColor: '#ab003c',
-                    boxShadow: '0 0 12px rgba(171, 0, 60, 0.6)',
+                    boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
                 },
             }}
         >
@@ -277,55 +285,24 @@ function Tank() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
                     width: '100%',
                     height: '100%',
                     transform: 'scale(1)',
-                    transition: 'transform 0.2s ease, opacity 0.2s ease',
-                    opacity: 1,
-                    pointerEvents: 'none',
+                    transition: 'transform 0.3s ease, opacity 0.3s ease',
                     '&:hover': {
-                        opacity: 0,
+                        transform: 'scale(1.1)',
                     },
-                }}
-            >
-                <GrMoney
-                    fontSize="1.3rem"
-                    style={{
-                        marginRight: '0.4rem'
-                    }}
-                />
-                Purchase
-            </Box>
-            <Box
-                className="hover-text"
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    opacity: 0,
                     whiteSpace: 'nowrap',
-                    transition: 'opacity 0.2s ease 0.1s',
-                    pointerEvents: 'none',
-                    '&:hover': {
-                        opacity: 1,
-                    },
                 }}
             >
                 <GrMoney
-                    fontSize="1.3rem"
+                    fontSize="1.5rem"
                     style={{
-                        marginRight: '0.4rem'
+                        marginRight: '.5rem',
+                        transition: 'transform 0.3s ease, color 0.1s ease'
                     }}
                 />
-                Purchase for <span style={{ marginLeft: '0.3rem' }}>{fixNumber(tank.price)} Credits</span>
+                {purchaseButtonHover ? `Purchase for ${tank.price ? fixNumber(tank.price) : 'NA'} Credits` : 'Purchase'}
             </Box>
         </Button>
     );
@@ -349,8 +326,12 @@ function Tank() {
                     fontSize: '1rem',
                     justifyContent: 'center',
                     overflow: 'hidden',
-                    transition: 'all 0.3s ease, width 0.3s ease',
-                    width: reference ? '16rem' : '12rem',
+                    // transition: 'all 0.3s ease, width 0.3s ease',
+                    width: labelOn === 'Inline Information' || labelOff === 'Stack Information'
+                        ? '16rem'
+                        : reference
+                            ? '16rem'
+                            : '12rem',
                     whiteSpace: 'nowrap',
                     '&:hover': {
                         backgroundColor: 'transparent',
@@ -362,8 +343,8 @@ function Tank() {
             >
                 {IconComponent && (
                     <IconComponent
-                        fontSize="1.5rem"
                         style={{
+                            fontSize: '1.5rem',
                             marginRight: '.5rem',
                             marginTop: '.2rem',
                             transition: 'transform 0.3s ease, color 0.3s ease',
@@ -458,7 +439,7 @@ function Tank() {
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
-                                gap: '3rem',
+                                gap: '5rem',
                                 justifyContent: 'center',
                                 marginTop: '2rem',
                                 alignItems: 'center',
@@ -517,9 +498,76 @@ function Tank() {
                             alignItems: 'start',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center',
+                            gap: '1rem',
+                            marginBottom: '1rem',
                             marginLeft: '2rem',
-                            marginBottom: '1rem'
+                            marginTop: '1rem',
+                            width: '100%'
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '1rem',
+                            }}
+                        >
+                            <ToggleButton
+                                IconComponent={FaRegKeyboard}
+                                labelOn="Hide Description"
+                                labelOff="Show Description"
+                                onClick={() => handleToggleExpand('description')}
+                                reference={expand.description}
+                            />
+                            <ToggleButton
+                                IconComponent={iconComponent}
+                                labelOn="Inline Information"
+                                labelOff="Stack Information"
+                                onClick={handleToggleIsColumn}
+                                reference={isColumn}
+                            />
+                        </Box>
+                        {tank && (
+                            <Collapse
+                                in={expand.description}
+                                timeout={400}
+                                unmountOnExit
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginRight: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: '50rem'
+                                    }}
+                                >
+                                    <Typography
+                                        variant='h6'
+                                        sx={{
+                                            textAlign: 'start'
+                                        }}
+                                    >
+                                        {tank.description}
+                                    </Typography>
+                                </Box>
+                            </Collapse>
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            marginBottom: '1rem',
+                            marginLeft: '2rem',
+                            marginTop: '1rem'
                         }}
                     >
                         <ToggleButton
@@ -532,37 +580,334 @@ function Tank() {
                         {tank && (
                             <Collapse
                                 in={expand.firepower}
-                                timeout='auto'
+                                timeout={400}
                                 unmountOnExit
                             >
-                                <Grow
-                                    in={expand.firepower}
-                                    key={isColumn ? 'row-layout' : 'column-layout'}
-                                    style={{
-
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: isColumn ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: 'auto',
+                                        maxWidth: isColumn ? '100%' : '50rem',
                                     }}
-                                    timeout={800}
                                 >
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: isColumn ? 'column' : 'row',
-                                            flexWrap: 'wrap',
-                                            gap: '1rem',
-                                            marginTop: '1rem',
-                                            marginLeft: '2rem',
-                                            marginRight: '2rem',
-                                            transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
-                                        }}
-                                    >
+                                    <InformationLine
+                                        label='Aim Time:'
+                                        value={tank.default_profile?.gun?.['aim_time']}
+                                        tooltip='Aim time in seconds'
+                                        unit='s'
+                                    />
+                                    <InformationLine
+                                        label='Caliber:'
+                                        value={tank.default_profile?.gun?.['caliber']}
+                                        tooltip='Caliber of gun in millimeters'
+                                        unit='mm'
+                                    />
+                                    <InformationLine
+                                        label='Dispersion:'
+                                        value={tank.default_profile?.gun?.['dispersion']}
+                                        tooltip='Dispersion of gun up to 100 meters'
+                                        unit='/100m'
+                                    />
+                                    <InformationLine
+                                        label='Fire Rate:'
+                                        value={tank.default_profile?.gun?.['fire_rate']}
+                                        tooltip='Rate of fire in rounds per minute'
+                                        unit='rpm'
+                                    />
+                                    <InformationLine
+                                        label='Gun Name:'
+                                        value={tank.default_profile?.gun?.['name']}
+                                        tooltip='Gun Model Name'
+                                    />
+                                    <InformationLine
+                                        label='Gun Weight:'
+                                        value={fixNumber(tank.default_profile?.gun?.['weight'])}
+                                        tooltip='Gun Model Weight'
+                                        unit='kg'
+                                    />
+                                </Box>
+                            </Collapse>
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            marginBottom: '1rem',
+                            marginLeft: '2rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <ToggleButton
+                            IconComponent={GiChemicalTank}
+                            labelOn='Hide Survivability'
+                            labelOff='Show Survivability'
+                            onClick={() => handleToggleExpand('survivability')}
+                            reference={expand.survivability}
+                        />
+                        {tank && (
+                            <Collapse
+                                in={expand.survivability}
+                                timeout={400}
+                                unmountOnExit
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: isColumn ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: 'auto',
+                                        maxWidth: isColumn ? '100%' : '50rem',
+                                    }}
+                                >
+                                    <InformationLine
+                                        label='Tier:'
+                                        value={tank.tier}
+                                        tooltip='Vehicle Tier'
+                                    />
+                                    <InformationLine
+                                        label='HP:'
+                                        value={tank.default_profile?.hp}
+                                        tooltip='Vehicle HP'
+                                    />
+                                    <InformationLine
+                                        label='Hull Armor:'
+                                        value={`${tank.default_profile?.armor?.hull?.['front']}/${tank.default_profile?.armor?.hull?.['sides']}/${tank.default_profile?.armor?.hull?.['rear']}`}
+                                        tooltip='Vehicle Front / Side / Rear Hull Armor in millimeters'
+                                    />
+                                    {tank.default_profile?.armor?.turret && (
                                         <InformationLine
-                                            label='Firepower'
-                                            value={tank.default_profile?.gun?.['aim_time']}
-                                            tooltip='Aim time in seconds'
-                                            unit='s'
+                                            label='Turret Armor:'
+                                            value={`${tank.default_profile?.armor?.turret?.['front']}/${tank.default_profile?.armor?.turret?.['sides']}/${tank.default_profile?.armor?.turret?.['rear']}`}
+                                            tooltip='Vehicle Front / Side / Rear Turret Armor in millimeters'
                                         />
-                                    </Box>
-                                </Grow>
+                                    )}
+                                    <InformationLine
+                                        label='Max Ammo:'
+                                        value={tank.default_profile?.max_ammo}
+                                        tooltip='Vehicle max ammo capacity'
+                                    />
+                                </Box>
+                            </Collapse>
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            marginBottom: '1rem',
+                            marginLeft: '2rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <ToggleButton
+                            IconComponent={GiGreatWarTank}
+                            labelOn='Hide Mobility'
+                            labelOff='Show Mobility'
+                            onClick={() => handleToggleExpand('mobility')}
+                            reference={expand.mobility}
+                        />
+                        {tank && (
+                            <Collapse
+                                in={expand.mobility}
+                                timeout={400}
+                                unmountOnExit
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: isColumn ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: 'auto',
+                                        maxWidth: isColumn ? '100%' : '50rem',
+                                    }}
+                                >
+                                    <InformationLine
+                                        label='Top Speed Forward:'
+                                        value={tank.default_profile?.speed_forward}
+                                        tooltip='Top vehicle speed forward in kilometers per hour'
+                                        unit=' km/h'
+                                    />
+                                    <InformationLine
+                                        label='Top Speed Reverse:'
+                                        value={tank.default_profile?.speed_backward}
+                                        tooltip='Top vehicle speed reverse in kilometers per hour'
+                                        unit=' km/h'
+                                    />
+                                    <InformationLine
+                                        label='Traverse Speed:'
+                                        value={tank.default_profile?.suspension?.['traverse_speed']}
+                                        tooltip='Top vehicle traverse speed in degrees per second'
+                                        unit=' deg/s'
+                                    />
+                                    <InformationLine
+                                        label='Max Weight:'
+                                        value={fixNumber(tank.default_profile?.max_weight)}
+                                        tooltip='Maximum vehicle weight'
+                                        unit=' tons'
+                                    />
+                                </Box>
+                            </Collapse>
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            marginBottom: '1rem',
+                            marginLeft: '2rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <ToggleButton
+                            IconComponent={MdRemoveRedEye}
+                            labelOn='Hide Spotting'
+                            labelOff='Show Spotting'
+                            onClick={() => handleToggleExpand('spotting')}
+                            reference={expand.spotting}
+                        />
+                        {tank && (
+                            <Collapse
+                                in={expand.spotting}
+                                timeout={400}
+                                unmountOnExit
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: isColumn ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: 'auto',
+                                        maxWidth: isColumn ? '100%' : '50rem',
+                                    }}
+                                >
+                                    <InformationLine
+                                        label='View Range:'
+                                        value={tank.default_profile?.turret?.view_range}
+                                        tooltip='Maximum view range in meters'
+                                        unit=' m'
+                                    />
+                                    <InformationLine
+                                        label='Signal Range:'
+                                        vehicle={tank.default_profile?.radio?.signal_range}
+                                        tooltip='Maximum signal range in meters'
+                                        unit=' m'
+                                    />
+                                </Box>
+                            </Collapse>
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'start',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            marginBottom: '1rem',
+                            marginLeft: '2rem',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <ToggleButton
+                            IconComponent={SlPeople}
+                            labelOn='Hide Crew'
+                            labelOff='Show Crew'
+                            onClick={() => handleToggleExpand('crew')}
+                            reference={expand.crew}
+                        />
+                        {tank && (
+                            <Collapse
+                                in={expand.crew}
+                                timeout={400}
+                                unmountOnExit
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: isColumn ? 'column' : 'row',
+                                        flexWrap: 'wrap',
+                                        gap: '1rem',
+                                        marginLeft: '2rem',
+                                        marginTop: '1rem',
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out',
+                                        width: 'auto',
+                                        maxWidth: isColumn ? '100%' : '50rem',
+                                    }}
+                                >
+                                    {tank.crew?.map((crewMember, index) => (
+                                        <Box
+                                            key={`crew-member-${index}`}
+                                            sx={{
+                                                textAlign: 'start',
+                                            }}
+                                        >
+                                            <Tooltip
+                                                arrow
+                                                title={`Vehicle ${crewMember.member_id}`}
+                                                placement="bottom"
+                                                slotProps={{
+                                                    popper: {
+                                                        modifiers: [
+                                                            {
+                                                                name: 'offset',
+                                                                options: {
+                                                                    offset: [0, 20],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
+                                                }}
+                                            >
+                                                <img
+                                                    src={`https://na-wotp.wgcdn.co/static/6.2.8_cfaf5d/wotp_static/img/tankopedia_new/frontend/scss/tankopedia-detail/img/crew/${tank.nation.toLowerCase()}-face-${index + 1}.png`}
+                                                    alt={crewMember.member_id}
+                                                    style={{
+                                                        width: '6rem',
+                                                        height: '5rem',
+                                                    }}
+                                                />
+                                            </Tooltip>
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    marginTop: '0.5rem',
+                                                    color: '#fafafa',
+                                                }}
+                                            >
+                                                {crewMember.member_id.toUpperCase()}
+                                            </Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
                             </Collapse>
                         )}
                     </Box>
@@ -570,6 +915,40 @@ function Tank() {
             </>
         )
     }
+
+
+    // Tank Purchase Form Render / Backdrop Render 
+    const renderPurchaseForm = () => {
+        return (
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
+                }}
+            >
+                <Backdrop
+                    open={purchaseOpen}
+                    sx={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1
+                    }}
+                >
+                    {purchaseOpen && (
+                        <PurchaseForm
+                            information={tank}
+                            onClose={handleTogglePurchaseClose}
+                        />
+                    )}
+                </Backdrop>
+            </Box>
+        )
+    }
+
 
     // Tank Component Render 
     return (
@@ -586,6 +965,7 @@ function Tank() {
             >
                 {renderTankImageContainer()}
                 {renderTankSpecification()}
+                {renderPurchaseForm()}
             </Box>
 
         </>
