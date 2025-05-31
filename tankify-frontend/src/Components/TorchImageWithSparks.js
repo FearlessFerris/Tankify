@@ -106,7 +106,7 @@ function TorchImageWithSparks({
         style={{
           position: 'relative',
           display: 'inline-block',
-          width,
+          width: width || '100%',
           height,
           ...containerStyle
         }}

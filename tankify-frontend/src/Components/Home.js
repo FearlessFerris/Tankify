@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 // Components & Necessary Files 
 import Carousel from './Carousel';
-import TankGrid from './TankGrid';
+import TankGridV2 from './TankGridV2';
 
 
 // Home Component 
@@ -27,7 +27,7 @@ function Home(){
                 marginTop: '10rem'
             }}
         >
-            <TankGrid /> 
+            <TankGridV2 /> 
         </div>
     )
 }

@@ -3,7 +3,7 @@
 
 // Dependencies 
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from 'material/ui';
+import { Box, Typography } from '@mui/material';
 
 
 // Components & Necessary Files 
@@ -13,51 +13,106 @@ import { Box, Typography } from 'material/ui';
 
 
 // TankCardInformationLine Component 
-function TankCardInformationLine ({ IconComponent, label, value }) { 
+function TankCardInformationLine ({ IconComponent, label, value, description = false }) { 
 
-
-    return( 
+    return (
         <Box
-            sx = {{ 
-                alignItems: 'center',
+            sx={{
                 display: 'flex',
-                justifyContent: 'space-between'
+                flexDirection: description ? 'column' : 'row',
+                alignItems: 'center',
+                justifyContent: description ? 'center' : 'space-between',
+                textAlign: description ? 'center' : 'left',
+                marginY: description ? '1rem' : '0.2rem',
+                width: '100%'
             }}
         >
-            <Typography
-                variant = 'body1'
-                sx = {{ 
-                    color: '#fafafa',
-                    marginLeft: '.5rem',
-                    textAlign: 'center'
-                }}
-            > 
-                { label }
-            </Typography>
-            <Typography
-                variant = 'body1'
-                sx = {{ 
-                    color: '#ab003c',
-                    fontWeight: 'bold',
-                    marginRight: '.5rem'
-                }}
-            > 
-            { IconComponent && ( 
-                <IconComponent 
-                    fontSize = '1rem'
-                    style = {{ 
-                        color: '#4b4848',
-                        marginRight: '.2rem',
-                        position: 'relative',
-                        top: '.2rem',
-                        transition: 'color 0.3s ease'
-                    }}
-                />
+            {description ? (
+                <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: '0.5rem'
+                        }}
+                    >
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                color: '#fafafa',
+                                fontWeight: 'bold',
+                                marginRight: '.3rem'
+                            }}
+                        >
+                            {label}
+                        </Typography>
+                        {IconComponent && (
+                            <IconComponent
+                                fontSize="1rem"
+                                style={{
+                                    color: '#4b4848',
+                                    transition: 'color 0.3s ease'
+                                }}
+                            />
+                        )}
+                    </Box>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            color: '#ab003c',
+                            textAlign: 'center',
+                            wordBreak: 'break-word',
+                            whiteSpace: 'pre-line'
+                        }}
+                    >
+                        {value}
+                    </Typography>
+                </>
+            ) : (
+                <>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            color: '#fafafa'
+                        }}
+                    >
+                        {label}
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#ab003c',
+                            fontWeight: 'bold',
+                            textAlign: 'right'
+                        }}
+                    >
+                        {IconComponent && (
+                            <IconComponent
+                                fontSize="1rem"
+                                style={{
+                                    color: '#4b4848',
+                                    marginRight: '.3rem',
+                                    position: 'relative',
+                                    top: '.1rem'
+                                }}
+                            />
+                        )}
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                color: '#ab003c',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            {value}
+                        </Typography>
+                    </Box>
+                </>
             )}
-            { value }
-            </Typography>
         </Box>
-    )
+    );
 }
 
 export default TankCardInformationLine; 
