@@ -48,9 +48,11 @@ def all_tanks():
             print( nation )
             query = query.filter(Tank.nation.ilike(f'%{nation}%'))
         if tank_type:
+            print( tank_type )
             formatted_type = tank_type.replace(" ", "").lower()
             query = query.filter(func.lower(Tank.type) == formatted_type)
         if tier:
+            print( tier )
             query = query.filter(Tank.tier == tier)
 
         paginated_result = query.paginate(page=page, per_page=per_page, error_out=False)

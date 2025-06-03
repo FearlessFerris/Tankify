@@ -412,27 +412,36 @@ function Tank() {
                         >
                             <Box
                                 sx={{
-                                    top: 0,
-                                    zIndex: 0
+                                    position: 'relative',
+                                    width: '60rem',
+                                    height: '30rem',
                                 }}
                             >
                                 <TorchImageWithSparks
                                     src={tank.nation_flag_hd}
+                                    width="95%"
+                                    height="100%"
                                 />
-                                <CardMedia
-                                    component="img"
-                                    image={tank.image}
-                                    alt={`${tank.name}`}
+                                <Box
                                     sx={{
                                         position: 'absolute',
-                                        bottom: '36rem',
+                                        top: '50%',
                                         left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        width: '30rem',
+                                        transform: 'translate(-50%, -50%)',
                                         zIndex: 2,
-                                        pointerEvents: 'none',
                                     }}
-                                />
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        image={tank.image}
+                                        alt={`${tank.name}`}
+                                        sx={{
+                                            width: '28rem',
+                                            height: 'auto',
+                                            pointerEvents: 'none',
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </Box>
                         <Box

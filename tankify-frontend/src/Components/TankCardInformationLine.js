@@ -18,12 +18,12 @@ function TankCardInformationLine ({ IconComponent, label, value, description = f
     return (
         <Box
             sx={{
+                alignItems: 'center',
                 display: 'flex',
                 flexDirection: description ? 'column' : 'row',
-                alignItems: 'center',
                 justifyContent: description ? 'center' : 'space-between',
-                textAlign: description ? 'center' : 'left',
                 marginY: description ? '1rem' : '0.2rem',
+                textAlign: description ? 'center' : 'left',
                 width: '100%'
             }}
         >
@@ -61,6 +61,7 @@ function TankCardInformationLine ({ IconComponent, label, value, description = f
                         variant="body1"
                         sx={{
                             color: '#ab003c',
+                            fontWeight: 'bold',
                             textAlign: 'center',
                             wordBreak: 'break-word',
                             whiteSpace: 'pre-line'
@@ -81,9 +82,9 @@ function TankCardInformationLine ({ IconComponent, label, value, description = f
                     </Typography>
                     <Box
                         sx={{
-                            display: 'flex',
                             alignItems: 'center',
                             color: '#ab003c',
+                            display: 'flex',
                             fontWeight: 'bold',
                             textAlign: 'right'
                         }}

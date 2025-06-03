@@ -2,7 +2,7 @@
 
 
 // Dependencies 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Grid2, IconButton, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
@@ -24,7 +24,10 @@ function TankGridV2() {
     const navigate = useNavigate();
 
     // State Variables 
-    const [tanks, setTanks] = useState([]);
+    const [ tanks, setTanks ] = useState([]);
+    const [ page, setPage ] = useState(1);
+    const [ totalPages, setTotalPages ] = useState( null );
+    const [ isLoading, setIsLoading ] = useState( false );
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const types = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG'];
     const nations = ['USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy'];
@@ -34,53 +37,78 @@ function TankGridV2() {
         type: '',
         nation: ''
     });
-    const [anchorEl, setAnchorEl] = useState({
-        tier: null,
-        type: null,
-        nation: null
-    });
-
 
     // API Helper Functions 
-    const fetchTanks = async (currentPage = 1, currentFilters = filters) => {
-        try {
+    const fetchTanks = async ( currentPage = 1, currentFilters = filters, append = false ) => { 
+        setIsLoading( true );
+        try{ 
             const { search, tier, type, nation } = currentFilters;
-            console.log('Fetching Tanks...');
-            const response = await apiClient.get(`/tanks/all?search=${search || ''}&page=${currentPage}&per_page=20&type=${type || ''}&tier=${tier || ''}&nation=${nation || ''}`);
-            const apiTanks = response.data.data;
-            console.log(apiTanks);
-            if (currentPage === 1) {
-                setTanks(apiTanks);
+            const params = new URLSearchParams(); 
+            if ( search ) params.append( 'search', search );
+            if ( tier ) params.append( 'tier', tier );
+            if ( type ) params.append( 'type', type );
+            if ( nation ) params.append( 'nation', nation );
+            params.append( 'page', currentPage );
+            params.append( 'per_page', 20 );
+            const response = await apiClient.get( `/tanks/all?${ params.toString() }` );
+            const apiTanks = response.data.data; 
+            setTotalPages( response.data.total_pages );
+            // await new Promise( r => setTimeout( r, 300 ) );
+            setTanks(prev => append ? [...prev, ...apiTanks] : apiTanks);
+        }
+        catch( error ){ 
+            console.error( `Error fetching tanks`, error );
+        }
+        finally { 
+            setIsLoading( false );
+        }
+    }
+
+    const handleTextFilterChange = (event) => {
+        const { name, value } = event.target;
+        const sanitizedValue = value.replace(/[^a-zA-Z0-9 -]/g, '');
+        const updatedFilters = { 
+            ...filters, 
+            [ name ]: sanitizedValue
+        }
+        setFilters( updatedFilters );
+        setPage( 1 );
+    }
+
+    const handleMenuFilterChange = (filterType, value) => {
+        const isAlreadySelected = filters[filterType] === value;
+        const updatedFilters = {
+            ...filters,
+            [filterType]: isAlreadySelected ? '' : value,
+        };
+        setFilters(updatedFilters);
+    };
+
+    useEffect( () => { 
+        const handleScroll = () => { 
+            const scrollPosition = window.innerHeight + window.scrollY; 
+            const nearBottom = document.body.offsetHeight - 500; 
+            if ( scrollPosition >= nearBottom && page < totalPages ){ 
+                const nextPage = page + 1; 
+                setPage( nextPage );
+                fetchTanks( nextPage, filters, true );
             }
         }
-        catch (error) {
-            console.error('Error fetching tanks', error)
-        }
-    }
-
-    const handleMenuOpen = (event, type) => {
-        setAnchorEl((previous) => ({
-            ...previous,
-            [type]: event.currentTarget
-        }));
-    }
-
-    const handleMenuClose = (type) => {
-        setAnchorEl((previous) => ({
-            ...previous,
-            [type]: null
-        }));
-    }
-
+        window.addEventListener( 'scroll', handleScroll );
+        return () => window.removeEventListener( 'scroll', handleScroll );
+    }, [ page, totalPages, filters ] )
 
     // Initial Data Fetching 
     useEffect(() => {
-        fetchTanks(1, filters);
-    }, []);
-
+        setPage(1);
+        setTanks( [] );
+        fetchTanks(1, filters );
+    }, [ filters ] );
 
     // Menu Filter Selector Render 
-    const MenuFilterSelector = ({ anchorElReference, filterType, filterValues, IconComponent, tooltipTitle }) => {
+    const MenuFilterSelector = ({ filterType, filterValues, IconComponent, tooltipTitle }) => {
+
+        const [anchorEl, setAnchorEl] = React.useState(null);
 
         return (
             <>
@@ -88,12 +116,12 @@ function TankGridV2() {
                     title={tooltipTitle}
                 >
                     <IconButton
-                        onClick={(event) => handleMenuOpen({ event, filterType })}
-                        sx={{
+                        onClick = { ( event ) => { setAnchorEl( event.currentTarget ) } }
+                        sx={{ 
                             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
                             transition: 'box-shadow 0.3s ease',
                             borderRadius: '0.5rem',
-                            color: filters.tier ? '#ab003c' : '#fafafa',
+                            color: filters[filterType] ? '#ab003c' : '#fafafa',
                             marginLeft: '0.5rem'
                         }}
                     >
@@ -106,24 +134,36 @@ function TankGridV2() {
                         )}
                     </IconButton>
                 </Tooltip>
-                <Menu
-                    anchorEl={anchorElReference}
-                    open={Boolean(anchorElReference)}
-                    onClose={() => handleMenuClose({ filterType })}
-                >
-                    {filterValues.map((filterType) => (
+                    <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left'
+                    }}
+                    >
+                    {filterValues.map((value) => (
                         <MenuItem
-                            key={filterType}
-                            sx={{
-                                color: '#fafafa',
-                                backgroundColor: filters.filterType === filterType ? '#ab003c' : '#0d0d0d',
-                                '&:hover': {
-                                    backgroundColor: '#ab003c',
-                                    color: '#fafafa'
-                                }
-                            }}
+                        onClick={() => { 
+                            handleMenuFilterChange(filterType, value)
+                            setAnchorEl( null )
+                        }}
+                        key={value}
+                        sx={{
+                            color: '#fafafa',
+                            backgroundColor: filters[filterType] === value ? '#ab003c' : '#0d0d0d',
+                            '&:hover': {
+                                backgroundColor: '#ab003c',
+                                color: '#fafafa'
+                            }
+                        }}
                         >
-                            {filterType}
+                            {value}
                         </MenuItem>
                     ))}
                 </Menu>
@@ -138,9 +178,11 @@ function TankGridV2() {
         return (
             <>
                 <TextField
-                    variant='outlined'
+                    name='search'
+                    onChange={handleTextFilterChange}
                     placeholder='Search Tank by Name'
                     value={filters.search}
+                    variant='outlined'
                     sx={{
                         input: { color: '#ab003c' },
                         '& .MuiOutlinedInput-root fieldset': { border: 'none' },
@@ -150,21 +192,18 @@ function TankGridV2() {
                     }}
                 />
                 <MenuFilterSelector
-                    anchorElReference={anchorEl.tier}
                     filterType='tier'
                     filterValues={tiers}
                     IconComponent={FormatListNumberedIcon}
                     tooltipTitle='Tier Filter'
                 />
                 <MenuFilterSelector
-                    anchorElReference={anchorEl.type}
                     filterType='type'
                     filterValues={types}
                     IconComponent={ClassIcon}
                     tooltipTitle='Type Filter'
                 />
                 <MenuFilterSelector
-                    anchorElReference={anchorEl.nation}
                     filterType='nation'
                     filterValues={nations}
                     IconComponent={FlagIcon}
@@ -187,7 +226,7 @@ function TankGridV2() {
                         gap: '2rem',
                     }}
                 >
-                    {tanks.length > 0 ? (
+                    { tanks.length > 0 ? (
                         tanks.map((tank) => (
                             <Box
                                 key={tank.id}
@@ -205,14 +244,34 @@ function TankGridV2() {
                     ) : (
                         <Box
                             sx={{
-                                width: '100%',
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1rem',
                                 marginTop: '2rem',
-                                textAlign: 'center'
+                                textAlign: 'center',
+                                width: '100%'
                             }}
                         >
-                            <Typography variant="h5">
-                                No results
+                            { isLoading ? ( 
+                                <>
+                            <CircularProgress 
+                                color = 'inherit'
+                                size = '4rem'
+                            />    
+                                Loading Tanks...
+                            <Typography 
+                                variant = "h5"
+                            >
                             </Typography>
+                                </>
+                            ):(
+                                <Typography 
+                                    variant = 'h5'
+                                > 
+                                No Results 
+                                </Typography>
+                            )}
                         </Box>
                     )}
                 </Box>
@@ -232,7 +291,7 @@ function TankGridV2() {
             }}
         >
             <Typography
-                variant='h3'
+                variant='h4'
                 sx={{
                     color: '#ab003c',
                     marginBottom: '2rem',
@@ -240,7 +299,7 @@ function TankGridV2() {
                     textAlign: 'center'
                 }}
             >
-                Tank Inventory
+                Search Tank Inventory
             </Typography>
 
             <Box
@@ -256,7 +315,6 @@ function TankGridV2() {
                     marginRight: 'auto',
                 }}
             >
-
                 {renderMenuComponent()}
             </Box>
 
