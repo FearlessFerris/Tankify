@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 // Components & Necessary Files 
 import Carousel from './Carousel';
-import TankGridV2 from './TankGridV2';
+import TankGridV2 from './TankGrid';
 
 
 // Home Component 
