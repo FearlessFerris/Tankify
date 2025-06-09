@@ -24,10 +24,10 @@ function TankGridV2() {
     const navigate = useNavigate();
 
     // State Variables 
-    const [ tanks, setTanks ] = useState([]);
-    const [ page, setPage ] = useState(1);
-    const [ totalPages, setTotalPages ] = useState( null );
-    const [ isLoading, setIsLoading ] = useState( false );
+    const [tanks, setTanks] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const tiers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const types = ['Heavy Tank', 'Medium Tank', 'Light Tank', 'AT-SPG', 'SPG'];
     const nations = ['USSR', 'Germany', 'USA', 'China', 'France', 'UK', 'Japan', 'Czech', 'Sweden', 'Poland', 'Italy'];
@@ -39,42 +39,40 @@ function TankGridV2() {
     });
 
     // API Helper Functions 
-    const fetchTanks = async ( currentPage = 1, currentFilters = filters, append = false ) => { 
-        if( isLoading ) return; 
-        setIsLoading( true );
-        try{ 
+    const fetchTanks = async (currentPage = 1, currentFilters = filters, append = false) => {
+        if (isLoading) return;
+        setIsLoading(true);
+        try {
             const { search, tier, type, nation } = currentFilters;
-            const params = new URLSearchParams(); 
-            if ( search ) params.append( 'search', search );
-            if ( tier ) params.append( 'tier', tier );
-            if ( type ) params.append( 'type', type );
-            if ( nation ) params.append( 'nation', nation );
-            params.append( 'page', currentPage );
-            params.append( 'per_page', 20 );
-            const response = await apiClient.get( `/tanks/all?${ params.toString() }` );
-            const apiTanks = response.data.data; 
-            setTotalPages( response.data.total_pages );
-            // await new Promise( r => setTimeout( r, 300 ) );
-            setTanks(prev => append ? [...prev, ...apiTanks] : apiTanks );
-            console.log( apiTanks );
+            const params = new URLSearchParams();
+            if (search) params.append('search', search);
+            if (tier) params.append('tier', tier);
+            if (type) params.append('type', type);
+            if (nation) params.append('nation', nation);
+            params.append('page', currentPage);
+            params.append('per_page', 20);
+            const response = await apiClient.get(`/tanks/all?${params.toString()}`);
+            const apiTanks = response.data.data;
+            setTotalPages(response.data.total_pages);
+            setTanks(prev => append ? [...prev, ...apiTanks] : apiTanks);
         }
-        catch( error ){ 
-            console.error( `Error fetching tanks`, error );
+        catch (error) {
+            console.error(`Error fetching tanks`, error);
         }
-        finally { 
-            setIsLoading( false );
+        finally {
+            setIsLoading(false);
         }
     }
 
     const handleTextFilterChange = (event) => {
         const { name, value } = event.target;
         const sanitizedValue = value.replace(/[^a-zA-Z0-9 -]/g, '');
-        const updatedFilters = { 
-            ...filters, 
-            [ name ]: sanitizedValue
+        const updatedFilters = {
+            ...filters,
+            [name]: sanitizedValue
         }
-        setFilters( updatedFilters );
-        setPage( 1 );
+        setFilters(updatedFilters);
+        setPage(1);
     }
 
     const handleMenuFilterChange = (filterType, value) => {
@@ -86,28 +84,40 @@ function TankGridV2() {
         setFilters(updatedFilters);
     };
 
-    useEffect( () => { 
-        const handleScroll = () => { 
-            const scrollPosition = window.innerHeight + window.scrollY; 
-            const nearBottom = document.body.offsetHeight - 500; 
-            if ( scrollPosition >= nearBottom && page < totalPages ){ 
-                const nextPage = page + 1; 
-                setPage( nextPage );
-                fetchTanks( nextPage, filters, true );
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const nearBottom = document.body.offsetHeight - 500;
+            if (scrollPosition >= nearBottom && page < totalPages) {
+                const nextPage = page + 1;
+                setPage(nextPage);
+                fetchTanks(nextPage, filters, true);
             }
         }
-        window.addEventListener( 'scroll', handleScroll );
-        return () => window.removeEventListener( 'scroll', handleScroll );
-    }, [ page, totalPages, filters ] )
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [page, totalPages, filters])
 
     // Initial Data Fetching 
     useEffect(() => {
         setPage(1);
-        setTanks( [] );
-        fetchTanks( 1, filters );
-    }, [ filters ] );
+        setTanks([]);
+        fetchTanks(1, filters);
+    }, [filters]);
 
     // Menu Filter Selector Render 
+    /* 
+        For future reference, when working with the Material UI Menu component:
+
+        The anchorEl prop is best set locally within the component itself. 
+        Attempting to set the prop globally can lead to unpredictable dropdown positioning or broken attachment. 
+
+        This is due to the fact that the anchorEl needs to reference the actual DOM element triggering the menu
+        and that reference must exist in the current render cycle. 
+
+        Setting the anchorEl locally using the event.currentTarget inside the onClick handler of the triggering 
+        element ( like an IconButton ) ensures correct and reliable positioning
+    */ 
     const MenuFilterSelector = ({ filterType, filterValues, IconComponent, tooltipTitle }) => {
 
         const [anchorEl, setAnchorEl] = React.useState(null);
@@ -118,8 +128,8 @@ function TankGridV2() {
                     title={tooltipTitle}
                 >
                     <IconButton
-                        onClick = { ( event ) => { setAnchorEl( event.currentTarget ) } }
-                        sx={{ 
+                        onClick={(event) => { setAnchorEl(event.currentTarget) }}
+                        sx={{
                             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
                             transition: 'box-shadow 0.3s ease',
                             borderRadius: '0.5rem',
@@ -136,7 +146,7 @@ function TankGridV2() {
                         )}
                     </IconButton>
                 </Tooltip>
-                    <Menu
+                <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={() => setAnchorEl(null)}
@@ -148,22 +158,22 @@ function TankGridV2() {
                         vertical: 'top',
                         horizontal: 'left'
                     }}
-                    >
+                >
                     {filterValues.map((value) => (
                         <MenuItem
-                        onClick={() => { 
-                            handleMenuFilterChange(filterType, value)
-                            setAnchorEl( null )
-                        }}
-                        key={value}
-                        sx={{
-                            color: '#fafafa',
-                            backgroundColor: filters[filterType] === value ? '#ab003c' : '#0d0d0d',
-                            '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa'
-                            }
-                        }}
+                            onClick={() => {
+                                handleMenuFilterChange(filterType, value)
+                                setAnchorEl(null)
+                            }}
+                            key={value}
+                            sx={{
+                                color: '#fafafa',
+                                backgroundColor: filters[filterType] === value ? '#ab003c' : '#0d0d0d',
+                                '&:hover': {
+                                    backgroundColor: '#ab003c',
+                                    color: '#fafafa'
+                                }
+                            }}
                         >
                             {value}
                         </MenuItem>
@@ -228,7 +238,7 @@ function TankGridV2() {
                         gap: '2rem',
                     }}
                 >
-                    { tanks.length > 0 ? (
+                    {tanks.length > 0 ? (
                         tanks.map((tank) => (
                             <Box
                                 key={tank.id}
@@ -255,23 +265,23 @@ function TankGridV2() {
                                 width: '100%'
                             }}
                         >
-                            { isLoading ? ( 
+                            {isLoading ? (
                                 <>
-                            <CircularProgress 
-                                color = 'inherit'
-                                size = '4rem'
-                            />    
-                                Loading Tanks...
-                            <Typography 
-                                variant = "h5"
-                            >
-                            </Typography>
+                                    <CircularProgress
+                                        color='inherit'
+                                        size='4rem'
+                                    />
+                                    Loading Tanks...
+                                    <Typography
+                                        variant="h5"
+                                    >
+                                    </Typography>
                                 </>
-                            ):(
-                                <Typography 
-                                    variant = 'h5'
-                                > 
-                                No Results 
+                            ) : (
+                                <Typography
+                                    variant='h5'
+                                >
+                                    No Results
                                 </Typography>
                             )}
                         </Box>

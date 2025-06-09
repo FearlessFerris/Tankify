@@ -4,7 +4,7 @@
 // Dependencies 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Backdrop, Box, Button, CardMedia, Collapse, Grow, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CardMedia, Collapse, Grow, Modal, Paper, Tooltip, Typography } from '@mui/material';
 import { FaNewspaper } from 'react-icons/fa';
 import { FaCodeCompare, FaRegKeyboard } from 'react-icons/fa6';
 import { GiChemicalTank, GiGreatWarTank } from 'react-icons/gi';
@@ -428,7 +428,7 @@ function Tank() {
                                         top: '50%',
                                         left: '50%',
                                         transform: 'translate(-50%, -50%)',
-                                        zIndex: 2,
+                                        zIndex: 'inherit',
                                     }}
                                 >
                                     <CardMedia
@@ -929,7 +929,11 @@ function Tank() {
     // Tank Purchase Form Render / Backdrop Render 
     const renderPurchaseForm = () => {
         return (
-            <Box
+            <Modal
+                open = { purchaseOpen }
+                onClose = { handleTogglePurchaseClose }
+                aria-labeledby = 'purchase-modal'
+                aria-describedby = 'purchase-form-description' 
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
@@ -937,24 +941,20 @@ function Tank() {
                     justifyContent: 'center'
                 }}
             >
-                <Backdrop
-                    open={purchaseOpen}
+                <Box
                     sx={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         zIndex: 1
                     }}
                 >
-                    {purchaseOpen && (
-                        <PurchaseForm
-                            information={tank}
-                            onClose={handleTogglePurchaseClose}
-                        />
-                    )}
-                </Backdrop>
-            </Box>
+                    <PurchaseForm
+                        information={tank}
+                        onClose={handleTogglePurchaseClose}
+                    />
+                </Box>
+            </Modal>
         )
     }
 

@@ -10,7 +10,7 @@ import { CssBaseline } from '@mui/material';
 
 
 // Components & Necessary Files 
-import CreateUser from './Components/CreateUser';
+import CreateUserV2 from './Components/CreateUserV2';
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Navbar from './Components/Navbar';
@@ -54,7 +54,7 @@ function App() {
                                 <Route exact path="/" element={<Home />} />
                                 <Route exact path="/shop" element={<Shop />} />
                                 <Route exact path="/tank/:tank_id" element={<Tank />} />
-                                <Route exact path="/user/create" element={<CreateUser />} />
+                                <Route exact path="/user/create" element={<CreateUserV2 />} />
                                 <Route exact path="/user/profile" element={<Profile />} />
                                 <Route exact path="/user/login" element={<Login />} />
                             </Routes>

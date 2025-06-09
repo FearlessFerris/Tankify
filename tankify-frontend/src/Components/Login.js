@@ -174,6 +174,50 @@ const renderLoginButton = () => {
   );
 };
 
+// Render Sign Up Text / Link
+const renderSignUpLink = () => { 
+
+    return( 
+        <>
+            <Box
+                sx = {{ 
+                    marginTop: '1rem',
+                    textAlign: 'center'
+                }}
+            > 
+                <Typography
+                    variant = 'h6'
+                    sx = {{ 
+                        color: '#fafafa'
+                    }}
+                > 
+                Don't have an account? {' '}
+                <Button 
+                    onClick = { () => navigate( '/user/create') }
+                    sx={{
+                        color: '#ab003c',
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '.2rem',
+                        minWidth: 'auto',
+                        padding: 0,
+                        textTransform: 'none',
+                        '&:hover': {
+                            textDecoration: 'underline',
+                            backgroundColor: 'transparent',
+                        },
+                    }}
+                    >
+                    Sign Up 
+                </Button>
+                </Typography>
+            </Box>
+        </>
+    )
+}
+
+
+
 // Input Style Render
 const inputStyles = {
   marginTop: '2rem',
@@ -236,8 +280,9 @@ return (
           width: '45rem',
       }}
   >
-      {renderLoginInput()}
-      {renderLoginButton()}
+      { renderLoginInput() }
+      { renderLoginButton() }
+      { renderSignUpLink() }
   </Box>
 )
 }
