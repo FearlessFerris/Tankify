@@ -12,6 +12,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 // Confirmation Component
 function Confirmation({ open, onClose, onConfirm }) { 
     
+    
     return( 
         <Dialog 
             open = { open }
@@ -21,15 +22,14 @@ function Confirmation({ open, onClose, onConfirm }) {
             PaperProps={{
                 sx: {
                     borderRadius: "1.5rem",
-                    backgroundColor: "#161616",
+                    backgroundColor: "#0d0d0d",
                     boxShadow: "none",
-                    border: "2px solid #161616"
                 }
             }}
         >
             <DialogTitle
                 sx = {{
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     color: '#fafafa',
                     display: 'flex',
                     justifyContent: 'center',
@@ -40,7 +40,7 @@ function Confirmation({ open, onClose, onConfirm }) {
             </DialogTitle>
             <DialogContent
                 sx = {{
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     display: 'flex',
                     justifyContent: 'center'
                 }}
@@ -56,29 +56,29 @@ function Confirmation({ open, onClose, onConfirm }) {
             </DialogContent>
             <DialogActions
                 sx = {{
-                    backgroundColor: '#161616',
+                    backgroundColor: '#0d0d0d',
                     display: 'flex',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    marginBottom: '2rem'
                 }}
             >
                 <Button
                     onClick = { onClose }
                     variant = 'filled'
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        color: '#900C3F',
-                            backgroundColor: '#161616',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                            fontStyle: 'bold',
-                            fontSize: '1.1rem',
-                            marginRight: '1rem',
-                            width: '8rem',
-                            '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa',
-                            },
-                        }}
+                        backgroundColor: '#ab003c',
+                        color: '#fafafa',
+                        border: '2px solid transparent',
+                        marginRight: '1rem',
+                        width: '8rem',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            color: '#fafafa',
+                            borderColor: '#ab003c',
+                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                        }
+                    }}
                 >
                     No 
                 </Button>
@@ -86,20 +86,19 @@ function Confirmation({ open, onClose, onConfirm }) {
                     onClick = { onConfirm }
                     variant = 'filled'
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        color: '#900C3F',
-                            backgroundColor: '#161616',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)',
-                            fontStyle: 'bold',
-                            fontSize: '1.1rem',
-                            marginRight: '1rem',
-                            width: '8rem',
-                            '&:hover': {
-                                backgroundColor: '#ab003c',
-                                color: '#fafafa',
-                            },
-                        }}
+                        backgroundColor: '#ab003c',
+                        color: '#fafafa',
+                        border: '2px solid transparent',
+                        marginRight: '1rem',
+                        width: '8rem',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            color: '#fafafa',
+                            borderColor: '#ab003c',
+                            boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                        }
+                    }}
                 >
                     Yes 
                 </Button>

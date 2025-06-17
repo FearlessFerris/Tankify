@@ -14,6 +14,10 @@ import apiClient from '../api/apiClient';
 const UserContext = createContext();
 
 
+// Custom Hook to use the UserContext 
+export const useUser = () => useContext(UserContext);
+
+
 // User Context 
 export const UserProvider = ({ children }) => {
     
@@ -74,6 +78,8 @@ export const UserProvider = ({ children }) => {
                     default_currency: userCurrency
                 };
                 localStorage.setItem('user', JSON.stringify(updatedLocalUser));
+                console.log( response.data.data );
+                console.log( 'Successfully fetched default user currency' );
             }
            
         }
@@ -103,5 +109,3 @@ export const UserProvider = ({ children }) => {
     );
 };
 
-// Custom Hook to use the UserContext 
-export const useUser = () => useContext(UserContext);

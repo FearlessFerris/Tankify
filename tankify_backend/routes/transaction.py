@@ -41,8 +41,8 @@ def create_new_transaction( user_id ):
     """ Creates new User Transaction Instance """
 
     data = request.get_json() 
-    payment_type = data.get( 'paymentType' )
-    transaction_type = data.get( 'transactionType' )
+    payment_source = data.get( 'paymentSource' )
+    transaction_purpose = data.get( 'transactionPurpose' )
     amount = data.get( 'amount' )
     payment_method_id = data.get( 'paymentMethodId', None )
 
@@ -61,8 +61,8 @@ def create_new_transaction( user_id ):
     try: 
         result = Transaction.create_transaction( 
             user_id = user_id, 
-            payment_type = payment_type,
-            transaction_type = transaction_type, 
+            payment_source = payment_source,
+            transaction_purpose = transaction_purpose, 
             amount = amount,
             payment_method_id = payment_method_id
         )
@@ -86,7 +86,7 @@ def process_purchase_route():
 
     user_id = data.get('userId')
     amount = int( data.get('amount') )
-    payment_type = data.get('paymentType')
+    payment_source = data.get('paymentSource')
     payment_method_id = data.get( 'paymentMethodId', None )
 
     print( data )
@@ -96,7 +96,7 @@ def process_purchase_route():
 
     result = Transaction.process_purchase(
         user_id=user_id,
-        payment_type=payment_type,
+        payment_source=payment_source,
         amount=amount,
         payment_method_id=payment_method_id
     )

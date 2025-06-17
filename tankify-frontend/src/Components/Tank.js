@@ -932,7 +932,7 @@ function Tank() {
             <Modal
                 open = { purchaseOpen }
                 onClose = { handleTogglePurchaseClose }
-                aria-labeledby = 'purchase-modal'
+                aria-labeledby = 'purchase-model'
                 aria-describedby = 'purchase-form-description' 
                 sx={{
                     alignItems: 'center',

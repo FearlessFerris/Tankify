@@ -227,6 +227,41 @@ def seed_tanks():
 
         return []
 
+def seed_payment_methods( users ): 
+    """ Seeds the PaymentMethods table with mock data """
+
+    if not users: 
+        print( f'Skipping payment_method seeding due to missing users' )
+    
+    payment_methods = [ 
+        PaymentMethod( 
+            user_id = users[ 0 ].id, 
+            cardholder_name= 'James May',
+            card_number='89828281',
+            expiry='9/21',
+            cvv = '926',
+            type = 'debit',
+            details = '',
+            default_method=False,
+        ),
+
+        PaymentMethod( 
+            user_id = users[ 0 ].id, 
+            cardholder_name = 'Richard Hammond', 
+            card_number='09837861',
+            expiry='10/8',
+            cvv = '910', 
+            type = 'credit',
+            details = 'This is the Hammonds best card for purchases',
+            default_method = True, 
+        ),
+    ]
+
+    db.session.add_all( payment_methods )
+    db.session.commit()
+    print( f'Seeded { len( payment_methods )} payment_methods to the database' )
+    
+
 def seed_transactions(users, tanks):
     """Seeds the Transactions table with mock data."""
 
@@ -240,24 +275,32 @@ def seed_transactions(users, tanks):
     transactions = [
         Transaction(
             user_id=users[0].id, 
-            payment_type="Credit Card",
-            transaction_type = 'In Game Currency',
+            payment_source="in_app_credit",
+            transaction_purpose = 'purchase',
             amount=59.99, 
             payment_method_id=payment_method_id,
         ),
 
         Transaction(
             user_id=users[1].id, 
-            payment_type = 'In Game Credits',
-            transaction_type = 'Tank', 
+            payment_source = 'in_app_gold',
+            transaction_purpose = 'purchase', 
             amount=tanks[1].price, 
             payment_method_id=None,
         ),
 
+        Transaction( 
+            user_id = users[0].id,
+            payment_source = 'credit_card',
+            transaction_purpose = 'purchase',
+            amount = 29.99,
+            payment_method_id = None,
+        ),
+
         Transaction(
             user_id=users[2].id, 
-            payment_type = "Debit Card",
-            transaction_type = 'In Game Currency', 
+            payment_source = "debit_card",
+            transaction_purpose = 'purchase', 
             amount=102.99, 
             payment_method_id=None,
         ),
@@ -278,8 +321,10 @@ def seed_database():
             currencies = seed_currencies()
             users = seed_users(currencies)
             tanks = seed_tanks()
-            if users and tanks:
-                seed_transactions(users, tanks)
+            if users:
+                seed_payment_methods( users )
+                if tanks:
+                    seed_transactions(users, tanks)
             else:
                 print("Skipping transaction seeding due to missing users or tanks.")
 
@@ -288,9 +333,6 @@ def seed_database():
         except Exception as e:
             print(f"Error occurred while seeding data: {e}")
             db.session.rollback()
-
-
-
 
 if __name__ == "__main__":
     seed_database()

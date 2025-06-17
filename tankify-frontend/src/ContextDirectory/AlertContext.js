@@ -1,4 +1,4 @@
-// Alert Context Component Implementation 
+// Alert Context Component Implementation
 
 
 // Dependencies 
@@ -8,76 +8,103 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 
 
-// Components & Necessary Files 
-
-
 // Create Context 
 const AlertContext = createContext();
 
 
 // Custom Hook for accessing the Alert Context 
-export const useAlert = () => useContext( AlertContext );
+export const useAlert = () => useContext(AlertContext);
 
 
 // Alert Provider Component 
 export const AlertProvider = ({ children }) => {
 
-    const [ alert, setAlert ] = useState({ 
+    const [alert, setAlert] = useState({
         open: false,
         message: '',
         severity: 'info'
     });
 
-    const showAlert = useCallback(( message, severity = 'info' ) => {
+    const showAlert = useCallback((message, severity = 'info') => {
         setAlert({
-            open: true, 
+            open: true,
             message,
             severity
         });
-    }, [] );
-    
+    }, []);
+
     const closeAlert = () => {
-        setAlert(( previous ) => ({
-            ...previous,
+        setAlert(prev => ({
+            ...prev,
             open: false
         }));
-    }
+    };
 
-    return(
-        <AlertContext.Provider value = { showAlert }>
-        { children }
-        <Snackbar
-            open = { alert.open }
-            autoHideDuration = { 6000 }
-            onClose = { closeAlert }
-            anchorOrigin = {{ 
-                vertical: 'top',
-                horizontal: 'center' 
-            }}
+    const iconColor = alert.severity === 'success' ? '#fafafa' : '#ab003c';
+    const IconComponent = alert.severity === 'success' ? DoneIcon : CloseIcon;
+
+    return (
+        <AlertContext.Provider 
+            value = { showAlert } 
+        >
+            {children}
+            <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                onClose={closeAlert}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                }}
             >
-            <Alert
-                onClose = { closeAlert }
-                severity = { alert.severity }
-                sx = {{
-                    width: '100%',
-                    fontSize: '1.1rem',
-                    backgroundColor: '#161616',
-                    color: alert.severity === 'error' ? '#ab003c' : '#fafafa',
-                    border: '.1rem solid #fafafa',
-                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
-                    marginTop: '4rem'
-                }} 
-                icon={
-                    alert.severity === 'success' ? (
-                        <DoneIcon sx={{ color: '#fafafa' }} />
-                    ) : alert.severity === 'error' ? (
-                        <CloseIcon sx={{ color: '#ab003c' }} />
-                    ) : null
-                }
-            > 
-                { alert.message }
-            </Alert>
-        </Snackbar>
-    </AlertContext.Provider>
-    )
-}
+                <Alert
+                    severity={alert.severity}
+                    onClose={closeAlert}
+                    icon={
+                        <IconComponent
+                            onClick={closeAlert}
+                            sx={{
+                                color: iconColor,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                height: '100%',
+                            }}
+                        />
+                    }
+                    action={
+                        <IconComponent
+                            onClick={closeAlert}
+                            sx={{
+                                color: iconColor,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                height: '100%',
+                            }}
+                        />
+                    }
+                    sx={{
+                        backgroundColor: '#0d0d0d',
+                        border: alert.severity === 'error' ? '.1rem solid #ab003c' : '.1rem solid #fafafa',
+                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
+                        color: '#fafafa',
+                        fontSize: '1.1rem',
+                        marginTop: '6rem',
+                        minWidth: '20rem',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        '.MuiAlert-message': {
+                            flex: 1,
+                            textAlign: 'center'
+                        }
+                    }}
+                >
+                    {alert.message}
+                </Alert>
+            </Snackbar>
+        </AlertContext.Provider>
+    );
+};

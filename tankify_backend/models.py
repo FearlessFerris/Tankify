@@ -458,168 +458,142 @@ class PaymentMethod( Base ):
         print(f"Unset default for user {user_id}. Rows updated: {rows_updated}")
 
 
-class Transaction( Base ): 
+class Transaction(Base):
     """ Transaction Model """
 
     __tablename__ = 'transactions'
-    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-    payment_type = Column( String, nullable = False )
-    transaction_type = Column( String, nullable = False )
-    amount = Column( Integer, nullable = False )
-    payment_method_id = Column( UUID( as_uuid = True ), ForeignKey( 'payment_methods.id' ),nullable = True )
-    created_at = Column( DateTime, server_default = func.now() )
 
-    # Relationships with back_populates 
-    user = relationship( 'User', back_populates = 'transactions' )
-    payment_method = relationship( 'PaymentMethod', back_populates = 'transactions' )
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    payment_source = Column(String, nullable=False)
+    transaction_purpose = Column(String, nullable=False)
+    amount = Column(Integer, nullable=False)
+    payment_method_id = Column(UUID(as_uuid=True), ForeignKey('payment_methods.id'), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
 
+    # Relationships
+    user = relationship('User', back_populates='transactions')
+    payment_method = relationship('PaymentMethod', back_populates='transactions')
 
-    def __init__( self, user_id, payment_type, transaction_type, amount, payment_method_id = None ):
-        """ Initiates Transaction Instance """
-
-        self.user_id = user_id 
-        self.payment_type = payment_type, 
-        self.transaction_type = transaction_type,
-        self.amount = amount 
+    def __init__(self, user_id, payment_source, transaction_purpose, amount, payment_method_id=None):
+        self.user_id = user_id
+        self.payment_source = payment_source
+        self.transaction_purpose = transaction_purpose
+        self.amount = amount
         self.payment_method_id = payment_method_id
-    
-    def __repr__( self ):
-        """ Transaction Representation Method of Instance """
 
-        return( 
-            f"<Transaction( id = '{ self.id }',"
-            f"user_id = '{ self.user_id }', "
-            f"payment_type = '{ self.payment_type }', "
-            f"transaction_type = '{ self.transaction_type }', "
-            f"amount = '{ self.amount }', "
-            f"payment_method_id = '{ self.payment_method_id }')>"
+    def __repr__(self):
+        return (
+            f"<Transaction(id='{self.id}', "
+            f"user_id='{self.user_id}', "
+            f"payment_source='{self.payment_source}', "
+            f"transaction_purpose='{self.transaction_purpose}', "
+            f"amount='{self.amount}', "
+            f"payment_method_id='{self.payment_method_id}')>"
         )
-    
-    def to_dict( self ): 
-        """ Converts Transaction Instance to Dictionary """
 
-        return{ 
-            'id': str( self.id ),
-            'user_id': str( self.user_id ),
-            'payment_type': self.payment_type,
-            'transaction_type': self.transaction_type,
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'user_id': str(self.user_id),
+            'payment_source': self.payment_source,
+            'transaction_purpose': self.transaction_purpose,
             'amount': self.amount,
             'payment_method_id': self.payment_method_id,
             'created_at': self.created_at.isoformat(),
         }
-    
-    @classmethod
-    def get_all_transactions( cls, user_id, selected_filter = None ): 
-        """ Retrieves all of a Users Transactions """
 
-        user = User.query.filter_by( id = user_id ).first()
+    @classmethod
+    def get_all_transactions(cls, user_id, selected_filter=None):
+        user = User.query.filter_by(id=user_id).first()
         if not user:
-            print( f'User not found' ) 
-            return { 'success': False, 'message': 'User not found' }
-        try: 
-            query = cls.query.filter_by( user_id = user_id )
-            if selected_filter == 'date_desc': 
-                query = query.order_by( cls.created_at.desc() )
-            if selected_filter == 'date asc': 
-                query = query.order_by( cls.created_at.asc() )
-            if selected_filter == 'amount_high': 
-                query = query.order_by( cls.amount.desc() )
-            if selected_filter == 'amount_low': 
-                query = query.order_by( cls.amount.asc() )
-            if selected_filter == 'credit': 
-                query = query.order_by( cls.type == 'Credit' )
-            if selected_filter == 'Debit': 
-                query = query.order_by( cls.type == 'Debit' )
-            
-            transactions = query.all() 
+            return {'success': False, 'message': 'User not found'}
 
-            return { 'success': True, 'transactions': [ tx.to_dict() for tx in transactions ] }
-        
-        except Exception as e: 
-            print( f'Error retrieving transactions: { e }' )
-            return { 'success': False, 'message': 'Error retrieving transactions', 'error': str( e ) }
+        try:
+            query = cls.query.filter_by(user_id=user_id)
+            if selected_filter == 'date_desc':
+                query = query.order_by(cls.created_at.desc())
+            elif selected_filter == 'date_asc':
+                query = query.order_by(cls.created_at.asc())
+            elif selected_filter == 'amount_high':
+                query = query.order_by(cls.amount.desc())
+            elif selected_filter == 'amount_low':
+                query = query.order_by(cls.amount.asc())
+            elif selected_filter == 'purchase':
+                query = query.filter_by(transaction_purpose='purchase')
+            elif selected_filter == 'refund':
+                query = query.filter_by(transaction_purpose='refund')
 
+            transactions = query.all()
+            return {'success': True, 'transactions': [tx.to_dict() for tx in transactions]}
+        except Exception as e:
+            return {'success': False, 'message': 'Error retrieving transactions', 'error': str(e)}
 
     @classmethod
-    def create_transaction( cls, user_id, payment_type, transaction_type, amount, payment_method_id = None ):
-        """ Creates New Transaction Instance """
+    def create_transaction(cls, user_id, payment_source, transaction_purpose, amount, payment_method_id=None):
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return {'success': False, 'message': 'User not found'}
 
-        user = User.query.filter_by( id = user_id ).first()
-        if not user: 
-            print( f'User not found' )
-            return None 
-        
-        try: 
-            new_transaction = cls( 
-                user_id = user_id, 
-                payment_type = payment_type,
-                transaction_type = transaction_type,  
-                amount = amount, 
-                payment_method_id = payment_method_id
+        try:
+            new_transaction = cls(
+                user_id=user_id,
+                payment_source=payment_source,
+                transaction_purpose=transaction_purpose,
+                amount=amount,
+                payment_method_id=payment_method_id
             )
-
-            db.session.add( new_transaction )
-            db.session.commit() 
-            return { 'success': True, 'message': 'New transaction has been processed' }
+            db.session.add(new_transaction)
+            db.session.commit()
+            return {'success': True, 'message': f'New { transaction_purpose } has been processed' }
         except Exception as e:
             db.session.rollback()
-            print( f'Error processing transaction: { e }' ) 
-            return { 'success': False, 'message': 'New transaction could not be processed' }
-        
+            return {'success': False, 'message': 'Error processing transaction', 'error': str(e)}
 
-    @classmethod 
-    def process_purchase(cls, user_id, payment_type, amount, payment_method_id=None ):
-        """ Process a User Purchase """
-
+    @classmethod
+    def process_purchase(cls, user_id, payment_source, amount, payment_method_id=None):
         user = User.query.filter_by(id=user_id).first()
         if not user:
             return {'success': False, 'message': 'User not found'}
 
         try:
             if payment_method_id is None:
-                if payment_type == "In App Credits":
+                if payment_source == "in_app_credit":
                     if user.credit_balance >= amount:
                         user.credit_balance -= amount
-                        transaction_type = "Credit Purchase"
+                        transaction_purpose = "purchase"
                     else:
-                        return {'success': False, 'message': 'Purchase Failed: Insufficient Credits'}
-            
-                elif payment_type == "In App Gold":
+                        return {'success': False, 'message': 'Insufficient credits'}
+                elif payment_source == "in_app_gold":
                     if user.gold_balance >= amount:
                         user.gold_balance -= amount
-                        transaction_type = "Gold Purchase"
+                        transaction_purpose = "purchase"
                     else:
-                        return {'success': False, 'message': 'Purchase Failed: Insufficient Gold'}
-
+                        return {'success': False, 'message': 'Insufficient gold'}
                 else:
-                    return {'success': False, 'message': 'Invalid Payment Type'}
-
+                    return {'success': False, 'message': 'Invalid in-app payment source'}
             else:
                 payment_method = PaymentMethod.query.filter_by(id=payment_method_id, user_id=user_id).first()
                 if not payment_method:
                     return {'success': False, 'message': 'Payment method not found'}
 
                 card_type = payment_method.type.lower()
-                if "credit" in card_type:
-                    transaction_type = "Credit Card Purchase"
-                else:
-                    transaction_type = "Debit Card Purchase"
+                payment_source = "credit_card" if "credit" in card_type else "debit_card"
+                transaction_purpose = "purchase"
 
             new_transaction = cls(
                 user_id=user_id,
-                payment_type=payment_type,
-                transaction_type = transaction_type,
+                payment_source=payment_source,
+                transaction_purpose=transaction_purpose,
                 amount=amount,
                 payment_method_id=payment_method_id
             )
-
             db.session.add(new_transaction)
             db.session.commit()
-            
+
             return {
                 'success': True,
-                'message': 'Purchase Successful',
+                'message': 'Purchase successful',
                 'amount': amount,
                 'transaction': new_transaction.to_dict(),
                 'updated_balance': {
@@ -630,7 +604,6 @@ class Transaction( Base ):
 
         except Exception as e:
             db.session.rollback()
-            print(f'Error processing purchase: {e}')
             return {'success': False, 'message': 'Error processing purchase', 'error': str(e)}
 
 

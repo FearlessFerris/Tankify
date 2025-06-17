@@ -1,5 +1,5 @@
 // Create User V2 Component Implementation 
-
+ 
 
 // Dependencies 
 import React, { useEffect, useRef, useState } from 'react';
@@ -91,10 +91,10 @@ function CreateUserV2() {
         event.preventDefault(); 
         const errors = validateCreateUserForm( form );
         if( errors.length > 0 ){ 
-            showAlert( errors[ 0 ], 'errors' );
+            showAlert( errors[ 0 ], 'error' );
         }
         const formData = new FormData(); 
-        const fieldsToAppend = [ 'username', 'password', 'confirmPassword', 'email' ]
+        const fieldsToAppend = [ 'username', 'password', 'confirmPassword', 'email' ];
         fieldsToAppend.forEach(( key ) => { 
             if( form[ key ] ){ 
                 formData.append( key, form[ key ] );
@@ -239,16 +239,16 @@ function CreateUserV2() {
                     startIcon = { <CloudUploadOutlined /> }
                     sx={{
                         backgroundColor: '#ab003c',
-                        color: '#fafafa',
                         border: '2px solid transparent',
+                        color: '#fafafa',
                         marginRight: '1rem',
-                        width: '10rem',
                         transition: 'all 0.3s ease',
+                        width: '10rem',
                         '&:hover': {
                             backgroundColor: 'transparent',
-                            color: '#fafafa',
                             borderColor: '#ab003c',
                             boxShadow: '0 0 10px rgba(171, 0, 60, 0.5)',
+                            color: '#fafafa',
                         }
                     }}
                     >
