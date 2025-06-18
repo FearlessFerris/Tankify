@@ -723,15 +723,25 @@ class Currency( Base ):
 #     tank = relationship( 'Tank', back_populates='reviews' )
 
 
-# class Inventory( Base ):
-#     """ Inventory Model """
+class Inventory( Base ):
+    """ Inventory Model """
 
-#     __tablename__ = 'inventory'
-#     id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
-#     user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
-#     tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
-#     acquired_at = Column( DateTime, server_default = func.now() )
+    __tablename__ = 'inventory'
+    id = Column( UUID( as_uuid = True ), primary_key = True, default = uuid.uuid4 )
+    user_id = Column( UUID( as_uuid = True ), ForeignKey( 'users.id' ), nullable = False )
+    tank_id = Column( UUID( as_uuid = True ), ForeignKey( 'tanks.id' ), nullable = False )
+    acquisition_method = Column( String, nullable = False, default = 'purchase' )
+    purchase_transaction_id = Column( UUID( as_uuid = True ), ForeignKey( 'transactions.id' ), nullable = True )
+    is_refunded = Column( Boolean, default = False )
+    refund_requested = Column( Boolean, default = False )
+    refund_reason = Column( String, nullable = True )
+    notes = Column( Text, nullable = True )
+    acquired_at = Column( DateTime, server_default = func.now() )
 
-#     # Relationships with back_populates
-#     user = relationship( 'User', back_populates='inventory' )
-#     tank = relationship( 'Tank', back_populates='inventory' )
+
+    # Relationships with back_populates
+    user = relationship( 'User', back_populates='inventory' )
+    tank = relationship( 'Tank', back_populates='inventory' )
+
+
+    def __init__( self, user_id, tank_id, acquisition_method, is_refunded, refund_requested )

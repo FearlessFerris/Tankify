@@ -82,18 +82,20 @@ def create_new_transaction( user_id ):
 def process_purchase_route():
     """ Handles processing of purchases using either in-game currency or credit/debit card. """
 
+    # Lets parse the request body
     data = request.json
 
+    # Save Necessary Variables for Transaction  
     user_id = data.get('userId')
     amount = int( data.get('amount') )
     payment_source = data.get('paymentSource')
     payment_method_id = data.get( 'paymentMethodId', None )
 
-    print( data )
-
+    # Verify if a user is valid or amount is valid 
     if not user_id or amount is None:
         return jsonify({'success': False, 'message': 'Missing required fields'}), 400
 
+    # Provide necessary fields to the Transaction process_purchase method 
     result = Transaction.process_purchase(
         user_id=user_id,
         payment_source=payment_source,
@@ -101,6 +103,7 @@ def process_purchase_route():
         payment_method_id=payment_method_id
     )
 
+    # If the result is successful print 201( Successful POST request )
     if result['success']:
         return jsonify(result), 201
     else:

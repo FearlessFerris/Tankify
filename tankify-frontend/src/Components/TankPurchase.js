@@ -42,18 +42,17 @@ function TankPurchase({ tank, onClose }) {
     const handlePurchase = async () => {
         const payload = {
             userId: user.id,
-            paymentType: 'In App Credits',
+            paymentSource: 'in_app_credit',
             amount: parseInt( tank.price, 10 )
         }
         try {
             const response = await apiClient.post(`/transaction/purchase`, payload );
-            console.log( response.data.message );
             showAlert( `${ response.data.message } ${ fixNumber( tank.price )} credits`, 'success' );
             await refreshUserData();
             onClose();
         }
         catch (error) {
-            console.error('Error handling tank purchase');
+            console.error( 'Error handling purchase request' );
         }
     }
 

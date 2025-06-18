@@ -95,7 +95,7 @@ export const UserProvider = ({ children }) => {
         try {
             const response = await apiClient.get(`/get/${user.id}`);
             const updatedUser = response.data.user;
-            setUser(( previousUser ) => ({ ...previousUser, ...updatedUser })); 
+            setUser( updatedUser );
             localStorage.setItem('user', JSON.stringify(updatedUser));
         } catch (error) {
             console.error('Error refreshing user data:', error);
