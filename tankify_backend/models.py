@@ -744,4 +744,40 @@ class Inventory( Base ):
     tank = relationship( 'Tank', back_populates='inventory' )
 
 
-    def __init__( self, user_id, tank_id, acquisition_method, is_refunded, refund_requested )
+    def __init__( self, user_id, tank_id, acquisition_method, is_refunded = False, refund_requested = False, refund_reason = None, notes = None ):
+        " Initiates Inventory Instance "
+
+        self.user_id = user_id 
+        self.tank_id = tank_id 
+        self.acquisition_method = acquisition_method
+        self.is_refunded = is_refunded 
+        self.refund_requested = refund_requested
+        self.refund_reason = refund_reason
+        self.notes = notes 
+    
+    def __repr__( self ): 
+        """ Inventory Representation Method for Instance """
+
+        return( 
+            f"<Inventory( id = '{ self.id }'," 
+            f"user_id = '{ self.user_id }',"
+            f"tank_id = '{ self.tank_id }',"
+            f"acquisition_method = '{ self.acquisition_method }', "
+            f"is_refunded = '{ self.is_refunded }', "
+            f"refund_requested = '{ self.refund_requested }')>"
+        )
+    
+    def to_dict( self ): 
+        """ Converts Inventory Instance to Dictionary """
+
+        return{ 
+            'id': str( self.id ), 
+            'user_id': self.user_id, 
+            'tank_id': self.tank_id, 
+            'acquisition_method': self.acquisition_method, 
+            'is_refunded': self.is_refunded, 
+            'refund_requested': self.refund_requested
+        }
+    
+
+
