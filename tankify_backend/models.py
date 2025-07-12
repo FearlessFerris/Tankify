@@ -43,6 +43,7 @@ class User( Base ):
     # Relationships 
     default_currency_id = Column( UUID( as_uuid = True ), ForeignKey( 'currencies.id' ), nullable = True )
     default_currency = relationship( 'Currency', back_populates = 'users' )
+    inventory = relationship( 'Inventory', back_populates = 'user', lazy = 'select' )
     payment_methods = relationship( 'PaymentMethod', back_populates = 'user', lazy = 'select' )
     transactions = relationship( 'Transaction', back_populates='user', lazy= 'select' )
 
@@ -202,6 +203,9 @@ class Tank( Base ):
     radios = Column( JSONB, nullable = False )
     suspensions = Column( JSONB, nullable = False )
     turrets = Column( JSONB, nullable = False )
+
+    # Relationships 
+    inventory = relationship( 'Inventory', back_populates = 'tank', lazy = 'select' )
 
     def __init__( self, name, tag, description, price, vehicle_type, tier, type, nation, nation_flag, nation_flag_hd, image, crew, default_profile, guns, modules_tree, next_tanks, radios, suspensions, turrets ):
         """ Initialize Tank Class """

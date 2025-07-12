@@ -20,8 +20,10 @@ itsdangerous==2.2.0
 jedi==0.19.2
 Jinja2==3.1.4
 jmespath==1.0.1
+markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
+mdurl==0.1.2
 parso==0.8.4
 pexpect==4.9.0
 pillow==11.0.0
@@ -34,7 +36,9 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.2
 requests==2.32.3
+rich==14.0.0
 s3transfer==0.10.3
+setuptools==80.9.0
 six==1.16.0
 SQLAlchemy==2.0.36
 stack-data==0.6.3
