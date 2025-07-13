@@ -360,7 +360,6 @@ from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeEl
 # Load environment variables
 load_dotenv()
 WG_API_KEY = os.getenv("WG_API_KEY")
-print( 'WG_API_KEY', os.getenv("WG_API_KEY") )
 
 # Constants
 WOT_CDN_BASE = 'https://na-wotp.wgcdn.co/dcont/tankopedia_images/'
@@ -544,7 +543,8 @@ def seed_inventory( users, tanks ):
 
     inventories = [ 
         Inventory( user_id = users[0].id, tank_id = tanks[0].id, acquisition_method = 'purchase' ), 
-        Inventory( user_id = users[1].id, tank_id = tanks[1].id, acquisition_method = 'purchase' )
+        Inventory( user_id = users[1].id, tank_id = tanks[1].id, acquisition_method = 'purchase' ), 
+        Inventory( user_id = users[2].id, tank_id = tanks[3].id, acquisition_method = 'purchase' ),
     ]
     db.session.add_all( inventories )
     db.session.commit()
