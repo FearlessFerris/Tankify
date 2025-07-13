@@ -783,5 +783,22 @@ class Inventory( Base ):
             'refund_requested': self.refund_requested
         }
     
+    @classmethod 
+    def add_inventory( cls, user_id, tank_id, acquisition_method = 'purchase', is_refunded = False, refund_requested = False, refund_reason = None, notes = None ): 
+        """ Creates New Inventory Item and Adds to Database """
 
+        new_inventory = cls( 
+            user_id = user_id, 
+            tank_id = tank_id, 
+            acquisition_method = acquisition_method, 
+            is_refunded = is_refunded, 
+            refund_requested = refund_requested, 
+            refund_reason = refund_reason, 
+            notes = notes
+        )
+        db.session.add( new_inventory )
+        db.session.commit()
 
+        return new_inventory 
+    
+    

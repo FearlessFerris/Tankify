@@ -350,7 +350,7 @@ from time import perf_counter
 
 
 from app import app, db
-from models import User, Tank, Transaction, Currency, PaymentMethod
+from models import User, Tank, Transaction, Currency, PaymentMethod, Inventory
 from s3_utils import BUCKET_NAME, get_s3_client
 
 
@@ -360,6 +360,7 @@ from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeEl
 # Load environment variables
 load_dotenv()
 WG_API_KEY = os.getenv("WG_API_KEY")
+print( 'WG_API_KEY', os.getenv("WG_API_KEY") )
 
 # Constants
 WOT_CDN_BASE = 'https://na-wotp.wgcdn.co/dcont/tankopedia_images/'
@@ -538,6 +539,17 @@ def seed_tanks():
         console.print(f"[red]Error fetching tank data:[/red] {e}")
         return []
 
+def seed_inventory( users, tanks ): 
+    """ Creates and Seeds Inventories """
+
+    inventories = [ 
+        Inventory( user_id = users[0].id, tank_id = tanks[0].id, acquisition_method = 'purchase' ), 
+        Inventory( user_id = users[1].id, tank_id = tanks[1].id, acquisition_method = 'purchase' )
+    ]
+    db.session.add_all( inventories )
+    db.session.commit()
+
+    return inventories 
 
 def seed_payment_methods(users):
     methods = [
@@ -577,6 +589,9 @@ def seed_database():
 
             tanks = seed_tanks()
             console.print(f"✅ [green]Seeded {len(tanks)} tanks[/green]")
+
+            inventories = seed_inventory( users, tanks )
+            console.print( f'✅ [green]Seeded {len(inventories)} inventories[/green]' )
 
             seed_payment_methods(users)
             console.print("✅ [green]Seeded payment methods[/green]")
